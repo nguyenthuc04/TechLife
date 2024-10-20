@@ -1,4 +1,4 @@
-package com.snapco.snaplife.ui.view.fragment.camera
+package com.snapco.techlife.ui.view.fragment.camera
 
 import android.os.Bundle
 import android.view.LayoutInflater

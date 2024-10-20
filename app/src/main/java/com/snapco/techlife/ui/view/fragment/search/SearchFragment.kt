@@ -1,4 +1,4 @@
-package com.snapco.snaplife.ui.view.fragment.search
+package com.snapco.techlife.ui.view.fragment.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

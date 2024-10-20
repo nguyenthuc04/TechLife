@@ -94,7 +94,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_comment"
+            android:src="@drawable/ic_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fav_btn_id"
             app:layout_constraintTop_toTopOf="parent" />
@@ -114,7 +114,7 @@
             android:layout_width="23dp"
             android:layout_height="20dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/ic_bookmark"
+            android:background="@drawable/ic_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

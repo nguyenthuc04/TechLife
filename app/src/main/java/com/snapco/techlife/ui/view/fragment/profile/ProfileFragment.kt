@@ -1,4 +1,4 @@
-package com.snapco.snaplife.ui.view.fragment.profile
+package com.snapco.techlife.ui.view.fragment.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
