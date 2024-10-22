@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.view.fragment.reels.ReelsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="he" />
-
+        android:orientation="vertical"/>
 </FrameLayout>
