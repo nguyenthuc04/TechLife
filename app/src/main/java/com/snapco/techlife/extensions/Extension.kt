@@ -1,4 +1,4 @@
-package com.snapco.snaplife.extensions
+package com.snapco.techlife.extensions
 
 import android.content.Context
 import android.widget.Toast
