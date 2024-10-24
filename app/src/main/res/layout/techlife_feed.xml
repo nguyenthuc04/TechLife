@@ -46,15 +46,6 @@
             app:layout_constraintStart_toEndOf="@+id/frameLayout2"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/location_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="location"
-            android:textColor="#616161"
-            android:textSize="9sp"
-            app:layout_constraintStart_toStartOf="@+id/username_id"
-            app:layout_constraintTop_toBottomOf="@+id/username_id" />
 
         <View
             android:layout_width="30dp"
@@ -97,16 +88,6 @@
             android:src="@drawable/ic_send"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fav_btn_id"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/send_btn_id"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_send"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/comnt_btn_id"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
