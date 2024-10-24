@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -31,6 +32,7 @@ class CameraFragment : Fragment() {
     private lateinit var captureButton: Button
     private lateinit var recordButton: Button
     private lateinit var switchCameraButton: Button
+    private lateinit var txtTimeRecord: TextView
     private val cameraViewModel: CameraViewModel by viewModels()
 
     override fun onCreateView(
@@ -42,6 +44,7 @@ class CameraFragment : Fragment() {
         captureButton = view.findViewById(R.id.btnCapture)
         recordButton = view.findViewById(R.id.btnrecord)
         switchCameraButton = view.findViewById(R.id.btnSwitchCamera)
+        txtTimeRecord = view.findViewById(R.id.txtTimeRecord)
 
         // Thiết lập CameraView
         cameraView.setLifecycleOwner(viewLifecycleOwner)
@@ -81,6 +84,9 @@ class CameraFragment : Fragment() {
         // Quan sát thay đổi từ ViewModel
         cameraViewModel.facing.observe(viewLifecycleOwner, Observer { facing ->
             cameraView.facing = facing
+        })
+        cameraViewModel.timerText.observe(viewLifecycleOwner, Observer { time ->
+            txtTimeRecord.text = time
         })
 
         cameraViewModel.isRecording.observe(viewLifecycleOwner, Observer { isRecording ->
