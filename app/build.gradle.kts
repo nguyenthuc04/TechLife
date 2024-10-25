@@ -36,9 +36,19 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.google.code.gson:gson:2.8.6")
+    implementation ("androidx.fragment:fragment-ktx:1.3.6")
+
+
     implementation ("androidx.fragment:fragment-ktx:1.8.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
