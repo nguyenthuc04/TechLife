@@ -1,0 +1,123 @@
+package com.snapco.techlife.ui.view.fragment.home
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Bundle
+import android.provider.MediaStore
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import com.snapco.techlife.R
+import com.snapco.techlife.data.model.home.Feed
+import com.snapco.techlife.databinding.FragmentCreatePostBinding
+import com.snapco.techlife.ui.view.fragment.home.CreatePostFragment.Companion
+import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
+import java.util.UUID
+
+class CreatePostFragment : Fragment() {
+    private lateinit var binding : FragmentCreatePostBinding
+    private var uri: Uri? = null
+    private lateinit var bitmap: Bitmap
+    private var postid: String = UUID.randomUUID().toString()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
+    companion object {
+        const val REQUEST_IMAGE_PICK = 1
+        const val REQUEST_IMAGE_CAPTURE = 2
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater ,R.layout.fragment_create_post, container, false)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        // Set click listener for image selection
+        binding.imageToPost.setOnClickListener {
+            addPostDialog()
+        }
+    }
+
+    private fun addPostDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Choose your profile picture")
+        builder.setItems(options) { dialog, item ->
+            when (options[item]) {
+                "Take Photo" -> takePhotoWithCamera()
+                "Choose from Gallery" -> pickImageFromGallery()
+                "Cancel" -> dialog.dismiss()
+            }
+        }
+        builder.show()
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun pickImageFromGallery() {
+        val pickPictureIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        if (pickPictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(pickPictureIntent, CreatePostFragment.REQUEST_IMAGE_PICK)
+        }
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun takePhotoWithCamera() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(takePictureIntent, CreatePostFragment.REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                CreatePostFragment.REQUEST_IMAGE_CAPTURE -> {
+                    val imageBitmap = data?.extras?.get("data") as Bitmap
+                    displaySelectedImage(imageBitmap)
+                }
+                CreatePostFragment.REQUEST_IMAGE_PICK -> {
+                    val imageUri = data?.data
+                    val imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
+                    displaySelectedImage(imageBitmap)
+                }
+            }
+        }
+    }
+
+    private fun displaySelectedImage(imageBitmap: Bitmap) {
+        bitmap = imageBitmap
+        binding.imageToPost.setImageBitmap(imageBitmap)
+        Toast.makeText(context, "Image selected successfully!", Toast.LENGTH_SHORT).show()
+    }
+    private fun postImage(uri: Uri?) {
+        val caption = binding.addCaption.text.toString()
+        val newPost = Feed(
+            R.drawable.profile1,
+            "Bùi Quang Vinh",
+            "USA",
+            uri.toString(),
+            caption,
+            "0",
+            "10/26/2023"
+        )
+
+        sharedViewModel.setNewPost(newPost) // Cập nhật vào ViewModel
+        Toast.makeText(context, "Post created!", Toast.LENGTH_SHORT).show()
+    }
+}

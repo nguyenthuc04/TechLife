@@ -1,58 +1,81 @@
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
+import com.snapco.techlife.adapter.home.FeedAdapter
+import com.snapco.techlife.data.model.home.Feed
+import com.snapco.techlife.databinding.FragmentHomeBinding
+import com.snapco.techlife.ui.view.fragment.home.CreatePostFragment
+import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var feedAdapter: FeedAdapter
+    private lateinit var feedRecyclerView: RecyclerView
+    private val feedModelList = mutableListOf<Feed>()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater ,container: ViewGroup? ,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home ,container ,false)
-    }
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        // Initialize RecyclerViews
+        feedRecyclerView = binding.recyclerViewId
 
-companion object {
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    @JvmStatic
-    fun newInstance(param1: String ,param2: String) =
-        HomeFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_PARAM1 ,param1)
-                putString(ARG_PARAM2 ,param2)
+        // Set up feed list
+        sharedViewModel.newPost.observe(viewLifecycleOwner) { newPost ->
+            newPost?.let {
+                feedModelList.add(0, it)
+                feedAdapter.notifyDataSetChanged()
+                sharedViewModel.clearNewPost() // Xóa dữ liệu sau khi cập nhật
             }
         }
-}
+        setupFeedList()
+        return binding.root
+    }
+
+    private fun setupFeedList() {
+        // Initial feed data
+        if (feedModelList.isEmpty()) {
+            feedModelList.addAll(
+                listOf(
+                    Feed(
+                        R.drawable.profile2,
+                        "Jack",
+                        "USA",
+                        "https://marketplace.canva.com/EAFH_oMBen8/1/0/900w/canva-gray-and-white-asthetic-friend-instagram-story-C5KpyJG5MHA.jpg",
+                        "Hello, have a nice day",
+                        "3",
+                        "10/7/2023"
+                    ),
+                    Feed(R.drawable.profile4,
+                        "Alina",
+                        "USA",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMdl3HTGdSrPPtE1intiEqAGncJF0-HAyL6VpjWlBNG_wsroaBdglQkhczbEJ6rt5MeCg&usqp=CAU",
+                        "Hello, have a nice day",
+                        "8",
+                        "18/7/2023"),
+                    Feed(R.drawable.profile3,
+                        "Mariya",
+                        "USA",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6bQFqMhQmg9hJ-FA5xUUrQidHgQqZC5Nktw&usqp=CAU",
+                        "Hello, have a nice day",
+                        "13",
+                        "1/7/2023")
+                    // Additional feed data here...
+                )
+            )
+        }
+
+        feedAdapter = FeedAdapter(feedModelList)
+        feedRecyclerView.adapter = feedAdapter
+        feedAdapter.notifyDataSetChanged()
+    }
 }

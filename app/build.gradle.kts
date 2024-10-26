@@ -40,9 +40,9 @@ android {
 
 dependencies {
     //Glide
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.androidx.navigation.runtime.ktx)
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
 
     implementation (libs.library)
