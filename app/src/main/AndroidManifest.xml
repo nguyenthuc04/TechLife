@@ -22,7 +22,13 @@
         android:theme="@style/Theme.TechLife"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.fragment.course.AddCourse"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.CourseActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
