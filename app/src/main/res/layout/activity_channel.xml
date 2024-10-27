@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_margin="10dp"
+    tools:context=".ui.view.activity.messenger.ChannelActivity">
+
+    <io.getstream.chat.android.ui.feature.channels.header.ChannelListHeaderView
+        android:id="@+id/channelListHeaderView"
+        android:layout_width="0dp"
+        app:streamUiShowOfflineProgressBar="true"
+        app:streamUiActionButtonIcon="@drawable/baseline_add_24"
+        android:layout_height="wrap_content"
+        app:streamUiOnlineTitleTextSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/custom_edittext"
+        android:drawableStart="@drawable/baseline_search_24"
+        android:hint="@string/search"
+        app:layout_constraintTop_toBottomOf="@id/channelListHeaderView"
+        android:padding="10dp" />
+
+    <io.getstream.chat.android.ui.feature.channels.list.ChannelListView
+        android:id="@+id/channelListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtSearch" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

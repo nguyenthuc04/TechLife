@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TechLife</string>
+    <string name="no_messenger">Chưa có tin nhắn nào</string>
+    <string name="search">Search</string>
 </resources>

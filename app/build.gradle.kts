@@ -35,6 +35,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
 }
 
@@ -49,4 +50,27 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // thu vien cua phong
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    // Stream Chat SDK
+    implementation(libs.stream.chat.android.ui.components)
+    implementation(libs.stream.chat.android.offline)
+    implementation(libs.stream.chat.android.client)
+
+    // Glide cho ảnh
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    implementation(libs.material.v180) // Material Design, có thể dùng để cắt ảnh
+
+    // Lifecycle cho AndroidX
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+
+
 }
