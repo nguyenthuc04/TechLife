@@ -14,14 +14,9 @@ import com.snapco.techlife.ui.viewmodel.ReelAdapter
 
 class ReelsFragment : Fragment() {
 
-    // Thay đổi các tham số nếu cần
-    private var param1: String? = null
-    private var param2: String? = null
-
     // RecyclerView
     private lateinit var viewPager: ViewPager2
     private lateinit var reelAdapter: ReelAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,9 +39,9 @@ class ReelsFragment : Fragment() {
             ReelModel("https://www.youtube.com/shorts/lrYbkgaW8xI?feature=share", "Người dùng 3", "Nội dung video 3")
         )
 
-        // Khởi tạo adapter và thiết lập cho ViewPager2
-        reelAdapter = ReelAdapter(videoList)
+        // Khởi tạo adapter với callback cho btnCamera
+
+        // Thiết lập adapter cho ViewPager2
         viewPager.adapter = reelAdapter
     }
-
 }

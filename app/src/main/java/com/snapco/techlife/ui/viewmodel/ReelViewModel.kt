@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.snapco.techlife.R
 import com.snapco.techlife.data.model.ReelModel
 import com.snapco.techlife.databinding.ItemReelBinding
+import com.snapco.techlife.ui.view.fragment.reels.AddReelFragment
 
 class ReelViewModel {
     inner class VideoViewHolder(private val binding: ItemReelBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -33,6 +35,7 @@ class ReelViewModel {
 
             binding.userName.text = "Tên người dùng"
             binding.content.text = "Nội dung video"
+
             binding.btnFollow.setOnClickListener {
                 // Xử lý sự kiện khi click vào nút Follow
             }
@@ -48,10 +51,14 @@ class ReelViewModel {
                 // Logic cho nút Share
             }
         }
+
+
     }
 }
 
-class ReelAdapter(private val videoList: List<ReelModel>) : RecyclerView.Adapter<ReelViewModel.VideoViewHolder>() {
+class ReelAdapter(
+    private val videoList: List<ReelModel>,
+) : RecyclerView.Adapter<ReelViewModel.VideoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReelViewModel.VideoViewHolder {
         val binding = ItemReelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -60,6 +67,8 @@ class ReelAdapter(private val videoList: List<ReelModel>) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: ReelViewModel.VideoViewHolder, position: Int) {
         holder.bindVideo(videoList[position])
+
+
     }
 
     override fun getItemCount(): Int = videoList.size

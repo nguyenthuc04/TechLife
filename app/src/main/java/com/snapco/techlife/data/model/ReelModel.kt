@@ -1,8 +1,11 @@
 package com.snapco.techlife.data.model
 
+import com.google.firebase.Timestamp
+
 data class ReelModel(
-    val url: String,              // URL của video
-    val userName: String,         // Tên người dùng
-    val content: String,          // Nội dung mô tả video
-    val isFollowed: Boolean = false // Trạng thái theo dõi (mặc định là false)
+    var videoId : String = "",
+    var title : String = "",
+    var url : String = "",
+    var uploaderId : String = "",
+    var createdTime : Timestamp = Timestamp.now()
 )

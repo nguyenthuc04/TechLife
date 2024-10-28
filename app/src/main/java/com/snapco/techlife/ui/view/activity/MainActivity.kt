@@ -12,6 +12,7 @@ import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityMainBinding
 import com.snapco.techlife.ui.view.fragment.camera.CameraFragment
 import com.snapco.techlife.ui.view.fragment.profile.ProfileFragment
+import com.snapco.techlife.ui.view.fragment.reels.AddReelFragment
 import com.snapco.techlife.ui.view.fragment.reels.ReelsFragment
 import com.snapco.techlife.ui.view.fragment.search.SearchFragment
 
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_home -> HomeFragment()
                 R.id.menu_search -> SearchFragment()
                 R.id.menu_camera -> CameraFragment()
-                R.id.menu_reels -> ReelsFragment()
+                R.id.menu_reels -> AddReelFragment()
                 R.id.menu_profile -> ProfileFragment()
                 else -> throw IllegalArgumentException("Unknown menu item")
             }
