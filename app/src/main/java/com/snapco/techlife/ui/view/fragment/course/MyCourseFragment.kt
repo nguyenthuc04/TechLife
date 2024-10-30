@@ -1,60 +1,84 @@
 package com.snapco.techlife.ui.view.fragment.course
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.course.CourseAdapter
+import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MyCourseFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyCourseFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var viewModel: CourseViewModel
+    private lateinit var btnAddCourse: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var courseAdapter: CourseAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_course, container, false)
+        val view = inflater.inflate(R.layout.fragment_my_course, container, false)
+        viewModel = ViewModelProvider(this).get(CourseViewModel::class.java)
+
+        btnAddCourse = view.findViewById(R.id.btnAddCourse)
+        recyclerView = view.findViewById(R.id.recyclerView)
+
+        // Thiết lập LayoutManager cho RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Khởi tạo adapter rỗng ban đầu cho RecyclerView
+        courseAdapter = CourseAdapter(mutableListOf(), viewModel)
+        recyclerView.adapter = courseAdapter
+
+        // Sự kiện khi nhấn vào nút Thêm Khóa Học
+        btnAddCourse.setOnClickListener {
+            val intent = Intent(activity, AddCourse::class.java)
+            startActivityForResult(intent, REQUEST_CODE_ADD_COURSE)
+        }
+
+        // Quan sát danh sách khóa học từ ViewModel
+        viewModel.courses.observe(viewLifecycleOwner, Observer { courseList ->
+            courseAdapter.updateCourses(courseList) // Cập nhật danh sách khóa học
+        })
+
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        })
+
+        // Gọi phương thức lấy danh sách khóa học
+        viewModel.fetchCourses()
+
+        return view
+    }
+
+
+private fun displayCourses() {
+    // Code lấy danh sách khóa học từ API và hiển thị trong RecyclerView
+    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    recyclerView.adapter = courseAdapter
+}
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_ADD_COURSE && resultCode == AppCompatActivity.RESULT_OK) {
+            // Gọi lại phương thức fetchCourses để làm mới dữ liệu
+            viewModel.fetchCourses()
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyCourseFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyCourseFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        private const val REQUEST_CODE_ADD_COURSE = 1
     }
 }
