@@ -47,6 +47,8 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.google.code.gson:gson:2.8.6")
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 
     implementation ("androidx.fragment:fragment-ktx:1.8.1")

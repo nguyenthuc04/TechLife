@@ -1,5 +1,6 @@
 package com.snapco.techlife.ui.view.fragment.search
 
+import SearchAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.snapco.techlife.R
 import com.snapco.techlife.databinding.FragmentSearchBinding
-import com.snapco.techlife.ui.adapter.SearchAdapter
 import com.snapco.techlife.ui.viewmodel.SearchViewModel
 
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment() {
 
     private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var binding: FragmentSearchBinding
@@ -25,7 +24,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        binding = FragmentSearchBinding.inflate(inflater, container, false).apply {
+            viewModel = searchViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
@@ -33,10 +35,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
 
         searchAdapter = SearchAdapter(emptyList())
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = searchAdapter
-        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = searchAdapter
 
         searchViewModel.users.observe(viewLifecycleOwner, Observer { users ->
             searchAdapter.updateData(users)
