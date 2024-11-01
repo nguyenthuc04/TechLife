@@ -1,6 +1,7 @@
 package com.snapco.techlife.ui.view.fragment.search
 
 import SearchAdapter
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.databinding.FragmentSearchBinding
+import com.snapco.techlife.ui.view.activity.PremiumActivity
 import com.snapco.techlife.ui.viewmodel.SearchViewModel
 
 class SearchFragment : Fragment() {
@@ -83,6 +85,11 @@ class SearchFragment : Fragment() {
             binding.searchView.setQuery("", false)
             binding.searchView.clearFocus()
             binding.cancelText.visibility = View.GONE
+        }
+
+        binding.btnPremium.setOnClickListener {
+            val intent = Intent(requireContext(), PremiumActivity::class.java)
+            startActivity(intent)
         }
     }
 }
