@@ -3,7 +3,6 @@ package com.snapco.techlife.ui.view.fragment.course
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.snapco.techlife.ui.view.activity.CourseActivity
 
 class PagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.course.CourseAdapter
+import com.snapco.techlife.ui.view.activity.course.AddCourse
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
 
@@ -23,7 +24,6 @@ class MyCourseFragment : Fragment() {
     private lateinit var btnAddCourse: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var courseAdapter: CourseAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +42,6 @@ class MyCourseFragment : Fragment() {
         courseAdapter = CourseAdapter(mutableListOf(), viewModel)
         recyclerView.adapter = courseAdapter
 
-        // Sự kiện khi nhấn vào nút Thêm Khóa Học
-        btnAddCourse.setOnClickListener {
-            val intent = Intent(activity, AddCourse::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADD_COURSE)
-        }
-
         // Quan sát danh sách khóa học từ ViewModel
         viewModel.courses.observe(viewLifecycleOwner, Observer { courseList ->
             courseAdapter.updateCourses(courseList) // Cập nhật danh sách khóa học
@@ -57,24 +51,23 @@ class MyCourseFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         })
 
+
+
         // Gọi phương thức lấy danh sách khóa học
         viewModel.fetchCourses()
+
+        btnAddCourse.setOnClickListener {
+            val intent = Intent(activity, AddCourse::class.java)
+            startActivityForResult(intent, REQUEST_CODE_ADD_COURSE)
+        }
 
         return view
     }
 
-
-private fun displayCourses() {
-    // Code lấy danh sách khóa học từ API và hiển thị trong RecyclerView
-    recyclerView.layoutManager = LinearLayoutManager(requireContext())
-    recyclerView.adapter = courseAdapter
-}
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_COURSE && resultCode == AppCompatActivity.RESULT_OK) {
-            // Gọi lại phương thức fetchCourses để làm mới dữ liệu
-            viewModel.fetchCourses()
+            viewModel.fetchCourses() // Lấy lại danh sách khóa học sau khi thêm
         }
     }
 

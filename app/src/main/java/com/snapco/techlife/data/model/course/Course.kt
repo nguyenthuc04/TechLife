@@ -1,9 +1,12 @@
 package com.snapco.techlife.data.model.course
 
+import com.google.gson.annotations.SerializedName
+
 data class Course(
-    val id: String? = null, // ID là optional vì có thể chưa có trong khi thêm mới
+    @SerializedName("_id")
+    val id: String?,
     val name: String,
-    val date: String,
     val price: String,
-    val duration: String
+    val duration: String,
+    val date: String
 )

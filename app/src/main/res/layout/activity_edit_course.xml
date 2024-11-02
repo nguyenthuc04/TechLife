@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/edtCourseName_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Tên Khóa Học"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <EditText
+        android:id="@+id/edtCoursePrice_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Giá Khóa Học"
+        app:layout_constraintTop_toBottomOf="@id/edtCourseName_ed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <EditText
+        android:id="@+id/edtCourseDuration_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="90dp"
+        android:hint="Thời Gian Khóa Học"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtCoursePrice_ed" />
+
+    <EditText
+        android:id="@+id/edtCourseDate_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Ngày tạo"
+        app:layout_constraintTop_toBottomOf="@id/edtCourseDuration_ed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+<!--    <Button-->
+<!--        android:id="@+id/btnSaveCourse_ed"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:text="Lưu Khóa Học"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/edtCourseDuration_ed" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
