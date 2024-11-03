@@ -2,17 +2,31 @@ package com.snapco.techlife.ui.view.activity.signup
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityTermsAndPoliciesBinding
+import com.snapco.techlife.extensions.getTag
 import com.snapco.techlife.extensions.setHighlightedText
+import com.snapco.techlife.extensions.showCustomAlertDialog
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.login.LoginActivity
+import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.UserDataHolder
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 
 class TermsAndPoliciesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTermsAndPoliciesBinding
+    val TAG = getTag()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +36,68 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
         applyWindowInsets()
         setupToolbar()
         binding.btnNext.setOnClickListener {
-            startActivity<AvatarActivity>()
+            createAccount()
         }
         customText()
+        binding.btnBack.setOnClickListener {
+            showCustomAlertDialog(
+                this,
+                title = "Bạn đã có tài khoản ư?",
+                message = "",
+                positiveButtonText = "Đăng nhập",
+                negativeButtonText = "Tiếp tục tạo tài khoản",
+                positiveAction = {
+                    startActivity<LoginActivity>()
+                },
+                negativeAction = {
+                },
+            )
+        }
+        userViewModel.createUserResponse.observe(
+            this,
+            Observer { response ->
+                if (response != null) {
+                    Log.d(TAG, "SignUp successful: $response")
+                    val user = response.user
+                    if (user != null) {
+                        UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
+                        Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
+                    }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.btnNext.text = "Tôi đồng ý"
+                        binding.progressBar.visibility = View.GONE
+                        startActivity<LoginActivity>()
+                    }, 2000)
+                } else {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.btnNext.text = "Tôi đồng ý"
+                        binding.progressBar.visibility = View.GONE
+                        Log.d(TAG, "Login failed")
+                    }, 1000)
+                }
+            },
+        )
+    }
+
+    private fun createAccount() {
+        Log.d(TAG, SignUpDataHolder.getUser().toString())
+        binding.btnNext.text = ""
+        binding.progressBar.visibility = View.VISIBLE
+        val oldUser = SignUpDataHolder.getUser()
+        val user =
+            oldUser?.copy(
+                accountType = "mentee",
+                bio = "null",
+                avatar = "https://www.gravatar.com/avatar/?d=mp&f=y",
+            )
+        user?.let {
+            Log.d(TAG, "user: $it")
+            SignUpDataHolder.setUser(it)
+        }
+        val newUser = SignUpDataHolder.getUser()
+        if (newUser != null) {
+            userViewModel.createUser(newUser)
+        }
     }
 
     private fun customText() {
@@ -58,11 +131,14 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
         )
         binding.textView12.setHighlightedText(
             fullText =
-                "Những người dùng dịch vụ của chúng tôi có thể đã tải thông tin liên hệ của bạn lên TechLife.\nTìm hiểu thêm",
+                "Những người dùng dịch vụ của chúng tôi có thể đã tải thông tin liên hệ của bạn lên" +
+                    " TechLife.\nTìm hiểu thêm",
             highlights = listOf("Tìm hiểu thêm" to Color.BLUE),
         )
         binding.textView13.setHighlightedText(
-            fullText = "Bạn cũng sẽ nhận được email của chúng tôi và có thể chọn ngừng nhận bất cứ lúc nào. Tìm hiểu thêm",
+            fullText =
+                "Bạn cũng sẽ nhận được email của chúng tôi và có thể chọn ngừng nhận bất cứ " +
+                    "lúc nào. Tìm hiểu thêm",
             highlights = listOf("Tìm hiểu thêm" to Color.BLUE),
         )
     }

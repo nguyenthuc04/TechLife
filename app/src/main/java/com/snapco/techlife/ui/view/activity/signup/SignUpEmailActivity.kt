@@ -2,13 +2,15 @@ package com.snapco.techlife.ui.view.activity.signup
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.User
+import com.snapco.techlife.data.model.CreateUserRequest
 import com.snapco.techlife.databinding.ActivitySignUpEmailBinding
 import com.snapco.techlife.extensions.EmailAuthViewModelFactory
 import com.snapco.techlife.extensions.isValidEmail
@@ -18,13 +20,14 @@ import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.login.LoginActivity
 import com.snapco.techlife.ui.viewmodel.EmailAuthViewModel
 import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 
 class SignUpEmailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpEmailBinding
     private val viewModel: EmailAuthViewModel by viewModels {
         EmailAuthViewModelFactory(applicationContext)
     }
-    private val signUpDataHolder: SignUpDataHolder by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,23 @@ class SignUpEmailActivity : AppCompatActivity() {
                 },
             )
         }
+        userViewModel.checkEmailResponse.observe(this) { response ->
+            if (response != null) {
+                if (response.exists) {
+                    binding.btnNext.text = "Tiếp"
+                    binding.progressBar.visibility = View.GONE
+                    AlertDialog
+                        .Builder(this)
+                        .setTitle("Thông báo")
+                        .setMessage("Email đã tồn tại vui lòng đăng nhập hoặc đăng kí bằng email khác")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }.show()
+                } else {
+                    sendVerificationEmail(response.account)
+                }
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -77,7 +97,9 @@ class SignUpEmailActivity : AppCompatActivity() {
                 showToast("Email không hợp lệ")
                 return@setOnClickListener
             }
-            sendVerificationEmail(email)
+            binding.btnNext.text = ""
+            binding.progressBar.visibility = View.VISIBLE
+            userViewModel.checkEmail(email)
         }
     }
 
@@ -85,9 +107,11 @@ class SignUpEmailActivity : AppCompatActivity() {
         viewModel.sendVerificationEmail(email)
         viewModel.authResult.observe(this) { success ->
             if (success) {
-                val user = User(account = email)
-                signUpDataHolder.setUser(user)
+                val user = CreateUserRequest(account = email)
+                SignUpDataHolder.setUser(user)
                 showToast("Gửi email xác minh thành công")
+                binding.btnNext.text = "Tiếp"
+                binding.progressBar.visibility = View.GONE
                 startActivity<ConfirmActivity>()
             } else {
                 showToast("Gửi email xác minh thất bại")

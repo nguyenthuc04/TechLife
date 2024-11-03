@@ -1,13 +1,12 @@
 package com.snapco.techlife.ui.view.activity.signup
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.User
 import com.snapco.techlife.databinding.ActivityCreatePassBinding
 import com.snapco.techlife.extensions.isValidPassword
 import com.snapco.techlife.extensions.showToast
@@ -16,7 +15,6 @@ import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
 
 class CreatePassActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreatePassBinding
-    private val signUpDataHolder: SignUpDataHolder by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +43,13 @@ class CreatePassActivity : AppCompatActivity() {
                 )
                 return@setOnClickListener
             }
-            val user = User(password = pass)
-            signUpDataHolder.setUser(user)
+            val oldUser = SignUpDataHolder.getUser()
+            Log.d("CreatePassActivity", "oldUser: $oldUser")
+            val user = oldUser?.copy(password = pass)
+            user?.let {
+                Log.d("CreatePassActivity", "user: $it")
+                SignUpDataHolder.setUser(it)
+            }
             startActivity<BirthdayActivity>()
         }
     }

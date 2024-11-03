@@ -1,18 +1,16 @@
 package com.snapco.techlife.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
-import com.snapco.techlife.data.model.User
+import com.snapco.techlife.data.model.CreateUserRequest
 
-
-object SignUpDataHolder : ViewModel() {
-    private var userData: User? = null
+object SignUpDataHolder {
+    private var userData: CreateUserRequest? = null
     private var verificationId: String? = null
 
-    fun setUser(user: User) {
+    fun setUser(user: CreateUserRequest) {
         userData = user
     }
 
-    fun getUser(): User? = userData
+    fun getUser(): CreateUserRequest? = userData
 
     fun setVerificationId(id: String) {
         verificationId = id

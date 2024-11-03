@@ -16,18 +16,14 @@ fun Context.showToast(
     Toast.makeText(this, message, duration).show()
 }
 
-fun Fragment.setupToolbar(
+fun Fragment.setupClickToolbar(
     toolbar: Toolbar,
-    text: String? = null,
     onUser: (() -> Unit)? = null,
     onAddClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
 ) {
     (activity as? AppCompatActivity)?.let { appCompatActivity ->
         appCompatActivity.setSupportActionBar(toolbar)
-
-        val textView = toolbar.findViewById<TextView>(R.id.toolbar_custom_title)
-        textView?.text = text
         toolbar.findViewById<View>(R.id.linearLayout7)?.setOnClickListener {
             onUser?.invoke()
         }
@@ -39,5 +35,17 @@ fun Fragment.setupToolbar(
         toolbar.findViewById<View>(R.id.toolbar_menu)?.setOnClickListener {
             onMenuClick?.invoke()
         }
+    }
+}
+
+fun Fragment.setupTextToolbar(
+    toolbar: Toolbar,
+    text: String? = null,
+) {
+    (activity as? AppCompatActivity)?.let { appCompatActivity ->
+        appCompatActivity.setSupportActionBar(toolbar)
+
+        val textView = toolbar.findViewById<TextView>(R.id.toolbar_custom_title)
+        textView?.text = text
     }
 }

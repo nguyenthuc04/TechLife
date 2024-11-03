@@ -1,8 +1,8 @@
 package com.snapco.techlife.ui.view.activity.signup
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,7 +16,6 @@ class NameActivity : AppCompatActivity() {
     @Suppress("ktlint:standard:property-naming")
     private val TAG = getTag()
     private lateinit var binding: ActivityNameBinding
-    private val signUpDataHolder: SignUpDataHolder by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +29,10 @@ class NameActivity : AppCompatActivity() {
             if (name.isEmpty()) {
                 return@setOnClickListener
             }
-            val oldUser = signUpDataHolder.getUser()
+            val oldUser = SignUpDataHolder.getUser()
+            Log.d(TAG, "oldUser: $oldUser")
             val user = oldUser?.copy(name = name)
-            user?.let { signUpDataHolder.setUser(it) }
+            user?.let { SignUpDataHolder.setUser(it) }
             startActivity<NickNameActivity>()
         }
     }

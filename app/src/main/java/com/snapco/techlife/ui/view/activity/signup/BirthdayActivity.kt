@@ -3,9 +3,9 @@ package com.snapco.techlife.ui.view.activity.signup
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,7 +26,6 @@ class BirthdayActivity :
     private val TAG = getTag()
     private lateinit var binding: ActivityBirthdayBinding
     private var formattedDate: String = ""
-    private val signUpDataHolder: SignUpDataHolder by viewModels()
 
     @SuppressLint("DefaultLocale")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,9 +110,13 @@ class BirthdayActivity :
         binding.txtWR.visibility =
             if (age >= 10) android.view.View.GONE else android.view.View.VISIBLE
         binding.btnNext.setOnClickListener {
-            val oldUser = signUpDataHolder.getUser()
+            val oldUser = SignUpDataHolder.getUser()
+            Log.d(TAG, "oldUser: $oldUser")
             val user = oldUser?.copy(birthday = formattedDate)
-            user?.let { signUpDataHolder.setUser(it) }
+            user?.let {
+                Log.d(TAG, "user: $it")
+                SignUpDataHolder.setUser(it)
+            }
             startActivity<NameActivity>()
         }
     }

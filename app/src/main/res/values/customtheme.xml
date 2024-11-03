@@ -69,6 +69,7 @@
         <item name="android:padding">8dp</item>
         <item name="strokeColor">@color/white</item>
     </style>
+
     <style name="ButtonGray" parent="Widget.Material3.Button.OutlinedButton">
         <item name="backgroundTint">@color/material_dynamic_neutral95</item>
         <item name="cornerRadius">8dp</item>

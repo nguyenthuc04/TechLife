@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF2929</color>
     <color name="blueLogo">#007BFF</color>
+    <color name="dim_background">#80000000</color>
+    <color name="black_transparent">#80000000</color> <!-- Màu đen mờ -->
+
 </resources>
