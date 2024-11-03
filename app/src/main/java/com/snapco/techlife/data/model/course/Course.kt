@@ -6,7 +6,7 @@ data class Course(
     @SerializedName("_id")
     val id: String?,
     val name: String,
+    val date: String,
     val price: String,
-    val duration: String,
-    val date: String
+    val duration: String
 )

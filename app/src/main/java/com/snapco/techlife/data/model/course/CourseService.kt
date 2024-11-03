@@ -19,7 +19,7 @@ interface CourseService {
     fun getCourseById(@Path("id") courseId: String): Call<CourseResponse<Course>>
 
 
-    @PUT("/updateCourse/{id}")
+    @PUT("updateCourse/{id}")
     fun updateCourse(@Path("id") courseId: String, @Body course: Course): Call<CourseResponse<Course>>
 
 

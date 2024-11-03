@@ -76,25 +76,25 @@ object HttpRequest {
             }
         })
     }
-
-    fun updateCourse(courseId: String, updatedCourse: Course, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        val call = CourseRetrofit.apiService.updateCourse(courseId, updatedCourse)
+    fun updateCourse(courseId: String, course: Course, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        val call = CourseRetrofit.apiService.updateCourse(courseId, course) // Thay đổi với endpoint đúng
         call.enqueue(object : Callback<CourseResponse<Course>> {
             override fun onResponse(call: Call<CourseResponse<Course>>, response: Response<CourseResponse<Course>>) {
-                if (response.isSuccessful && response.body()?.success == true) {
+                if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    val errorMessage = response.errorBody()?.string() ?: "Lỗi không xác định."
-                    Log.e("HttpRequest", "Update course failed: $errorMessage") // Ghi log lỗi
-                    onFailure(errorMessage)
+                    onFailure("Lỗi khi cập nhật khóa học.")
                 }
             }
 
             override fun onFailure(call: Call<CourseResponse<Course>>, t: Throwable) {
-                Log.e("HttpRequest", "Network error: ${t.message}") // Ghi log lỗi kết nối
                 onFailure("Lỗi kết nối!")
             }
         })
     }
+
+
+
+
 
 }

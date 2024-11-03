@@ -44,41 +44,30 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
             onFailure = { errorMessage.value = it } // Sửa để lấy thông báo lỗi từ phản hồi
         )
     }
+
+    fun getCourseById(courseId: String) {
+        HttpRequest.getCourseById(courseId,
+            onSuccess = { response ->
+
+                if (response.success) {
+                    course.value = response.data
+                } else {
+                    errorMessage.value = response.message
+                }
+            },
+            onFailure = { error ->
+                errorMessage.value = error
+            }
+        )
+    }
+
     fun updateCourse(course: Course) {
-        if (course.id.isNullOrEmpty()) {
-            errorMessage.value = "ID khóa học không hợp lệ!"
-            return
-        }
-        HttpRequest.updateCourse(course.id, course,
+        HttpRequest.updateCourse(course.id!!, course, // Bạn cần thêm phương thức updateCourse trong HttpRequest
             onSuccess = {
-                fetchCourses() // Cập nhật danh sách khóa học
+                fetchCourses() // Lấy lại danh sách khóa học
                 isCourseUpdated.value = true
             },
             onFailure = { error -> errorMessage.value = error }
         )
     }
-    fun getCourseById(courseId: String) {
-        HttpRequest.getCourseById(courseId,
-            onSuccess = { response ->
-                // Kiểm tra xem phản hồi có thành công không
-                if (response.success) {
-                    course.value = response.data // Lưu thông tin khóa học vào LiveData
-                } else {
-                    errorMessage.value = response.message // Lưu thông báo lỗi vào LiveData
-                }
-            },
-            onFailure = { error ->
-                errorMessage.value = error // Lưu thông báo lỗi từ callback vào LiveData
-            }
-        )
-    }
-
-//    fun updateCourse(course: Course) {
-//    course.id?.let {
-//        HttpRequest.updateCourse(it, course,
-//            onSuccess = { fetchCourses() },
-//            onFailure = { error -> errorMessage.value = error }
-//        )
-//    }
-//    }
 }

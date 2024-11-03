@@ -1,14 +1,12 @@
 package com.snapco.techlife.ui.view.activity.course
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.course.Course
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
 class EditCourse : AppCompatActivity() {
@@ -17,7 +15,7 @@ class EditCourse : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_course)
+        setContentView(R.layout.dialog_edit_course)
 
         viewModel = ViewModelProvider(this).get(CourseViewModel::class.java)
         courseId = intent.getStringExtra("courseId") ?: return
