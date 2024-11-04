@@ -8,16 +8,36 @@
     android:layout_margin="10dp"
     tools:context=".ui.view.activity.messenger.ChannelActivity">
 
-    <io.getstream.chat.android.ui.feature.channels.header.ChannelListHeaderView
-        android:id="@+id/channelListHeaderView"
-        android:layout_width="0dp"
-        app:streamUiShowOfflineProgressBar="true"
-        app:streamUiActionButtonIcon="@drawable/baseline_add_24"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/headerChannel"
+        android:orientation="horizontal"
         android:layout_height="wrap_content"
-        app:streamUiOnlineTitleTextSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:ignore="MissingConstraints">
+        <ImageButton
+            android:id="@+id/btnDrawNavigation"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/baseline_keyboard_arrow_left_24"
+            tools:ignore="ContentDescription" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Đoạn chat"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <ImageButton
+            android:id="@+id/btnAddChannel"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/baseline_add_24"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edtSearch"
@@ -27,7 +47,7 @@
         android:background="@drawable/custom_edittext"
         android:drawableStart="@drawable/baseline_search_24"
         android:hint="@string/search"
-        app:layout_constraintTop_toBottomOf="@id/channelListHeaderView"
+        app:layout_constraintTop_toBottomOf="@id/headerChannel"
         android:padding="10dp" />
 
     <io.getstream.chat.android.ui.feature.channels.list.ChannelListView

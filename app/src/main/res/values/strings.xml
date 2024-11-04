@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">TechLife</string>
-    <string name="no_messenger">Chưa có tin nhắn nào</string>
+    <string name="no_messenger"></string>
     <string name="search">Search</string>
+    <string name="suggest">Gợi ý</string>
+    <string name="tittle_add_channel">New messenger</string>
 </resources>

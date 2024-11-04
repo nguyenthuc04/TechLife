@@ -3,6 +3,7 @@ package com.snapco.techlife.ui.view.activity.messenger
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ class LoginMessActivity : AppCompatActivity() {
                         streamToken
                     ).enqueue { result ->
                         if (result.isSuccess) {
+                            Log.d("check123", "onCreate: day la token "+streamToken)
                             Toast.makeText(
                                 this@LoginMessActivity,
                                 "login success",
@@ -40,6 +42,7 @@ class LoginMessActivity : AppCompatActivity() {
                             ).show()
                             val intent = Intent(this@LoginMessActivity, ChannelActivity::class.java)
                             startActivity(intent)
+
                         } else {
                             Toast.makeText(
                                 this@LoginMessActivity,

@@ -1,5 +1,6 @@
 package com.snapco.techlife.ui.viewmodel.messenger
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,4 +49,26 @@ class ChannelViewModel : ViewModel() {
             }
         }
     }
+
+    fun createChannel(channelId: String,userIdSelect:String, extraData: Map<String, Any>,context: Context) {
+        viewModelScope.launch {
+            try {
+                client.createChannel(
+                    channelType = "messaging",
+                    channelId = channelId,
+                    memberIds = listOf(client.getCurrentUser()!!.id, userIdSelect),
+                    extraData = extraData
+                ).enqueue { result ->
+                    if (result.isSuccess) {
+                        println("tao ok")
+                    } else {
+                        println("tao fail")
+                    }
+                }
+            }catch (e:Exception){
+                Log.d("fixmoi", "getListChannel: loi $e")
+            }
+        }
+    }
+
 }
