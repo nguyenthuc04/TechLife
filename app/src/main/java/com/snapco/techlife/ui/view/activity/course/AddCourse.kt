@@ -27,15 +27,42 @@ class AddCourse : AppCompatActivity() {
         val txtCourseDate = findViewById<EditText>(R.id.edtCourseDate)
 
         findViewById<Button>(R.id.btnSaveCourse).setOnClickListener {
-            val course = Course(
-                id = UUID.randomUUID().toString(), // Tạo ObjectId
-                name = txtCourseName.text.toString(),
-                price = txtCoursePrice.text.toString(),
-                duration = txtCourseDuration.text.toString(),
-                date = txtCourseDate.text.toString()
-            )
+            val name = txtCourseName.text.toString().trim()
+            val price = txtCoursePrice.text.toString().trim()
+            val duration = txtCourseDuration.text.toString().trim()
+            val date = txtCourseDate.text.toString().trim()
 
-            viewModel.addCourse(course)
+            // Xác thực dữ liệu
+            when {
+                name.isEmpty() -> {
+                    txtCourseName.error = "Tên khóa học không được để trống"
+                    txtCourseName.requestFocus()
+                }
+                price.isEmpty() -> {
+                    txtCoursePrice.error = "Giá khóa học không được để trống"
+                    txtCoursePrice.requestFocus()
+                }
+                duration.isEmpty() -> {
+                    txtCourseDuration.error = "Thời gian khóa học không được để trống"
+                    txtCourseDuration.requestFocus()
+                }
+                date.isEmpty() -> {
+                    txtCourseDate.error = "Ngày tạo không được để trống"
+                    txtCourseDate.requestFocus()
+                }
+                else -> {
+                    // Nếu dữ liệu hợp lệ, tạo và thêm khóa học mới
+                    val course = Course(
+                        id = UUID.randomUUID().toString(),
+                        name = name,
+                        price = price,
+                        duration = duration,
+                        date = date
+                    )
+
+                    viewModel.addCourse(course)
+                }
+            }
         }
 
         viewModel.isCourseAdded.observe(this, Observer { isAdded ->
@@ -51,3 +78,4 @@ class AddCourse : AppCompatActivity() {
         })
     }
 }
+

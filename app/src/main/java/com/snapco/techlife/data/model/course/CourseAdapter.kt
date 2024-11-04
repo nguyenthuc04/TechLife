@@ -26,7 +26,7 @@ class CourseAdapter(
         val courseDuration: TextView = view.findViewById(R.id.txtCourseDuration)
         val courseDate: TextView = view.findViewById(R.id.txtCourseDate)
         val btnDelete: Button = view.findViewById(R.id.btnDeleteCourse)
-        val btnEdit: Button = view.findViewById(R.id.btnEditCourse)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
@@ -49,13 +49,28 @@ class CourseAdapter(
 
         holder.btnDelete.setOnClickListener {
             courseId?.let { id ->
-                viewModel.deleteCourse(id)
+                val deleteDialogBuilder = AlertDialog.Builder(holder.itemView.context)
+                deleteDialogBuilder.setTitle("Xác nhận xóa")
+                deleteDialogBuilder.setMessage("Bạn có chắc chắn muốn xóa khóa học này không?")
+
+                deleteDialogBuilder.setPositiveButton("Đồng ý") { dialog, _ ->
+                    viewModel.deleteCourse(id)
+                    dialog.dismiss()
+                }
+
+                deleteDialogBuilder.setNegativeButton("Hủy") { dialog, _ ->
+                    dialog.dismiss()
+                }
+
+                val deleteDialog = deleteDialogBuilder.create()
+                deleteDialog.show()
             } ?: run {
                 Toast.makeText(holder.itemView.context, "ID khóa học không hợp lệ!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        holder.btnEdit.setOnClickListener {
+
+        holder.itemView.setOnLongClickListener {
             // Tạo dialog
             val dialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_edit_course, null)
             val edtCourseName = dialogView.findViewById<EditText>(R.id.edtCourseName_ed)
@@ -78,20 +93,48 @@ class CourseAdapter(
 
             // Khi bấm lưu
             btnSave.setOnClickListener {
-                val updatedCourse = Course(
-                    id = course.id,
-                    name = edtCourseName.text.toString(),
-                    price = edtCoursePrice.text.toString(),
-                    duration = edtCourseDuration.text.toString(),
-                    date = edtCourseDate.text.toString()
-                )
+                val name = edtCourseName.text.toString().trim()
+                val price = edtCoursePrice.text.toString().trim()
+                val duration = edtCourseDuration.text.toString().trim()
+                val date = edtCourseDate.text.toString().trim()
 
-                // Gọi ViewModel để cập nhật khóa học
-                viewModel.updateCourse(updatedCourse) // Bạn cần thêm phương thức updateCourse vào ViewModel
+                // Kiểm tra tính hợp lệ của dữ liệu
+                when {
+                    name.isEmpty() -> {
+                        edtCourseName.error = "Tên khóa học không được để trống"
+                        edtCourseName.requestFocus()
+                    }
+                    price.isEmpty() -> {
+                        edtCoursePrice.error = "Giá khóa học không được để trống"
+                        edtCoursePrice.requestFocus()
+                    }
+                    duration.isEmpty() -> {
+                        edtCourseDuration.error = "Thời gian khóa học không được để trống"
+                        edtCourseDuration.requestFocus()
+                    }
+                    date.isEmpty() -> {
+                        edtCourseDate.error = "Ngày tạo không được để trống"
+                        edtCourseDate.requestFocus()
+                    }
+                    else -> {
+                        // Nếu tất cả dữ liệu hợp lệ, tiến hành cập nhật khóa học
+                        val updatedCourse = Course(
+                            id = course.id,
+                            name = name,
+                            price = price,
+                            duration = duration,
+                            date = date
+                        )
 
-                dialog.dismiss()
+                        // Gọi ViewModel để cập nhật khóa học
+                        viewModel.updateCourse(updatedCourse)
+                        dialog.dismiss()
+                    }
+                }
             }
+            true // Trả về true để chỉ ra rằng sự kiện nhấn giữ đã được xử lý
         }
+
 
     }
 

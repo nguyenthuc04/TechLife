@@ -29,9 +29,9 @@ import java.io.IOException
 class CameraFragment : Fragment() {
 
     private lateinit var cameraView: CameraView
-    private lateinit var captureButton: Button
+    private lateinit var captureButton: ImageView
     private lateinit var recordButton: Button
-    private lateinit var switchCameraButton: Button
+    private lateinit var switchCameraButton: ImageView
     private lateinit var txtTimeRecord: TextView
     private val cameraViewModel: CameraViewModel by viewModels()
 
