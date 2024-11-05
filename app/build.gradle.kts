@@ -35,7 +35,6 @@ android {
     }
     buildFeatures {
         dataBinding = true
-        viewBinding = true
     }
     packagingOptions {
         // Exclude specific files to avoid conflicts
