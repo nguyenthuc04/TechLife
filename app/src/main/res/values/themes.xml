@@ -2,11 +2,9 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.TechLife" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="textInputStyle">@style/CustomTextInputLayout</item>
     </style>
-    <style name="Theme.Empty" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- No customizations. -->
-    </style>
-    <style name="Theme.TechLife" parent="Theme.Empty" />
-    <style name="Theme.TechLife1" parent="Base.Theme.TechLife" />
+    <style name="Theme.TechLife" parent="Base.Theme.TechLife" />
+
+
 </resources>
