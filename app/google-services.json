@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "543851549080",
-    "project_id": "techlife1-aafb2",
-    "storage_bucket": "techlife1-aafb2.firebasestorage.app"
+    "project_number": "20465104554",
+    "project_id": "reel-fe4a6",
+    "storage_bucket": "reel-fe4a6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:543851549080:android:71df851e31ffae17db5bed",
+        "mobilesdk_app_id": "1:20465104554:android:e20b6580cff30ffd6782d3",
         "android_client_info": {
           "package_name": "com.snapco.techlife"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBk1zqSC4LImyikX24-jNklsxgp5OPIQpc"
+          "current_key": "AIzaSyBOoKmK3K50CjrXVUHQKFgtG69YrHO6XN4"
         }
       ],
       "services": {
