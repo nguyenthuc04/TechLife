@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">TechLife</string>
+    <string name="no_messenger"></string>
+    <string name="search">Search</string>
+    <string name="suggest">Gợi ý</string>
+    <string name="tittle_add_channel">New messenger</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
