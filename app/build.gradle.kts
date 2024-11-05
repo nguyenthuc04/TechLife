@@ -74,4 +74,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("org.mongodb:bson:4.7.1")
+    implementation ("androidx.fragment:fragment-ktx:1.8.1")
+    implementation ("com.otaliastudios:cameraview:2.7.2")
 }

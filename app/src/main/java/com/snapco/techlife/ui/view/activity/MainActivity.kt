@@ -51,15 +51,7 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-            val fragment =
-                when (it.itemId) {
-                    R.id.menu_home -> HomeFragment()
-                    R.id.menu_search -> SearchFragment()
-                    R.id.menu_camera -> CameraFragment()
-                    R.id.menu_reels -> ReelsFragment()
-                    R.id.menu_profile -> ProfileFragment()
-                    else -> throw IllegalArgumentException("Unknown menu item")
-                }
+
             val fragment = when (it.itemId) {
                 R.id.menu_home -> HomeFragment()
                 R.id.menu_search -> SearchFragment()
