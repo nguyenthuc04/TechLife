@@ -51,7 +51,6 @@ class AddCourse : AppCompatActivity() {
                     txtCourseDate.requestFocus()
                 }
                 else -> {
-                    // Nếu dữ liệu hợp lệ, tạo và thêm khóa học mới
                     val course = Course(
                         id = UUID.randomUUID().toString(),
                         name = name,
