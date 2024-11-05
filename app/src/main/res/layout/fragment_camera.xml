@@ -24,16 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/btnCapture"-->
-                <!--                    android:layout_width="70dp"-->
-                <!--                    android:layout_height="70dp"-->
-                <!--                    android:layout_marginBottom="50dp"-->
-                <!--                    android:src="@drawable/img_capture"-->
-                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent" />-->
-
                 <ImageView
                     android:id="@+id/btnSwitchCamera"
                     android:layout_width="wrap_content"
@@ -42,7 +32,7 @@
                     android:src="@drawable/changecamera"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2" />
+                    app:layout_constraintStart_toEndOf="@+id/btnCapture" />
 
                 <ImageView
                     android:id="@+id/btnCapture"

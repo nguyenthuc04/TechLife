@@ -17,7 +17,7 @@ class SearchAdapter(private var items: List<User>) : RecyclerView.Adapter<Search
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = items[position]
         holder.binding.nameTextView.text = user.name
-        holder.binding.emailTextView.text = user.email
+        holder.binding.emailTextView.text = user.account
         Glide.with(holder.itemView.context).load(user.avatar).into(holder.binding.avatarImageView)
     }
 
