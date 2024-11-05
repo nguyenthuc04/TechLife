@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "543851549080",
+    "project_id": "techlife1-aafb2",
+    "storage_bucket": "techlife1-aafb2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543851549080:android:71df851e31ffae17db5bed",
+        "android_client_info": {
+          "package_name": "com.snapco.techlife"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk1zqSC4LImyikX24-jNklsxgp5OPIQpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
