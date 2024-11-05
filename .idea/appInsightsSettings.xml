@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.snapco.techlife" />
+                  <option name="mobileSdkAppId" value="1:543851549080:android:71df851e31ffae17db5bed" />
+                  <option name="projectId" value="techlife1-aafb2" />
+                  <option name="projectNumber" value="543851549080" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
