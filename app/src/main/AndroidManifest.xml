@@ -17,6 +17,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ui.view.activity.messenger.ChatApplication"
         android:allowBackup="true"
@@ -29,6 +38,12 @@
         android:theme="@style/Theme.TechLife"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.view.activity.PayPremiumActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.PremiumActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.view.activity.profile.EditProfileActivity"
             android:exported="false" />
