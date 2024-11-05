@@ -40,7 +40,7 @@ class ReelsFragment : Fragment() {
         )
 
         // Khởi tạo adapter với callback cho btnCamera
-
+        reelAdapter = ReelAdapter(videoList)
         // Thiết lập adapter cho ViewPager2
         viewPager.adapter = reelAdapter
     }
