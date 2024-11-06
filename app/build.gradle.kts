@@ -42,6 +42,7 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.room.ktx)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
 

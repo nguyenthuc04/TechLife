@@ -15,6 +15,10 @@ public class Feed {
         this.date = date;
     }
 
+    public Feed withUpdatedStatus(String newStatus) {
+        return new Feed(this.image, this.username, this.location, this.feed_img, newStatus, this.comment_count, this.date);
+    }
+
     public int getImage() {
         return image;
     }
