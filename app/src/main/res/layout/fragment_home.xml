@@ -86,7 +86,7 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="10"
-            tools:listitem="@layout/techlife_feed" />
+            tools:listitem="@layout/techlife_post" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

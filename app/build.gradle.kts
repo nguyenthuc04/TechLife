@@ -39,11 +39,22 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation (libs.gson)
+    implementation(libs.android.mail)
+    implementation(libs.android.activation)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.glide)
+    implementation (libs.androidx.fragment.ktx)
+    implementation(libs.kotlinx.serialization.json) // hoặc phiên bản mới nhất
+
+
     //Glide
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    implementation (libs.glide)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.room.ktx)
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    annotationProcessor (libs.compiler)
 
 
     implementation (libs.library)

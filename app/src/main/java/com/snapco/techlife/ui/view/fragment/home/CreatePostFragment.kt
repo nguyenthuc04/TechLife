@@ -16,17 +16,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.home.Feed
+import com.snapco.techlife.data.model.home.Post
 import com.snapco.techlife.databinding.FragmentCreatePostBinding
-import com.snapco.techlife.ui.view.fragment.home.CreatePostFragment.Companion
 import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
 import java.util.UUID
 
 class CreatePostFragment : Fragment() {
-    private lateinit var binding : FragmentCreatePostBinding
+    private lateinit var binding: FragmentCreatePostBinding
     private var uri: Uri? = null
     private lateinit var bitmap: Bitmap
-    private var postid: String = UUID.randomUUID().toString()
+    private var postId: String = UUID.randomUUID().toString()
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     companion object {
@@ -37,11 +36,11 @@ class CreatePostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater ,R.layout.fragment_create_post, container, false)
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_post, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -50,12 +49,21 @@ class CreatePostFragment : Fragment() {
         binding.imageToPost.setOnClickListener {
             addPostDialog()
         }
+
+        // Handle post button click
+        binding.postBtn.setOnClickListener {
+            if (uri != null) {
+                postImage(uri)
+            } else {
+                Toast.makeText(context, "Please select an image to post.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun addPostDialog() {
         val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose your profile picture")
+        builder.setTitle("Choose your image source")
         builder.setItems(options) { dialog, item ->
             when (options[item]) {
                 "Take Photo" -> takePhotoWithCamera()
@@ -70,7 +78,7 @@ class CreatePostFragment : Fragment() {
     private fun pickImageFromGallery() {
         val pickPictureIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         if (pickPictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(pickPictureIntent, CreatePostFragment.REQUEST_IMAGE_PICK)
+            startActivityForResult(pickPictureIntent, REQUEST_IMAGE_PICK)
         }
     }
 
@@ -78,7 +86,7 @@ class CreatePostFragment : Fragment() {
     private fun takePhotoWithCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(takePictureIntent, CreatePostFragment.REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
@@ -87,14 +95,18 @@ class CreatePostFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                CreatePostFragment.REQUEST_IMAGE_CAPTURE -> {
+                REQUEST_IMAGE_CAPTURE -> {
                     val imageBitmap = data?.extras?.get("data") as Bitmap
+                    uri = getImageUriFromBitmap(imageBitmap)
                     displaySelectedImage(imageBitmap)
                 }
-                CreatePostFragment.REQUEST_IMAGE_PICK -> {
+                REQUEST_IMAGE_PICK -> {
                     val imageUri = data?.data
-                    val imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
-                    displaySelectedImage(imageBitmap)
+                    if (imageUri != null) {
+                        uri = imageUri
+                        val imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
+                        displaySelectedImage(imageBitmap)
+                    }
                 }
             }
         }
@@ -105,19 +117,40 @@ class CreatePostFragment : Fragment() {
         binding.imageToPost.setImageBitmap(imageBitmap)
         Toast.makeText(context, "Image selected successfully!", Toast.LENGTH_SHORT).show()
     }
+
+    private fun getImageUriFromBitmap(bitmap: Bitmap): Uri {
+        val path = MediaStore.Images.Media.insertImage(context?.contentResolver, bitmap, "New Post", null)
+        return Uri.parse(path)
+    }
+
     private fun postImage(uri: Uri?) {
         val caption = binding.addCaption.text.toString()
-        val newPost = Feed(
-            R.drawable.profile1,
-            "Bùi Quang Vinh",
-            "USA",
+        if (caption.isEmpty()) {
+            Toast.makeText(context, "Please enter a caption.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val newPost = Post(1,
+            R.drawable.profile1.toString(), // Replace with user profile image or placeholder
             uri.toString(),
-            caption,
-            "0",
-            "10/26/2023"
+            "Hà Nội", // Replace with actual user name
+            100, // Replace with actual location
+            100,
+            3,
+            "Bùi Quang Vinh", // Initial like count
+            R.drawable.profile1.toString(),
+            isLiked = false,
+            isOwnPost = false
         )
 
-        sharedViewModel.setNewPost(newPost) // Cập nhật vào ViewModel
+        sharedViewModel.setNewPost(newPost) // Add the new post to the ViewModel
         Toast.makeText(context, "Post created!", Toast.LENGTH_SHORT).show()
+        clearFields()
+    }
+
+    private fun clearFields() {
+        binding.addCaption.text.clear()
+        binding.imageToPost.setImageResource(R.drawable.image_placeholder) // Reset to placeholder
+        uri = null
     }
 }

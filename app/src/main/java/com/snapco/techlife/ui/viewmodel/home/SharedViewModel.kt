@@ -4,43 +4,42 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.snapco.techlife.data.model.home.Feed
-
+import com.snapco.techlife.data.model.home.Post
 
 class SharedViewModel : ViewModel() {
-    private val _newPost = MutableLiveData<Feed?>()
-    val newPost: LiveData<Feed?> = _newPost
+    private val _newPost = MutableLiveData<Post?>()
+    val newPost: LiveData<Post?> = _newPost
 
-    private val _feedList = MutableLiveData<MutableList<Feed>>(mutableListOf())
-    val feedList: LiveData<MutableList<Feed>> = _feedList
+    private val _postList = MutableLiveData<MutableList<Post>>(mutableListOf())
+    val postList: LiveData<MutableList<Post>> = _postList
 
     // Method to add a new post
-    fun setNewPost(post: Feed) {
-        val updatedList = _feedList.value?.toMutableList() ?: mutableListOf()
+    fun setNewPost(post: Post) {
+        val updatedList = _postList.value?.toMutableList() ?: mutableListOf()
         updatedList.add(0, post)  // Add the new post at the beginning
-        _feedList.value = updatedList
+        _postList.value = updatedList
         _newPost.value = post
     }
 
-    fun updatePost(updatedPost: Feed, position: Int) {
-        // Ensure the position is valid and the list is not empty
-        val currentList = _feedList.value
+    // Method to update a post at a specific position
+    fun updatePost(updatedPost: Post, position: Int) {
+        val currentList = _postList.value
         if (currentList != null && position >= 0 && position < currentList.size) {
             val mutableList = currentList.toMutableList()  // Convert to MutableList to modify
             mutableList[position] = updatedPost  // Update the post at the specified position
-            _feedList.value = mutableList  // Update LiveData with the modified list
+            _postList.value = mutableList  // Update LiveData with the modified list
         } else {
             Log.e("SharedViewModel", "Invalid position or list is empty, cannot update post.")
         }
     }
 
+    // Method to delete a post at a specific position
     fun deletePost(position: Int) {
-        // Ensure that the position is valid and the list is not empty
-        val currentList = _feedList.value
+        val currentList = _postList.value
         if (!currentList.isNullOrEmpty() && position >= 0 && position < currentList.size) {
             val mutableList = currentList.toMutableList()  // Convert to MutableList
             mutableList.removeAt(position)  // Remove the post at the given position
-            _feedList.value = mutableList  // Update the LiveData with the modified list
+            _postList.value = mutableList  // Update LiveData with the modified list
         } else {
             Log.e("SharedViewModel", "Invalid position or list is empty, cannot delete post.")
         }
