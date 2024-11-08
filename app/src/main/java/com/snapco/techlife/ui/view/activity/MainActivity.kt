@@ -12,19 +12,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.fragment.app.commit
-
-
+import androidx.lifecycle.lifecycleScope
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityMainBinding
 import com.snapco.techlife.ui.view.fragment.camera.CameraFragment
 import com.snapco.techlife.ui.view.fragment.profile.ProfileFragment
 import com.snapco.techlife.ui.view.fragment.reels.ReelsFragment
 import com.snapco.techlife.ui.view.fragment.search.SearchFragment
-import com.snapco.techlife.ui.viewmodel.UserDataHolder
 import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -51,22 +49,22 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
-
-            val fragment = when (it.itemId) {
-                R.id.menu_home -> HomeFragment()
-                R.id.menu_search -> SearchFragment()
-                R.id.menu_camera -> {
-                    if (!checkPermissions()) {
-                        CameraFragment()
-                    } else {
-                        requestPermissions()
-                        null
+            val fragment =
+                when (it.itemId) {
+                    R.id.menu_home -> HomeFragment()
+                    R.id.menu_search -> SearchFragment()
+                    R.id.menu_camera -> {
+                        if (!checkPermissions()) {
+                            CameraFragment()
+                        } else {
+                            requestPermissions()
+                            null
+                        }
                     }
+                    R.id.menu_reels -> ReelsFragment()
+                    R.id.menu_profile -> ProfileFragment()
+                    else -> throw IllegalArgumentException("Unknown menu item")
                 }
-                R.id.menu_reels -> ReelsFragment()
-                R.id.menu_profile -> ProfileFragment()
-                else -> throw IllegalArgumentException("Unknown menu item")
-            }
 
             fragment?.let {
                 supportFragmentManager
@@ -77,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             true
         }
         fetchUserData()
+        userViewModel.userResponse.observe(this) { response ->
+            if (response != null) {
+                GetUserResponseHolder.setGetUserResponse(response)
+            }
+        }
     }
 
     private fun fetchUserData() {
@@ -86,15 +89,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun checkPermissions(): Boolean {
         val writePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val readPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         val cameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
         val recordAudioPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
         return writePermission == PackageManager.PERMISSION_GRANTED &&
-                readPermission == PackageManager.PERMISSION_GRANTED &&
-                cameraPermission == PackageManager.PERMISSION_GRANTED &&
-                recordAudioPermission == PackageManager.PERMISSION_GRANTED
+            readPermission == PackageManager.PERMISSION_GRANTED &&
+            cameraPermission == PackageManager.PERMISSION_GRANTED &&
+            recordAudioPermission == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermissions() {
@@ -104,13 +108,17 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
             ),
-            PERMISSION_REQUEST_CODE
+            PERMISSION_REQUEST_CODE,
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if ((grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED })) {

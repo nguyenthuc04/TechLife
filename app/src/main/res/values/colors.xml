@@ -6,5 +6,5 @@
     <color name="blueLogo">#007BFF</color>
     <color name="dim_background">#80000000</color>
     <color name="black_transparent">#80000000</color> <!-- Màu đen mờ -->
-
+    <color name="stream_gray_dark">#989898</color>
 </resources>

@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.snapco.techlife" />
-                  <option name="mobileSdkAppId" value="1:543851549080:android:71df851e31ffae17db5bed" />
-                  <option name="projectId" value="techlife1-aafb2" />
-                  <option name="projectNumber" value="543851549080" />
+                  <option name="mobileSdkAppId" value="1:20465104554:android:e20b6580cff30ffd6782d3" />
+                  <option name="projectId" value="reel-fe4a6" />
+                  <option name="projectNumber" value="20465104554" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

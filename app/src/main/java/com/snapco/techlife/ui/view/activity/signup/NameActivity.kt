@@ -10,7 +10,7 @@ import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityNameBinding
 import com.snapco.techlife.extensions.getTag
 import com.snapco.techlife.extensions.startActivity
-import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
 
 class NameActivity : AppCompatActivity() {
     @Suppress("ktlint:standard:property-naming")

@@ -15,12 +15,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityLoginBinding
 import com.snapco.techlife.extensions.getTag
-import com.snapco.techlife.extensions.isValidEmail
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.isEmailValid
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.activity.MainActivity
 import com.snapco.techlife.ui.view.activity.signup.SignUpEmailActivity
-import com.snapco.techlife.ui.viewmodel.UserDataHolder
 import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -77,27 +79,29 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.editPassword.text.toString()
         if (account.isEmpty()) {
             showError(binding.txtWR, "Vui lòng điền đầy đủ thông tin")
-            binding.txtWR2.visibility = View.GONE
+            binding.txtWR2.gone()
             return
         }
         if (password.isEmpty()) {
             showError(binding.txtWR2, "Vui lòng điền đầy đủ thông tin")
-            binding.txtWR.visibility = View.GONE
+            binding.txtWR.gone()
             return
         }
-        if (!account.isValidEmail()) {
-            binding.txtWR.text = "Email không hợp lệ"
+        if (!account.isEmailValid()) {
+            showError(binding.txtWR, "Email không hợp lệ")
+            binding.txtWR2.gone()
             return
         }
         if (password.length < 8) {
-            binding.txtWR2.text = "Mật khẩu phải có ít nhất 8 ký tự"
+            showError(binding.txtWR2, "Mật khẩu phải có ít nhất 8 ký tự")
+            binding.txtWR.gone()
             return
         }
-        binding.txtWR.visibility = View.GONE
-        binding.txtWR2.visibility = View.GONE
+        binding.txtWR.gone()
+        binding.txtWR2.gone()
         Log.d(TAG, "Login with account: $account, password: $password")
         binding.btnLogin.text = ""
-        binding.progressBar.visibility = View.VISIBLE
+        binding.progressBar.visible()
         userViewModel.login(account, password)
     }
 
@@ -120,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
         message: String,
     ) {
         textView.text = message
-        textView.visibility = View.VISIBLE
+        textView.visible()
     }
 
     private fun showLoginFailedDialog() {

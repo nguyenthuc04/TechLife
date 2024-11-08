@@ -13,14 +13,14 @@ import com.snapco.techlife.R
 import com.snapco.techlife.data.model.CreateUserRequest
 import com.snapco.techlife.databinding.ActivitySignUpEmailBinding
 import com.snapco.techlife.extensions.EmailAuthViewModelFactory
-import com.snapco.techlife.extensions.isValidEmail
+import com.snapco.techlife.extensions.isEmailValid
 import com.snapco.techlife.extensions.showCustomAlertDialog
 import com.snapco.techlife.extensions.showToast
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.login.LoginActivity
 import com.snapco.techlife.ui.viewmodel.EmailAuthViewModel
-import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
 import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
 
 class SignUpEmailActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpEmailBinding
@@ -93,7 +93,7 @@ class SignUpEmailActivity : AppCompatActivity() {
                 showToast("Vui lòng nhập email")
                 return@setOnClickListener
             }
-            if (!email.isValidEmail()) {
+            if (!email.isEmailValid()) {
                 showToast("Email không hợp lệ")
                 return@setOnClickListener
             }

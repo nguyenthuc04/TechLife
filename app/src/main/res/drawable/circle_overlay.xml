@@ -1,0 +1,19 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Lớp hình vuông màu đen mờ -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#20000000" /> <!-- Màu đen mờ 70% -->
+        </shape>
+    </item>
+
+    <!-- Hình tròn trong suốt nằm giữa hình vuông -->
+    <item
+        android:left="50dp"
+        android:top="50dp"
+        android:right="50dp"
+        android:bottom="50dp">
+        <shape android:shape="oval">
+            <solid android:color="#10000000" /> <!-- Màu trong suốt cho hình tròn -->
+        </shape>
+    </item>
+</layer-list>

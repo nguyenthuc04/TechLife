@@ -19,8 +19,8 @@ import com.snapco.techlife.extensions.setHighlightedText
 import com.snapco.techlife.extensions.showCustomAlertDialog
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.login.LoginActivity
-import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
-import com.snapco.techlife.ui.viewmodel.UserDataHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import com.snapco.techlife.ui.viewmodel.UserViewModel
 
 class TermsAndPoliciesActivity : AppCompatActivity() {

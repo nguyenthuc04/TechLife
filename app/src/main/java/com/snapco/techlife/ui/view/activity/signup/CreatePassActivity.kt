@@ -11,7 +11,7 @@ import com.snapco.techlife.databinding.ActivityCreatePassBinding
 import com.snapco.techlife.extensions.isValidPassword
 import com.snapco.techlife.extensions.showToast
 import com.snapco.techlife.extensions.startActivity
-import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
 
 class CreatePassActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreatePassBinding
