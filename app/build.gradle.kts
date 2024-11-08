@@ -42,7 +42,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation (libs.gson)
-    implementation(libs.android.mail)
     implementation(libs.android.activation)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.glide)

@@ -51,26 +51,26 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
                     Post(
                         postId = 1,
                         caption = "Hello, have a nice day",
-                        imageUrl = "https://example.com/image1.jpg",
+                        imageUrl = "https://m.yodycdn.com/blog/hinh-nen-thien-nhien-4k-yody-vn-42.jpg",
                         createdAt = "10/7/2023",
                         likesCount = 10,
                         commentsCount = 3,
                         userId = 101,
                         userName = "Jack",
-                        userImageUrl = "https://example.com/profile1.jpg",
+                        userImageUrl = "https://chiemtaimobile.vn/images/companies/1/%E1%BA%A2nh%20Blog/avatar-facebook-dep/Anh-avatar-hoat-hinh-de-thuong-xinh-xan.jpg?1704788263223",
                         isLiked = false,
                         isOwnPost = true
                     ),
                     Post(
                         postId = 2,
                         caption = "Enjoying the day!",
-                        imageUrl = "https://example.com/image2.jpg",
+                        imageUrl = "https://m.yodycdn.com/blog/hinh-nen-thien-nhien-4k-yody-vn-42.jpg",
                         createdAt = "18/7/2023",
                         likesCount = 15,
                         commentsCount = 5,
                         userId = 102,
                         userName = "Alina",
-                        userImageUrl = "https://example.com/profile2.jpg",
+                        userImageUrl = "https://chiemtaimobile.vn/images/companies/1/%E1%BA%A2nh%20Blog/avatar-facebook-dep/Anh-avatar-hoat-hinh-de-thuong-xinh-xan.jpg?1704788263223",
                         isLiked = true,
                         isOwnPost = false
                     )
