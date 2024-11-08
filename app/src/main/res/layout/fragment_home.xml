@@ -1,12 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.fragment.home.HomeFragment">
-        <TextView
+    android:overScrollMode="never"
+    tools:context=".ui.view.">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/techlife_land_logo"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@+id/frameLayout">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_favorite" />
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/bg_round"
+                    android:backgroundTint="@color/red" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="11dp"
+                    android:src="@drawable/svg_messenger" />
+
+                <TextView
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/bg_round"
+                    android:gravity="center"
+                    android:text="10"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    app:backgroundTint="@color/red" />
+
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="he" />
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="10"
+            tools:listitem="@layout/techlife_post" />
 
-</FrameLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+</layout>

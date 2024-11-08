@@ -1,58 +1,143 @@
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
+import com.snapco.techlife.adapter.home.PostAdapter
+import com.snapco.techlife.data.model.home.Post
+import com.snapco.techlife.databinding.FragmentHomeBinding
+import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var postAdapter: PostAdapter
+    private lateinit var postRecyclerView: RecyclerView
+    private val postModelList = mutableListOf<Post>()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        postRecyclerView = binding.recyclerViewId
+
+        // Observe changes from ViewModel
+        sharedViewModel.newPost.observe(viewLifecycleOwner) { newPost ->
+            newPost?.let {
+                postModelList.add(0, it)
+                postAdapter.notifyDataSetChanged()
+                sharedViewModel.clearNewPost() // Clear new post data after adding
+            }
+        }
+        setupPostList()
+        return binding.root
+    }
+
+    private fun setupPostList() {
+        // Populate the list with initial data if needed
+        if (postModelList.isEmpty()) {
+            postModelList.addAll(
+                listOf(
+                    Post(
+                        postId = 1,
+                        caption = "Hello, have a nice day",
+                        imageUrl = "https://example.com/image1.jpg",
+                        createdAt = "10/7/2023",
+                        likesCount = 10,
+                        commentsCount = 3,
+                        userId = 101,
+                        userName = "Jack",
+                        userImageUrl = "https://example.com/profile1.jpg",
+                        isLiked = false,
+                        isOwnPost = true
+                    ),
+                    Post(
+                        postId = 2,
+                        caption = "Enjoying the day!",
+                        imageUrl = "https://example.com/image2.jpg",
+                        createdAt = "18/7/2023",
+                        likesCount = 15,
+                        commentsCount = 5,
+                        userId = 102,
+                        userName = "Alina",
+                        userImageUrl = "https://example.com/profile2.jpg",
+                        isLiked = true,
+                        isOwnPost = false
+                    )
+                )
+            )
+        }
+
+        postAdapter = PostAdapter(postModelList, this)
+        postRecyclerView.adapter = postAdapter
+        postAdapter.notifyDataSetChanged()
+    }
+
+    override fun onPostLongClicked(position: Int) {
+        showPostOptionsDialog(position)
+    }
+
+    override fun onEditPost(position: Int) {
+        showEditDialog(position)
+    }
+
+    override fun onDeletePost(position: Int) {
+        if (position >= 0 && position < postModelList.size) {
+            postModelList.removeAt(position)
+            postAdapter.notifyItemRemoved(position)
+            sharedViewModel.deletePost(position)
+        } else {
+            Log.e("HomeFragment", "Invalid position for deletion.")
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater ,container: ViewGroup? ,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home ,container ,false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String ,param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1 ,param1)
-                    putString(ARG_PARAM2 ,param2)
+    private fun showPostOptionsDialog(position: Int) {
+        val options = arrayOf("Edit", "Delete")
+        AlertDialog.Builder(requireContext())
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showEditDialog(position)
+                    1 -> deletePost(position)
                 }
             }
+            .show()
+    }
+
+    private fun showEditDialog(position: Int) {
+        val currentPost = postModelList[position]
+
+        val editText = EditText(context)
+        editText.setText(currentPost.caption)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edit Post")
+            .setView(editText)
+            .setPositiveButton("Update") { _, _ ->
+                val updatedCaption = editText.text.toString()
+                val updatedPost = currentPost.copy(caption = updatedCaption)
+
+                postModelList[position] = updatedPost
+                postAdapter.notifyItemChanged(position)
+
+                sharedViewModel.updatePost(updatedPost, position)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deletePost(position: Int) {
+        postModelList.removeAt(position)
+        postAdapter.notifyItemRemoved(position)
+        sharedViewModel.deletePost(position)
     }
 }
