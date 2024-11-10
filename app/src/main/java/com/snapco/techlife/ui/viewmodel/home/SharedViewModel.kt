@@ -4,49 +4,87 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.snapco.techlife.data.model.home.Post
+import androidx.lifecycle.viewModelScope
+import com.snapco.techlife.data.model.home.post.Post
+import com.snapco.techlife.data.model.home.post.PostRetrofit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class SharedViewModel : ViewModel() {
-    private val _newPost = MutableLiveData<Post?>()
-    val newPost: LiveData<Post?> = _newPost
 
-    private val _postList = MutableLiveData<MutableList<Post>>(mutableListOf())
-    val postList: LiveData<MutableList<Post>> = _postList
+    private val _postList = MutableLiveData<MutableList<Post>>()
+    val postList: LiveData<MutableList<Post>> get() = _postList
 
-    // Method to add a new post
-    fun setNewPost(post: Post) {
-        val updatedList = _postList.value?.toMutableList() ?: mutableListOf()
-        updatedList.add(0, post)  // Add the new post at the beginning
-        _postList.value = updatedList
-        _newPost.value = post
-    }
-
-    // Method to update a post at a specific position
-    fun updatePost(updatedPost: Post, position: Int) {
-        val currentList = _postList.value
-        if (currentList != null && position >= 0 && position < currentList.size) {
-            val mutableList = currentList.toMutableList()  // Convert to MutableList to modify
-            mutableList[position] = updatedPost  // Update the post at the specified position
-            _postList.value = mutableList  // Update LiveData with the modified list
-        } else {
-            Log.e("SharedViewModel", "Invalid position or list is empty, cannot update post.")
+    // Fetch all posts for a specific user
+    fun fetchPosts(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.fetchUserPosts(userId).execute()
+                if (response.isSuccessful) {
+                    _postList.postValue(response.body()?.toMutableList())
+                } else {
+                    Log.e("SharedViewModel", "Failed to fetch posts: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error fetching posts", e)
+            }
         }
     }
 
-    // Method to delete a post at a specific position
-    fun deletePost(position: Int) {
-        val currentList = _postList.value
-        if (!currentList.isNullOrEmpty() && position >= 0 && position < currentList.size) {
-            val mutableList = currentList.toMutableList()  // Convert to MutableList
-            mutableList.removeAt(position)  // Remove the post at the given position
-            _postList.value = mutableList  // Update LiveData with the modified list
-        } else {
-            Log.e("SharedViewModel", "Invalid position or list is empty, cannot delete post.")
+    // Add a new post, optionally with an image file
+    fun createPost(post: Post, imageFile: File? = null) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val postData = Json.encodeToString(post).toRequestBody()
+                val filePart = imageFile?.let {
+                    MultipartBody.Part.createFormData("file", it.name, it.asRequestBody())
+                }
+                val response = PostRetrofit.apiService.createPost(postData.toString(), filePart).execute()
+
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _postList.value?.add(0, it)
+                        _postList.postValue(_postList.value)
+                    }
+                } else {
+                    Log.e("SharedViewModel", "Failed to create post: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error creating post", e)
+            }
         }
     }
 
-    // Clear new post data
-    fun clearNewPost() {
-        _newPost.value = null
+    // Update an existing post
+    fun updatePost(updatedPost: Post) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val currentList = _postList.value ?: return@launch
+            val index = currentList.indexOfFirst { it.postId == updatedPost.postId }
+            if (index != -1) {
+                currentList[index] = updatedPost
+                _postList.postValue(currentList)
+            }
+        }
+    }
+
+    // Delete a post by ID
+    fun deletePost(postId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.deletePost(postId).execute()
+                if (response.isSuccessful) {
+                    _postList.value?.removeIf { it.postId == postId }
+                    _postList.postValue(_postList.value)
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error deleting post", e)
+            }
+        }
     }
 }

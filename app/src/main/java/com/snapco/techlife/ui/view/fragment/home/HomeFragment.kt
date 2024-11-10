@@ -1,6 +1,6 @@
-import android.content.DialogInterface
+package com.snapco.techlife.ui.view.fragment.home
+
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +9,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
-import com.snapco.techlife.data.model.home.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
 
@@ -20,8 +18,6 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostAdapter
-    private lateinit var postRecyclerView: RecyclerView
-    private val postModelList = mutableListOf<Post>()
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -29,58 +25,22 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        postRecyclerView = binding.recyclerViewId
-
-        // Observe changes from ViewModel
-        sharedViewModel.newPost.observe(viewLifecycleOwner) { newPost ->
-            newPost?.let {
-                postModelList.add(0, it)
-                postAdapter.notifyDataSetChanged()
-                sharedViewModel.clearNewPost() // Clear new post data after adding
-            }
-        }
-        setupPostList()
+        setupRecyclerView()
+        observeNewPost()
         return binding.root
     }
 
-    private fun setupPostList() {
-        // Populate the list with initial data if needed
-        if (postModelList.isEmpty()) {
-            postModelList.addAll(
-                listOf(
-                    Post(
-                        postId = 1,
-                        caption = "Hello, have a nice day",
-                        imageUrl = "https://m.yodycdn.com/blog/hinh-nen-thien-nhien-4k-yody-vn-42.jpg",
-                        createdAt = "10/7/2023",
-                        likesCount = 10,
-                        commentsCount = 3,
-                        userId = 101,
-                        userName = "Jack",
-                        userImageUrl = "https://chiemtaimobile.vn/images/companies/1/%E1%BA%A2nh%20Blog/avatar-facebook-dep/Anh-avatar-hoat-hinh-de-thuong-xinh-xan.jpg?1704788263223",
-                        isLiked = false,
-                        isOwnPost = true
-                    ),
-                    Post(
-                        postId = 2,
-                        caption = "Enjoying the day!",
-                        imageUrl = "https://m.yodycdn.com/blog/hinh-nen-thien-nhien-4k-yody-vn-42.jpg",
-                        createdAt = "18/7/2023",
-                        likesCount = 15,
-                        commentsCount = 5,
-                        userId = 102,
-                        userName = "Alina",
-                        userImageUrl = "https://chiemtaimobile.vn/images/companies/1/%E1%BA%A2nh%20Blog/avatar-facebook-dep/Anh-avatar-hoat-hinh-de-thuong-xinh-xan.jpg?1704788263223",
-                        isLiked = true,
-                        isOwnPost = false
-                    )
-                )
-            )
-        }
+    private fun setupRecyclerView() {
+        postAdapter = PostAdapter(sharedViewModel.postList.value ?: mutableListOf(), this)
+        binding.recyclerViewId.adapter = postAdapter
+    }
 
-        postAdapter = PostAdapter(postModelList, this)
-        postRecyclerView.adapter = postAdapter
-        postAdapter.notifyDataSetChanged()
+    private fun observeNewPost() {
+        sharedViewModel.postList.observe(viewLifecycleOwner) { postList ->
+            postList?.let {
+                postAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onPostLongClicked(position: Int) {
@@ -88,17 +48,11 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     }
 
     override fun onEditPost(position: Int) {
-        showEditDialog(position)
+        showEditPostDialog(position)
     }
 
     override fun onDeletePost(position: Int) {
-        if (position >= 0 && position < postModelList.size) {
-            postModelList.removeAt(position)
-            postAdapter.notifyItemRemoved(position)
-            sharedViewModel.deletePost(position)
-        } else {
-            Log.e("HomeFragment", "Invalid position for deletion.")
-        }
+        sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
     }
 
     private fun showPostOptionsDialog(position: Int) {
@@ -106,38 +60,34 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
         AlertDialog.Builder(requireContext())
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> showEditDialog(position)
+                    0 -> showEditPostDialog(position)
                     1 -> deletePost(position)
                 }
             }
             .show()
     }
 
-    private fun showEditDialog(position: Int) {
-        val currentPost = postModelList[position]
-
-        val editText = EditText(context)
-        editText.setText(currentPost.caption)
+    private fun showEditPostDialog(position: Int) {
+        val post = sharedViewModel.postList.value?.get(position)
+        val editText = EditText(context).apply { setText(post?.caption) }
 
         AlertDialog.Builder(requireContext())
             .setTitle("Edit Post")
             .setView(editText)
             .setPositiveButton("Update") { _, _ ->
                 val updatedCaption = editText.text.toString()
-                val updatedPost = currentPost.copy(caption = updatedCaption)
+                val updatedPost = post?.copy(caption = updatedCaption)
 
-                postModelList[position] = updatedPost
-                postAdapter.notifyItemChanged(position)
-
-                sharedViewModel.updatePost(updatedPost, position)
+                if (updatedPost != null) {
+                    sharedViewModel.updatePost(updatedPost)
+                    postAdapter.notifyItemChanged(position)
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
     private fun deletePost(position: Int) {
-        postModelList.removeAt(position)
-        postAdapter.notifyItemRemoved(position)
-        sharedViewModel.deletePost(position)
+        sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
     }
 }

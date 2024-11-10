@@ -1,6 +1,5 @@
 package com.snapco.techlife.ui.view.fragment.home
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,16 +15,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.home.Post
+import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentCreatePostBinding
 import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
 import java.util.UUID
 
 class CreatePostFragment : Fragment() {
     private lateinit var binding: FragmentCreatePostBinding
-    private var uri: Uri? = null
-    private lateinit var bitmap: Bitmap
-    private var postId: String = UUID.randomUUID().toString()
+    private var imageUri: Uri? = null
+    private lateinit var imageBitmap: Bitmap
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     companion object {
@@ -38,119 +36,114 @@ class CreatePostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_post, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        setupListeners()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        // Set click listener for image selection
-        binding.imageToPost.setOnClickListener {
-            addPostDialog()
-        }
-
-        // Handle post button click
-        binding.postBtn.setOnClickListener {
-            if (uri != null) {
-                postImage(uri)
-            } else {
-                Toast.makeText(context, "Please select an image to post.", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun setupListeners() {
+        binding.imageToPost.setOnClickListener { showImageSourceDialog() }
+        binding.postBtn.setOnClickListener { handlePostCreation() }
     }
 
-    private fun addPostDialog() {
+    private fun showImageSourceDialog() {
         val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Choose your image source")
-        builder.setItems(options) { dialog, item ->
-            when (options[item]) {
-                "Take Photo" -> takePhotoWithCamera()
-                "Choose from Gallery" -> pickImageFromGallery()
-                "Cancel" -> dialog.dismiss()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Image Source")
+            .setItems(options) { dialog, which ->
+                when (options[which]) {
+                    "Take Photo" -> openCamera()
+                    "Choose from Gallery" -> openGallery()
+                    "Cancel" -> dialog.dismiss()
+                }
             }
-        }
-        builder.show()
+            .show()
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun pickImageFromGallery() {
-        val pickPictureIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        if (pickPictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(pickPictureIntent, REQUEST_IMAGE_PICK)
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_PICK)
         }
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
-    private fun takePhotoWithCamera() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    uri = getImageUriFromBitmap(imageBitmap)
-                    displaySelectedImage(imageBitmap)
+                    val bitmap = data?.extras?.get("data") as? Bitmap
+                    bitmap?.let {
+                        imageUri = saveImageAndReturnUri(it)
+                        displaySelectedImage(it)
+                    }
                 }
                 REQUEST_IMAGE_PICK -> {
-                    val imageUri = data?.data
-                    if (imageUri != null) {
-                        uri = imageUri
-                        val imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
-                        displaySelectedImage(imageBitmap)
+                    val uri = data?.data
+                    uri?.let {
+                        imageUri = it
+                        val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, it)
+                        displaySelectedImage(bitmap)
                     }
                 }
             }
         }
     }
 
-    private fun displaySelectedImage(imageBitmap: Bitmap) {
-        bitmap = imageBitmap
-        binding.imageToPost.setImageBitmap(imageBitmap)
+    private fun displaySelectedImage(bitmap: Bitmap) {
+        imageBitmap = bitmap
+        binding.imageToPost.setImageBitmap(bitmap)
         Toast.makeText(context, "Image selected successfully!", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getImageUriFromBitmap(bitmap: Bitmap): Uri {
+    private fun saveImageAndReturnUri(bitmap: Bitmap): Uri {
         val path = MediaStore.Images.Media.insertImage(context?.contentResolver, bitmap, "New Post", null)
         return Uri.parse(path)
     }
 
-    private fun postImage(uri: Uri?) {
-        val caption = binding.addCaption.text.toString()
-        if (caption.isEmpty()) {
-            Toast.makeText(context, "Please enter a caption.", Toast.LENGTH_SHORT).show()
+    private fun handlePostCreation() {
+        val username = binding.username.text.toString().trim()
+        val userImageUrl = binding.userImageUrl.text.toString().trim()
+        val caption = binding.addCaption.text.toString().trim()
+
+        if (username.isEmpty() || caption.isEmpty()) {
+            Toast.makeText(context, "Please enter both username and caption.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val newPost = Post(1,
-            R.drawable.profile1.toString(), // Replace with user profile image or placeholder
-            uri.toString(),
-            "Hà Nội", // Replace with actual user name
-            100, // Replace with actual location
-            100,
-            3,
-            "Bùi Quang Vinh", // Initial like count
-            R.drawable.profile1.toString(),
-            isLiked = false,
-            isOwnPost = false
-        )
+        imageUri?.let {
+            val newPost = Post(
+                postId = UUID.randomUUID().toString(),
+                caption = caption,
+                imageUrl = it.toString(),
+                userName = username,
+                userId = UUID.randomUUID().toString(),
+                createdAt = "Today",
+                likesCount = "0",
+                commentsCount = "0",
+                userImageUrl = userImageUrl,
+                isLiked = false,
+                isOwnPost = true
+            )
 
-        sharedViewModel.setNewPost(newPost) // Add the new post to the ViewModel
-        Toast.makeText(context, "Post created!", Toast.LENGTH_SHORT).show()
-        clearFields()
+            sharedViewModel.createPost(newPost)
+            Toast.makeText(context, "Post created successfully!", Toast.LENGTH_SHORT).show()
+            resetFields()
+        } ?: Toast.makeText(context, "Please select an image.", Toast.LENGTH_SHORT).show()
     }
 
-    private fun clearFields() {
+    private fun resetFields() {
+        binding.username.text.clear()
+        binding.userImageUrl.text.clear()
         binding.addCaption.text.clear()
-        binding.imageToPost.setImageResource(R.drawable.image_placeholder) // Reset to placeholder
-        uri = null
+        binding.imageToPost.setImageResource(R.drawable.image_placeholder)
+        imageUri = null
     }
 }

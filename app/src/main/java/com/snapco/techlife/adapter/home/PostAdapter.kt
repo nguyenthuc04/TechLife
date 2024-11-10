@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.home.Post
+import com.snapco.techlife.data.model.home.post.Post
 
 class PostAdapter(
-    private val modelList: List<Post>,
+    private val modelList: MutableList<Post>, // Changed to MutableList for better update handling
     private val onPostActionListener: OnPostActionListener?
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
@@ -88,19 +88,17 @@ class PostAdapter(
             userName: String,
             caption: String,
             imageUrl: String?,
-            likesCount: Int,
-            commentsCount: Int,
+            likesCount: String,
+            commentsCount: String,
             createdAt: String
         ) {
             Glide.with(itemView.context)
-                .load(userImageUrl)
+                .load(userImageUrl ?: R.drawable.image_placeholder)
                 .apply(RequestOptions.circleCropTransform())
-                .error(R.drawable.image_placeholder) // Placeholder if user image fails
                 .into(this.userImageUrl)
 
             Glide.with(itemView.context)
-                .load(imageUrl)
-                .error(R.drawable.image_placeholder) // Placeholder if post image fails
+                .load(imageUrl ?: R.drawable.image_placeholder)
                 .into(this.imageUrl)
 
             this.userName.text = userName

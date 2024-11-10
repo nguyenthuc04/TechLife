@@ -78,6 +78,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.kotlinx.serialization.json)
+    implementation (libs.kotlinx.serialization.json.v150) // For serialization
+    implementation (libs.converter.scalars) // To handle raw strings (if needed)
 
     // thu vien cua phong
     implementation(libs.logging.interceptor)
