@@ -99,10 +99,10 @@
             android:name=".ui.view.activity.messenger.LoginMessActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.course.CourseActivity"
+            android:name=".ui.view.activity.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.LoginActivity"
+            android:name=".ui.view.activity.course.CourseActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

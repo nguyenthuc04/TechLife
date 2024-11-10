@@ -39,7 +39,9 @@
 
     <Button
         android:id="@+id/btnDeleteCourse"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/CustomButton"
+        android:textColor="#FFFFFF"
         android:text="Xóa" />
 </LinearLayout>
