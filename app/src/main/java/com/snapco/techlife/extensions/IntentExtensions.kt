@@ -3,7 +3,7 @@ package com.snapco.techlife.extensions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-
+import androidx.fragment.app.Fragment
 // Extension để khởi động một Activity mới
 inline fun <reified T : Any> Context.startActivity(
     options: Bundle? = null,
@@ -43,4 +43,14 @@ inline fun <reified T : Any> Context.startService(noinline init: Intent.() -> Un
     val intent = Intent(this, T::class.java)
     intent.init()
     startService(intent)
+}
+
+
+
+inline fun <reified T : Any> Fragment.startActivity(
+    noinline init: Intent.() -> Unit = {}
+) {
+    val intent = Intent(requireContext(), T::class.java)
+    intent.init()
+    startActivity(intent)
 }

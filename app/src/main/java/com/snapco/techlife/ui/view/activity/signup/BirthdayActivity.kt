@@ -17,7 +17,7 @@ import com.snapco.techlife.extensions.showCustomAlertDialogINeedAcc
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.login.LoginActivity
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetDialogBirthdayFragment
-import com.snapco.techlife.ui.viewmodel.SignUpDataHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
 
 class BirthdayActivity :
     AppCompatActivity(),
