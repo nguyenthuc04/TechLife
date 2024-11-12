@@ -12,20 +12,23 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.with
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.ReelModel
+import com.snapco.techlife.data.model.reel.Reel
 import com.snapco.techlife.databinding.ItemReelBinding
 
 class ReelViewModel {
     inner class VideoViewHolder(private val binding: ItemReelBinding) : RecyclerView.ViewHolder(binding.root) {
         private var isLiked = false // Biến trạng thái để theo dõi trạng thái like
 
-        fun bindVideo(videoModel: ReelModel) {
+        fun bindVideo(videoModel: Reel) {
             // Binding video
             binding.videoView.apply {
-                setVideoPath(videoModel.url)
+                setVideoPath(videoModel.videoUrl)
                 setOnPreparedListener {
                     it.start()
                     it.isLooping = true
@@ -42,8 +45,11 @@ class ReelViewModel {
                 }
             }
 
-            binding.userName.text = "Tên người dùng"
-            binding.content.text = "Nội dung video"
+            binding.userName.text = videoModel.userName
+            binding.content.text = videoModel.caption
+            Glide.with(binding.root.context) // Context hiện tại (Activity hoặc Fragment)
+                .load(videoModel.userImageUrl) // URL của hình ảnh
+                .into(binding.imgAvata)
 
             binding.btnFollow.setOnClickListener {
                 Toast.makeText(binding.root.context, "Đã nhấn nút Follow", Toast.LENGTH_SHORT).show()
@@ -114,7 +120,7 @@ class ReelViewModel {
 }
 
 class ReelAdapter(
-    private val videoList: List<ReelModel>,
+    private val videoList: List<Reel>,
 ) : RecyclerView.Adapter<ReelViewModel.VideoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReelViewModel.VideoViewHolder {

@@ -11,15 +11,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.Timestamp
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.TaskState
-import com.snapco.techlife.data.model.ReelModel
 import com.snapco.techlife.databinding.FragmentAddReelBinding // Update the import for ViewBinding
 
 class AddReelFragment : Fragment() {

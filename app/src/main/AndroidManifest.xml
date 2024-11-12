@@ -75,7 +75,7 @@
             android:name=".ui.view.activity.signup.CreatePassActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.MainActivity"
+            android:name=".ui.view.activity.course.CourseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.signup.BirthdayActivity"
@@ -102,7 +102,7 @@
             android:name=".ui.view.activity.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.course.CourseActivity"
+            android:name=".ui.view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
