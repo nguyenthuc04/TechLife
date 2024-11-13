@@ -3,6 +3,7 @@ package com.snapco.techlife.ui.view.activity
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frameLayout, HomeFragment())
             .commit()
 
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             val fragment =
                 when (it.itemId) {
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                 GetUserResponseHolder.setGetUserResponse(response)
             }
         }
+
     }
 
     private fun fetchUserData() {

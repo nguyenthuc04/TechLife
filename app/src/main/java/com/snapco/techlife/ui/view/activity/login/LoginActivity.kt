@@ -1,11 +1,13 @@
 package com.snapco.techlife.ui.view.activity.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -23,6 +25,8 @@ import com.snapco.techlife.ui.view.activity.MainActivity
 import com.snapco.techlife.ui.view.activity.signup.SignUpEmailActivity
 import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.models.User
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -42,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
         setupToolbar()
+
         binding.btnLogin.setOnClickListener {
             login()
         }
@@ -53,10 +58,17 @@ class LoginActivity : AppCompatActivity() {
         ) { response ->
             if (response != null) {
                 Log.d(TAG, "Login successful: $response")
+
                 val user = response.user
+                Log.d("phongday", "Login successful: "+ user.id)
+                val tokenChat = response.streamToken.toString()
+
                 if (user != null) {
                     UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
                     Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
+
+                    userViewModel.connectChat(user.id,user.account,tokenChat)
+
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -64,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                     startActivity<MainActivity>()
                 }, 2000)
+
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.btnLogin.text = "Đăng nhập"
@@ -77,6 +90,7 @@ class LoginActivity : AppCompatActivity() {
     private fun login() {
         val account = binding.editAccount.text.toString()
         val password = binding.editPassword.text.toString()
+
         if (account.isEmpty()) {
             showError(binding.txtWR, "Vui lòng điền đầy đủ thông tin")
             binding.txtWR2.gone()
@@ -103,6 +117,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.text = ""
         binding.progressBar.visible()
         userViewModel.login(account, password)
+
     }
 
     private fun setupToolbar() {
@@ -136,4 +151,5 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.show()
     }
+
 }

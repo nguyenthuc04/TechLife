@@ -6,16 +6,19 @@ object UserDataHolder {
     private var userName: String? = null
     private var userAvatar: String? = null
 
+
     fun setUserData(
         id: String,
         account: String,
         name: String,
         avatar: String,
+
     ) {
         userId = id
         userAccount = account
         userName = name
         userAvatar = avatar
+
     }
 
     fun getUserId(): String? = userId
@@ -25,6 +28,9 @@ object UserDataHolder {
     fun getUserName(): String? = userName
 
     fun getUserAvatar(): String? = userAvatar
+
+
+
 
     fun clear() {
         userId = null

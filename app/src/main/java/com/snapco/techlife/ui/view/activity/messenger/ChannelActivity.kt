@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.snapco.techlife.databinding.ActivityChannelBinding
+import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.MainActivity
 import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.api.models.QueryChannelsRequest
@@ -33,6 +35,7 @@ class ChannelActivity : AppCompatActivity() {
     private lateinit var listChannelViewModel: ChannelViewModel
     private val client: ChatClient by lazy { ChatClient.instance() }
 
+    // phuong thuc hien thi data tren list channel
     private val channelListFactory: ChannelListViewModelFactory = ChannelListViewModelFactory(
         filter = Filters.and(
             Filters.eq("type", "messaging"),
@@ -57,7 +60,7 @@ class ChannelActivity : AppCompatActivity() {
         // Set up click listeners for the channel list
         binding.channelListView.setChannelItemClickListener { channel ->
             val intent = Intent(this, ChatActivity::class.java)
-            intent.putExtra("ID", channel.id)
+            intent.putExtra("ID", channel.id) // gui id channel sang activity chat
             startActivity(intent)
         }
 
@@ -65,34 +68,36 @@ class ChannelActivity : AppCompatActivity() {
         val customFactory = ChannelViewHolder()
         binding.channelListView.setViewHolderFactory(customFactory)
 
+        // su kien button tao kenh chat moi
         binding.btnAddChannel.setOnClickListener{
             val intent = Intent(this, AddChannelActivity::class.java)
             startActivity(intent)
         }
 
-
-        // Handle back press and logout
+        // su kien nut back tren dien thoai
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             @SuppressLint("CheckResult")
             override fun handleOnBackPressed() {
-                logOutUser {
-                    val intent = Intent(this@ChannelActivity, LoginMessActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+                startActivity<MainActivity>()
             }
         })
 
+        // su kien button arrow back
+        binding.btnBack.setOnClickListener{
+            startActivity<MainActivity>()
+        }
+
+        // code search channel
         setupSearchListener()
 
     }
 
     // Log out user function
-    @SuppressLint("CheckResult")
-    private fun logOutUser(onLogoutSuccess: () -> Unit) {
-        client.disconnect(flushPersistence = true)
-        onLogoutSuccess()
-    }
+//    @SuppressLint("CheckResult")
+//    private fun logOutUser(onLogoutSuccess: () -> Unit) {
+//        client.disconnect(flushPersistence = true)
+//        onLogoutSuccess()
+//    }
 
     private fun setupSearchListener() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {

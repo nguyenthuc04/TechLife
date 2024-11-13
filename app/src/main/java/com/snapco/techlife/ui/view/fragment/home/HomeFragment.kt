@@ -1,18 +1,29 @@
 package com.snapco.techlife.ui.view.fragment.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
 import com.snapco.techlife.databinding.FragmentHomeBinding
+import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.models.User
 
 class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
@@ -25,6 +36,11 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+
+        binding.btnNextActivityChannel.setOnClickListener{
+            startActivity<ChannelActivity>()
+        }
+
         setupRecyclerView()
         observeNewPost()
         return binding.root
@@ -90,4 +106,5 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     private fun deletePost(position: Int) {
         sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
     }
+
 }
