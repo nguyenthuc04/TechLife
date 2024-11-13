@@ -93,6 +93,26 @@ object HttpRequest {
         })
     }
 
+    fun getCoursesByUser(
+        idUser: String,
+        onSuccess: (List<Course>) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        val call = CourseRetrofit.apiService.getCoursesByUser(idUser)
+        call.enqueue(object : Callback<List<Course>> {
+            override fun onResponse(call: Call<List<Course>>, response: Response<List<Course>>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { onSuccess(it) }
+                } else {
+                    onFailure("Failed to fetch courses")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Course>>, t: Throwable) {
+                onFailure(t.message ?: "Unknown error")
+            }
+        })
+    }
 
 
 

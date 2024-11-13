@@ -22,6 +22,9 @@ interface CourseService {
     @PUT("updateCourse/{id}")
     fun updateCourse(@Path("id") courseId: String, @Body course: Course): Call<CourseResponse<Course>>
 
+    @GET("getCoursesByUser/{idUser}")
+    fun getCoursesByUser(@Path("idUser") idUser: String): Call<List<Course>>
+
 
     @DELETE("deleteCourse/{id}")
     fun deleteCourse(@Path("id") id: String): Call<Void>
