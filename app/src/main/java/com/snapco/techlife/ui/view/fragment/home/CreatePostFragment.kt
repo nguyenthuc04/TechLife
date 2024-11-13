@@ -6,13 +6,13 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.home.post.Post
@@ -32,8 +32,7 @@ class CreatePostFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_post, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -48,16 +47,14 @@ class CreatePostFragment : Fragment() {
 
     private fun showImageSourceDialog() {
         val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
-        AlertDialog.Builder(requireContext())
-            .setTitle("Select Image Source")
+        AlertDialog.Builder(requireContext()).setTitle("Select Image Source")
             .setItems(options) { dialog, which ->
                 when (options[which]) {
                     "Take Photo" -> openCamera()
                     "Choose from Gallery" -> openGallery()
                     "Cancel" -> dialog.dismiss()
                 }
-            }
-            .show()
+            }.show()
     }
 
     private fun openGallery() {
@@ -85,6 +82,7 @@ class CreatePostFragment : Fragment() {
                         displaySelectedImage(it)
                     }
                 }
+
                 REQUEST_IMAGE_PICK -> {
                     val uri = data?.data
                     uri?.let {
@@ -104,7 +102,8 @@ class CreatePostFragment : Fragment() {
     }
 
     private fun saveImageAndReturnUri(bitmap: Bitmap): Uri {
-        val path = MediaStore.Images.Media.insertImage(context?.contentResolver, bitmap, "New Post", null)
+        val path =
+            MediaStore.Images.Media.insertImage(context?.contentResolver, bitmap, "New Post", null)
         return Uri.parse(path)
     }
 
@@ -114,7 +113,8 @@ class CreatePostFragment : Fragment() {
         val caption = binding.addCaption.text.toString().trim()
 
         if (username.isEmpty() || caption.isEmpty()) {
-            Toast.makeText(context, "Please enter both username and caption.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Please enter both username and caption.", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -126,11 +126,10 @@ class CreatePostFragment : Fragment() {
                 userName = username,
                 userId = UUID.randomUUID().toString(),
                 createdAt = "Today",
-                likesCount = "0",
-                commentsCount = "0",
+                likesCount = 0,
+                commentsCount = 0,
                 userImageUrl = userImageUrl,
-                isLiked = false,
-                isOwnPost = true
+                isLiked = false
             )
 
             sharedViewModel.createPost(newPost)
@@ -140,9 +139,9 @@ class CreatePostFragment : Fragment() {
     }
 
     private fun resetFields() {
-        binding.username.text.clear()
-        binding.userImageUrl.text.clear()
-        binding.addCaption.text.clear()
+        binding.username.text?.clear()
+        binding.userImageUrl.text?.clear()
+        binding.addCaption.text?.clear()
         binding.imageToPost.setImageResource(R.drawable.image_placeholder)
         imageUri = null
     }

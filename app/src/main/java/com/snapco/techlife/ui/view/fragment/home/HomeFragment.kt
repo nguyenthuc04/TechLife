@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
+import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
@@ -69,6 +70,14 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
     override fun onDeletePost(position: Int) {
         sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
+    }
+
+    override fun onLikePost(post: Post, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCommentPost(postId: String) {
+        TODO("Not yet implemented")
     }
 
     private fun showPostOptionsDialog(position: Int) {

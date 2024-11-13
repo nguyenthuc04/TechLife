@@ -9,9 +9,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,36 +16,28 @@ import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.VideoResult
-import com.snapco.techlife.R
+import com.snapco.techlife.databinding.FragmentCameraBinding
 import com.snapco.techlife.ui.viewmodel.CameraViewModel
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
-
 class CameraFragment : Fragment() {
 
-    private lateinit var cameraView: CameraView
-    private lateinit var captureButton: ImageView
-    private lateinit var recordButton: Button
-    private lateinit var switchCameraButton: ImageView
-    private lateinit var txtTimeRecord: TextView
+    private var _binding: FragmentCameraBinding? = null
+    private val binding get() = _binding!!
     private val cameraViewModel: CameraViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_camera, container, false)
-        cameraView = view.findViewById(R.id.cameraView)
-        captureButton = view.findViewById(R.id.btnCapture)
-        recordButton = view.findViewById(R.id.btnrecord)
-        switchCameraButton = view.findViewById(R.id.btnSwitchCamera)
-        txtTimeRecord = view.findViewById(R.id.txtTimeRecord)
+        _binding = FragmentCameraBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        // Thiết lập CameraView
-        cameraView.setLifecycleOwner(viewLifecycleOwner)
-        cameraView.addCameraListener(object : CameraListener() {
+
+        binding.cameraView.setLifecycleOwner(viewLifecycleOwner)
+        binding.cameraView.addCameraListener(object : CameraListener() {
             override fun onPictureTaken(result: PictureResult) {
                 super.onPictureTaken(result)
                 savePicture(result)
@@ -61,36 +50,36 @@ class CameraFragment : Fragment() {
         })
 
         // Xử lý sự kiện nhấn nút chụp ảnh
-        captureButton.setOnClickListener {
-            cameraView.takePicture()
+        binding.btnCapture.setOnClickListener {
+            binding.cameraView.takePicture()
         }
 
         // Xử lý sự kiện nhấn nút ghi video
-        recordButton.setOnClickListener {
+        binding.btnrecord.setOnClickListener {
             if (cameraViewModel.isRecording.value == true) {
-                cameraView.stopVideo()
+                binding.cameraView.stopVideo()
                 cameraViewModel.stopRecording()
             } else {
-                cameraView.takeVideoSnapshot(getTemporaryFile(requireContext(), "video"))
+                binding.cameraView.takeVideoSnapshot(getTemporaryFile(requireContext(), "video"))
                 cameraViewModel.startRecording()
             }
         }
 
         // Xử lý sự kiện nhấn nút chuyển đổi camera
-        switchCameraButton.setOnClickListener {
+        binding.btnSwitchCamera.setOnClickListener {
             cameraViewModel.switchCamera()
         }
 
         // Quan sát thay đổi từ ViewModel
         cameraViewModel.facing.observe(viewLifecycleOwner, Observer { facing ->
-            cameraView.facing = facing
+            binding.cameraView.facing = facing
         })
         cameraViewModel.timerText.observe(viewLifecycleOwner, Observer { time ->
-            txtTimeRecord.text = time
+            binding.txtTimeRecord.text = time
         })
 
         cameraViewModel.isRecording.observe(viewLifecycleOwner, Observer { isRecording ->
-            recordButton.text = if (isRecording) "Stop" else "Record"
+            binding.btnrecord.text = if (isRecording) "Stop" else "Record"
         })
 
         return view
@@ -155,6 +144,6 @@ class CameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cameraView.destroy()
+        _binding = null
     }
 }
