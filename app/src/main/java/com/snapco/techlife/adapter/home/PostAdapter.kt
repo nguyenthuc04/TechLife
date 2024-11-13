@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -15,7 +16,7 @@ import com.snapco.techlife.R
 import com.snapco.techlife.data.model.home.post.Post
 
 class PostAdapter(
-    private val modelList: MutableList<Post>, // Changed to MutableList for better update handling
+    private val modelList: MutableList<Post>,
     private val onPostActionListener: OnPostActionListener?
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
@@ -36,6 +37,24 @@ class PostAdapter(
             model.createdAt
         )
 
+        // Handle like button click
+        holder.likeButton.setOnClickListener {
+            model.isLiked = !model.isLiked // Toggle like status
+            if (model.isLiked) {
+                model.likesCount += 1
+            } else {
+                model.likesCount -= 1
+            }
+            notifyItemChanged(position)
+            onPostActionListener?.onLikePost(model, position) // Pass the post object and position
+        }
+
+        // Handle comment button click
+        holder.commentButton.setOnClickListener {
+            onPostActionListener?.onCommentPost(model.postId)
+        }
+
+        // Handle long click for menu actions
         holder.itemView.setOnLongClickListener {
             onPostActionListener?.onPostLongClicked(position)
             true
@@ -52,44 +71,16 @@ class PostAdapter(
         private val captionText: TextView = itemView.findViewById(R.id.caption_text)
         private val likesCount: TextView = itemView.findViewById(R.id.likes_count)
         private val commentsCount: TextView = itemView.findViewById(R.id.comments_count)
-        private val menuIcon: ImageView = itemView.findViewById(R.id.menu_icon)
-
-        init {
-            menuIcon.setOnClickListener { showPopupMenu(it) }
-        }
-
-        private fun showPopupMenu(view: View) {
-            val popup = PopupMenu(view.context, view)
-            val inflater: MenuInflater = popup.menuInflater
-            inflater.inflate(R.menu.popup_menu, popup.menu)
-
-            popup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.action_edit -> {
-                        onPostActionListener?.onEditPost(adapterPosition)
-                        true
-                    }
-                    R.id.action_delete -> {
-                        onPostActionListener?.onDeletePost(adapterPosition)
-                        true
-                    }
-                    R.id.action_share -> {
-                        Toast.makeText(view.context, "Share clicked", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-                    else -> false
-                }
-            }
-            popup.show()
-        }
+        val likeButton: ImageButton = itemView.findViewById(R.id.like_button)
+        val commentButton: ImageButton = itemView.findViewById(R.id.comment_button)
 
         fun setItems(
             userImageUrl: String?,
             userName: String,
             caption: String,
             imageUrl: String?,
-            likesCount: String,
-            commentsCount: String,
+            likesCount: Int,
+            commentsCount: Int,
             createdAt: String
         ) {
             Glide.with(itemView.context)
@@ -112,5 +103,7 @@ class PostAdapter(
         fun onPostLongClicked(position: Int)
         fun onEditPost(position: Int)
         fun onDeletePost(position: Int)
+        fun onLikePost(post: Post, position: Int)
+        fun onCommentPost(postId: String)
     }
 }

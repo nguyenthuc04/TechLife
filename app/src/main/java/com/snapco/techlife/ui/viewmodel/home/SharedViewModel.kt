@@ -1,10 +1,10 @@
 package com.snapco.techlife.ui.viewmodel.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.snapco.techlife.data.model.home.comment.Comment
 import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.data.model.home.post.PostRetrofit
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +18,8 @@ import java.io.File
 
 class SharedViewModel : ViewModel() {
 
-    private val _postList = MutableLiveData<MutableList<Post>>()
-    val postList: LiveData<MutableList<Post>> get() = _postList
+    private val _postList = MutableLiveData<MutableList<Post>?>()
+    val postList: MutableLiveData<MutableList<Post>?> get() = _postList
 
     // Fetch all posts for a specific user
     fun fetchPosts(userId: String) {
@@ -29,7 +29,10 @@ class SharedViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _postList.postValue(response.body()?.toMutableList())
                 } else {
-                    Log.e("SharedViewModel", "Failed to fetch posts: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "SharedViewModel",
+                        "Failed to fetch posts: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("SharedViewModel", "Error fetching posts", e)
@@ -45,7 +48,8 @@ class SharedViewModel : ViewModel() {
                 val filePart = imageFile?.let {
                     MultipartBody.Part.createFormData("file", it.name, it.asRequestBody())
                 }
-                val response = PostRetrofit.apiService.createPost(postData.toString(), filePart).execute()
+                val response =
+                    PostRetrofit.apiService.createPost(postData.toString(), filePart).execute()
 
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -53,7 +57,10 @@ class SharedViewModel : ViewModel() {
                         _postList.postValue(_postList.value)
                     }
                 } else {
-                    Log.e("SharedViewModel", "Failed to create post: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "SharedViewModel",
+                        "Failed to create post: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 Log.e("SharedViewModel", "Error creating post", e)
@@ -84,6 +91,81 @@ class SharedViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("SharedViewModel", "Error deleting post", e)
+            }
+        }
+    }
+
+    fun likePost(postId: String, userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.likePost(postId, userId).execute()
+                if (response.isSuccessful) {
+                    // Update likes count in the post list
+                    val currentList = _postList.value
+                    val postIndex = currentList?.indexOfFirst { it.postId == postId }
+                    postIndex?.let {
+                        currentList[it].likesCount += 1
+                        _postList.postValue(currentList)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error liking post", e)
+            }
+        }
+    }
+
+    fun unlikePost(postId: String, userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.unlikePost(postId, userId).execute()
+                if (response.isSuccessful) {
+                    val currentList = _postList.value
+                    val postIndex = currentList?.indexOfFirst { it.postId == postId }
+                    postIndex?.let {
+                        currentList[it].likesCount -= 1
+                        _postList.postValue(currentList)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error unliking post", e)
+            }
+        }
+    }
+
+    fun addComment(postId: String, comment: Comment) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.addComment(postId, comment).execute()
+                if (response.isSuccessful) {
+                    // Add new comment to the post
+                    val currentList = _postList.value
+                    val postIndex = currentList?.indexOfFirst { it.postId == postId }
+                    postIndex?.let {
+                        currentList[it].commentsCount += 1
+                        currentList[it].comments = currentList[it].comments + comment
+                        _postList.postValue(currentList)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error adding comment", e)
+            }
+        }
+    }
+
+    fun fetchComments(postId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = PostRetrofit.apiService.getComments(postId).execute()
+                if (response.isSuccessful) {
+                    val currentList = _postList.value
+                    val postIndex = currentList?.indexOfFirst { it.postId == postId }
+                    postIndex?.let {
+                        currentList[it].comments = response.body() ?: listOf()
+                        _postList.postValue(currentList)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SharedViewModel", "Error fetching comments", e)
             }
         }
     }

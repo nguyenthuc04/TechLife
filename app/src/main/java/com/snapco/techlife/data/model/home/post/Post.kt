@@ -1,5 +1,7 @@
 package com.snapco.techlife.data.model.home.post
 
+import com.snapco.techlife.data.model.home.comment.Comment
+import com.snapco.techlife.data.model.home.like.Like
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,19 +13,18 @@ data class PostTextParams(
 @Serializable
 data class Post(
     val postId: String,
-    val caption: String,
-    val imageUrl: String,
-    val createdAt: String,
-    val likesCount: String,
-    val commentsCount: String,
     val userId: String,
     val userName: String,
     val userImageUrl: String?,
-    val isLiked: Boolean,
-    val isOwnPost: Boolean
+    val caption: String,
+    val imageUrl: String?,
+    var likesCount: Int = 0, // Changed to Int
+    var commentsCount: Int = 0, // Changed to Int
+    val createdAt: String,
+    var isLiked: Boolean = false, // Ensure this exists if you're using it
+    var likes: List<Like> = listOf(),
+    var comments: List<Comment> = listOf()
 )
-
-// Response classes for different operations with Post
 
 @Serializable
 data class GetPostResponse(
