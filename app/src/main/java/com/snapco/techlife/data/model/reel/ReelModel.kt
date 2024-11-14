@@ -12,16 +12,17 @@ data class ReelTextParams(
 @Serializable
 data class Reel(
     var reelId: String,
-    var caption: String,
-    var videoUrl: String,
-    var createdAt: Timestamp = Timestamp.now(),
-    var likesCount: String,
-    var commentsCount: String,
     var userId: String,
     var userName: String,
     var userImageUrl: String?,
-    var isLiked: Boolean,
-    var isOwnPost: Boolean
+    var caption: String,
+    var videoUrl: String,
+    var likesReelCount: Int = 0,
+    var commentsReelCount: Int = 0,
+    var createdAt: Timestamp = Timestamp.now(),
+    var isLiked: Boolean = false,
+    var likesReel: List<LikeReel> = listOf(),
+    var commentsReel: List<CommentReel> = listOf()
 )
 
 @Serializable
