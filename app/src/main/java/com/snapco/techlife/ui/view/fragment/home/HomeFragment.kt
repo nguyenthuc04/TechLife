@@ -13,13 +13,13 @@ import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
 import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
-import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
+import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
 class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostAdapter
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,12 +32,12 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     }
 
     private fun setupRecyclerView() {
-        postAdapter = PostAdapter(sharedViewModel.postList.value ?: mutableListOf(), this)
+        postAdapter = PostAdapter(homeViewModel.postList.value ?: mutableListOf(), this)
         binding.recyclerViewId.adapter = postAdapter
     }
 
     private fun observeNewPost() {
-        sharedViewModel.postList.observe(viewLifecycleOwner) { postList ->
+        homeViewModel.postList.observe(viewLifecycleOwner) { postList ->
             postList?.let {
                 postAdapter.notifyDataSetChanged()
             }
@@ -53,7 +53,7 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     }
 
     override fun onDeletePost(position: Int) {
-        sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
+        homeViewModel.deletePost(homeViewModel.postList.value?.get(position)?.postId ?: "")
     }
 
     override fun onLikePost(post: Post, position: Int) {
@@ -77,7 +77,7 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     }
 
     private fun showEditPostDialog(position: Int) {
-        val post = sharedViewModel.postList.value?.get(position)
+        val post = homeViewModel.postList.value?.get(position)
         val editText = EditText(context).apply { setText(post?.caption) }
 
         AlertDialog.Builder(requireContext())
@@ -88,7 +88,7 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
                 val updatedPost = post?.copy(caption = updatedCaption)
 
                 if (updatedPost != null) {
-                    sharedViewModel.updatePost(updatedPost)
+                    homeViewModel.updatePost(updatedPost)
                     postAdapter.notifyItemChanged(position)
                 }
             }
@@ -97,6 +97,6 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
     }
 
     private fun deletePost(position: Int) {
-        sharedViewModel.deletePost(sharedViewModel.postList.value?.get(position)?.postId ?: "")
+        homeViewModel.deletePost(homeViewModel.postList.value?.get(position)?.postId ?: "")
     }
 }
