@@ -1,5 +1,7 @@
 package com.snapco.techlife.data.model.reel
 
+import com.snapco.techlife.data.model.home.comment.Comment
+import com.snapco.techlife.data.model.home.like.Like
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -33,4 +35,16 @@ interface ReelService {
     // Delete a reel by ID
     @DELETE("deleteReel/{reelId}")
     fun deleteReel(@Path("reelId") reelId: String): Call<Void>
+
+    @POST("reels/{reelId}/like")
+    fun likeReel(@Path("reelId") reelId: String, @Body userId: String): Call<Like>
+
+    @DELETE("reels/{reelId}/like")
+    fun unlikeReel(@Path("reelId") reelId: String, @Query("userId") userId: String): Call<Void>
+
+    @POST("reels/{reelId}/comment")
+    fun addCommentReel(@Path("reelId") reelId: String, @Body comment: CommentReel): Call<Comment>
+
+    @GET("reels/{reelId}/comments")
+    fun getCommentsReel(@Path("reelId") reelId: String): Call<List<CommentReel>>
 }
