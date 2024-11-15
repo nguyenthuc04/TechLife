@@ -3,6 +3,8 @@ package com.snapco.techlife.ui.view.activity.profile
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +22,7 @@ import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditProfileBinding
     private val userViewModel: UserViewModel by viewModels()
+    private lateinit var galleryLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,25 @@ class EditProfileActivity : AppCompatActivity() {
         setupWindowInsets()
         setupToolbar()
         setUpOnClick()
+        setupActivityResultLauncher()
         GetUserResponseHolder.getGetUserResponse()?.let { updateUI(it) }
+    }
+
+    private fun setupActivityResultLauncher() {
+        galleryLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    // Đóng BottomSheet nếu cần thiết
+                    supportFragmentManager.findFragmentByTag("BottomSheetProfielAvatar")?.let {
+                        (it as BottomSheetProfielAvatar).dismiss()
+                    }
+                }
+            }
+    }
+
+    private fun onClickLibrary() {
+        val intent = Intent(this, CustomGalleryActivity::class.java)
+        galleryLauncher.launch(intent)
     }
 
     override fun onResume() {
@@ -93,11 +114,8 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
     private fun takeAphoto() {
-    }
-
-    private fun onClickLibrary() {
-        val intent = Intent(this, CustomGalleryActivity::class.java)
-        startActivity(intent)
+        val intent = Intent(this, CustomCameraActivity::class.java)
+        galleryLauncher.launch(intent)
     }
 
     private fun startDetailEditProfileActivity(

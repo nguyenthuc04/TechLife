@@ -71,7 +71,7 @@
     </style>
 
     <style name="ButtonGray" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="backgroundTint">@color/material_dynamic_neutral95</item>
+        <item name="backgroundTint">#f0f0f3</item>
         <item name="cornerRadius">8dp</item>
         <item name="strokeWidth">0dp</item>
         <item name="android:textColor">@color/black</item>

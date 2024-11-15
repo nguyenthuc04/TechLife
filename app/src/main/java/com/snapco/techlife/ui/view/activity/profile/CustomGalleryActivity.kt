@@ -1,7 +1,9 @@
 package com.snapco.techlife.ui.view.activity.profile
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,32 +11,45 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.databinding.ActivityCustomGalleryBinding
 import com.snapco.techlife.databinding.ItemGalleryImageBinding
+import com.snapco.techlife.extensions.CloudinaryUploader
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.showToast
+import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 class CustomGalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCustomGalleryBinding
     private val userViewModel: UserViewModel by viewModels()
+    private lateinit var cloudinaryUploader: CloudinaryUploader
     private val imageUris = mutableListOf<Uri>()
+    private var selectedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCustomGalleryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        cloudinaryUploader = CloudinaryUploader(this) // Initialize cloudinaryUploader
         checkAndRequestPermissions()
         setupToolbar()
         setupRecyclerView()
+        observeUpdateUserResponse()
     }
 
     private fun checkAndRequestPermissions() {
@@ -61,6 +76,9 @@ class CustomGalleryActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
+        binding.imageView.post {
+            binding.imageView.setScale(1.5f, true)
+        }
         binding.recyclerView.layoutManager = GridLayoutManager(this, 4)
         binding.recyclerView.adapter = GalleryAdapter(imageUris) { uri -> onImageSelected(uri) }
     }
@@ -96,11 +114,103 @@ class CustomGalleryActivity : AppCompatActivity() {
     }
 
     private fun onImageSelected(uri: Uri) {
+        Log.d("CustomGalleryActivity", "Selected image URI: $uri")
+        selectedImageUri = uri
         binding.imageView.setImageURI(uri)
+        binding.imageView.post {
+            binding.imageView.setScale(1.5f, true) // Phóng to 50%
+        }
     }
 
-    private fun onDone() {
-        // Handle the done action, e.g., return the selected image URI to the calling activity
+    private fun getBitmapFromImageView(imageView: ImageView): Bitmap {
+        imageView.isDrawingCacheEnabled = true
+        imageView.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(imageView.drawingCache)
+        imageView.isDrawingCacheEnabled = false
+        return bitmap
+    }
+
+    private fun getImageUriFromBitmap(
+        context: Context,
+        bitmap: Bitmap,
+    ): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
+        return Uri.parse(path)
+    }
+
+    private fun onDone() =
+        binding.apply {
+            selectedImageUri?.let {
+                val bitmap = getBitmapFromImageView(binding.imageView)
+                val uri = getImageUriFromBitmap(this@CustomGalleryActivity, bitmap)
+                progressBar.visible()
+                tvDone.gone()
+                cloudinaryUploader.uploadMedia(
+                    uri,
+                    false,
+                    object : CloudinaryUploader.UploadCallback {
+                        override fun onProgress(progress: Int) {
+                            progressBar.progress = progress
+                        }
+
+                        override fun onSuccess(url: String) {
+                            progressBar.gone()
+                            uploadedImage(url)
+                        }
+
+                        override fun onError(errorMessage: String) {
+                            progressBar.gone()
+                            tvDone.visible()
+                        }
+                    },
+                )
+            } ?: run {
+                showToast("Vui lòng chọn một hình ảnh")
+            }
+        }
+
+    private fun uploadedImage(url: String) {
+        val userId = UserDataHolder.getUserId() ?: return
+        GetUserResponseHolder.getGetUserResponse()?.let { response ->
+            val updateUserRequest =
+                UpdateUserRequest(
+                    account = response.user.account,
+                    password = response.user.password,
+                    birthday = response.user.birthday,
+                    name = response.user.name,
+                    nickname = response.user.nickname,
+                    bio = response.user.bio,
+                    avatar = url,
+                    accountType = response.user.accountType,
+                )
+            GetUserResponseHolder.setGetUserResponse(
+                response.copy(user = response.user.copy(avatar = url)),
+            )
+            userViewModel.updateUser(userId, updateUserRequest)
+        }
+    }
+
+    private fun observeUpdateUserResponse() {
+        userViewModel.updateUserResponse.observe(this) { response ->
+            response?.let {
+                if (response.message == "Người dùng đã được cập nhật thành công!") {
+                    finish()
+                } else {
+                    showUpdateErrorDialog()
+                }
+            }
+        }
+    }
+
+    private fun showUpdateErrorDialog() {
+        AlertDialog
+            .Builder(this)
+            .setTitle("Lỗi")
+            .setMessage("Cập nhật thất bại. Vui lòng thử lại.")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     override fun onRequestPermissionsResult(

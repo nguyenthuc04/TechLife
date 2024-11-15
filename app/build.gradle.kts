@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -60,6 +61,8 @@ dependencies {
     implementation(libs.firebase.common.ktx)
     implementation(libs.firebase.storage.ktx)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth)
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -68,7 +71,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-
 
     implementation("androidx.fragment:fragment-ktx:1.8.1")
     implementation(libs.androidx.core.ktx)
@@ -80,8 +82,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.serialization.json)
-    implementation (libs.kotlinx.serialization.json.v150) // For serialization
-    implementation (libs.converter.scalars) // To handle raw strings (if needed)
+    implementation(libs.kotlinx.serialization.json.v150) // For serialization
+    implementation(libs.converter.scalars) // To handle raw strings (if needed)
 
     // thu vien cua phong
     implementation(libs.logging.interceptor)
@@ -106,4 +108,8 @@ dependencies {
     implementation("org.mongodb:bson:4.7.1")
     implementation("androidx.fragment:fragment-ktx:1.8.1")
     implementation("com.otaliastudios:cameraview:2.7.2")
+
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.12.0") // Add this line
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
 }

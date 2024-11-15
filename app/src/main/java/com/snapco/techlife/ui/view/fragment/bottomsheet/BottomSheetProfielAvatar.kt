@@ -7,45 +7,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.snapco.techlife.R
 import com.snapco.techlife.databinding.BottomSheetAvatarBinding
 import com.snapco.techlife.databinding.BottomSheetItemBinding
 
 class BottomSheetProfielAvatar : BottomSheetDialogFragment() {
-    private lateinit var binding: BottomSheetAvatarBinding
     private lateinit var items: List<BottomSheetItem>
+
+    fun setItems(items: List<BottomSheetItem>) {
+        this.items = items
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = BottomSheetAvatarBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-    }
-
-    private fun setupRecyclerView() {
+        val binding = BottomSheetAvatarBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = BottomSheetAdapter(items)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.let {
-            it.window?.setBackgroundDrawableResource(R.color.dim_background)
-        }
-    }
-
-    fun setItems(items: List<BottomSheetItem>) {
-        this.items = items
+        return binding.root
     }
 
     private inner class BottomSheetAdapter(
@@ -57,7 +37,10 @@ class BottomSheetProfielAvatar : BottomSheetDialogFragment() {
             fun bind(item: BottomSheetItem) {
                 binding.imageView.setImageResource(item.iconResId)
                 binding.textView.text = item.text
-                binding.root.setOnClickListener { item.onClick() }
+                binding.root.setOnClickListener {
+                    item.onClick()
+                    dismiss() // Đóng BottomSheet khi item được chọn
+                }
             }
         }
 

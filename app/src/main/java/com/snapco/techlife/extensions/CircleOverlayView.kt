@@ -29,12 +29,18 @@ class CircleOverlayView
             super.onDraw(canvas)
             val width = width.toFloat()
             val height = height.toFloat()
-            val radius = Math.min(width, height) / 4 // Điều chỉnh kích thước hình tròn
+            val radius = Math.min(width, height) / 2 // Đặt bán kính bằng một nửa chiều rộng hoặc chiều cao
+
+            // Tạo một layer để vẽ
+            val saveLayer = canvas.saveLayer(0f, 0f, width, height, null)
 
             // Vẽ nền màu đen mờ
             canvas.drawRect(0f, 0f, width, height, backgroundPaint)
 
             // Vẽ hình tròn trong suốt ở giữa
             canvas.drawCircle(width / 2, height / 2, radius, clearPaint)
+
+            // Khôi phục layer
+            canvas.restoreToCount(saveLayer)
         }
     }
