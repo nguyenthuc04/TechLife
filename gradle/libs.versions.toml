@@ -25,6 +25,7 @@ firebaseCommonKtx = "21.0.0"
 firebaseStorageKtx = "21.0.1"
 swiperefreshlayout = "1.1.0"
 firebaseAuth = "23.1.0"
+playServicesCastTv = "21.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +57,7 @@ firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-k
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+play-services-cast-tv = { group = "com.google.android.gms", name = "play-services-cast-tv", version.ref = "playServicesCastTv" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

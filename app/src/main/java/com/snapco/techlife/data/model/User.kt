@@ -78,3 +78,40 @@ data class CheckEmailResponse(
     val message: String,
     val account: String,
 )
+
+data class SearchUserResponse(
+    val _id: String = "",
+    val account: String = "",
+    val password: String = "",
+    val birthday: String = "",
+    val name: String = "",
+    val nickname: String = "",
+    val avatar: String = "",
+    val following: List<String> = emptyList(),
+    val followers: List<Any> = emptyList(),
+    val bio: String = "",
+    val posts: List<String> = emptyList(),
+    val accountType: String = "",
+)
+
+data class FollowRequest(
+    val followerId: String,
+    val followeeId: String
+)
+
+data class FollowResponse(
+    val message: String,
+    val success: Boolean,
+    val updatedUser: User
+)
+
+data class UnfollowRequest(
+    val followerId: String,
+    val followeeId: String
+)
+
+data class UnfollowResponse(
+    val message: String,
+    val success: Boolean,
+    val updatedUser: User
+)
