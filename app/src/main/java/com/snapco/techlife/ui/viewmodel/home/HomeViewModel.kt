@@ -16,12 +16,11 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class SharedViewModel : ViewModel() {
+class HomeViewModel : ViewModel() {
 
     private val _postList = MutableLiveData<MutableList<Post>?>()
     val postList: MutableLiveData<MutableList<Post>?> get() = _postList
 
-    // Fetch all posts for a specific user
     fun fetchPosts(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -29,27 +28,20 @@ class SharedViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _postList.postValue(response.body()?.toMutableList())
                 } else {
-                    Log.e(
-                        "SharedViewModel",
-                        "Failed to fetch posts: ${response.errorBody()?.string()}"
-                    )
+                    Log.e("HomeViewModel", "Failed to fetch posts: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.e("SharedViewModel", "Error fetching posts", e)
+                Log.e("HomeViewModel", "Error fetching posts", e)
             }
         }
     }
 
     // Add a new post, optionally with an image file
-    fun createPost(post: Post, imageFile: File? = null) {
+    fun createPost(post: Post) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val postData = Json.encodeToString(post).toRequestBody()
-                val filePart = imageFile?.let {
-                    MultipartBody.Part.createFormData("file", it.name, it.asRequestBody())
-                }
-                val response =
-                    PostRetrofit.apiService.createPost(postData.toString(), filePart).execute()
+                val response = PostRetrofit.apiService.createPost(postData.toString()).execute()
 
                 if (response.isSuccessful) {
                     response.body()?.let {
@@ -57,13 +49,10 @@ class SharedViewModel : ViewModel() {
                         _postList.postValue(_postList.value)
                     }
                 } else {
-                    Log.e(
-                        "SharedViewModel",
-                        "Failed to create post: ${response.errorBody()?.string()}"
-                    )
+                    Log.e("HomeViewModel", "Failed to create post: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.e("SharedViewModel", "Error creating post", e)
+                Log.e("HomeViewModel", "Error creating post", e)
             }
         }
     }
@@ -80,7 +69,6 @@ class SharedViewModel : ViewModel() {
         }
     }
 
-    // Delete a post by ID
     fun deletePost(postId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -90,7 +78,7 @@ class SharedViewModel : ViewModel() {
                     _postList.postValue(_postList.value)
                 }
             } catch (e: Exception) {
-                Log.e("SharedViewModel", "Error deleting post", e)
+                Log.e("HomeViewModel", "Error deleting post", e)
             }
         }
     }
@@ -100,7 +88,6 @@ class SharedViewModel : ViewModel() {
             try {
                 val response = PostRetrofit.apiService.likePost(postId, userId).execute()
                 if (response.isSuccessful) {
-                    // Update likes count in the post list
                     val currentList = _postList.value
                     val postIndex = currentList?.indexOfFirst { it.postId == postId }
                     postIndex?.let {
@@ -109,7 +96,7 @@ class SharedViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("SharedViewModel", "Error liking post", e)
+                Log.e("HomeViewModel", "Error liking post", e)
             }
         }
     }
@@ -127,7 +114,7 @@ class SharedViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("SharedViewModel", "Error unliking post", e)
+                Log.e("HomeViewModel", "Error unliking post", e)
             }
         }
     }

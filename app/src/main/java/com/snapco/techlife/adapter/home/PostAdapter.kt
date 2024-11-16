@@ -37,24 +37,14 @@ class PostAdapter(
             model.createdAt
         )
 
-        // Handle like button click
         holder.likeButton.setOnClickListener {
-            model.isLiked = !model.isLiked // Toggle like status
-            if (model.isLiked) {
-                model.likesCount += 1
-            } else {
-                model.likesCount -= 1
-            }
-            notifyItemChanged(position)
-            onPostActionListener?.onLikePost(model, position) // Pass the post object and position
+            onPostActionListener?.onLikePost(model, position)
         }
 
-        // Handle comment button click
         holder.commentButton.setOnClickListener {
             onPostActionListener?.onCommentPost(model.postId)
         }
 
-        // Handle long click for menu actions
         holder.itemView.setOnLongClickListener {
             onPostActionListener?.onPostLongClicked(position)
             true
@@ -64,7 +54,6 @@ class PostAdapter(
     override fun getItemCount(): Int = modelList.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private val userImageUrl: ImageView = itemView.findViewById(R.id.user_image_url)
         private val imageUrl: ImageView = itemView.findViewById(R.id.image_url)
         private val userName: TextView = itemView.findViewById(R.id.user_name)
