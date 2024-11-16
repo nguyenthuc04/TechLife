@@ -13,6 +13,8 @@ import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
 import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
+import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
 class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
@@ -26,6 +28,11 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+
+        binding.btnNextActivityChannel.setOnClickListener{
+            startActivity<ChannelActivity>()
+        }
+
         setupRecyclerView()
         observeNewPost()
         return binding.root
