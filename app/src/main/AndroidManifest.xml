@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
@@ -14,13 +13,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:name=".ui.view.activity.messenger.ChatApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -29,6 +28,9 @@
         android:theme="@style/Theme.TechLife"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.view.activity.profile.CustomCameraActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.view.activity.profile.CustomGalleryActivity"
             android:exported="false" />
@@ -75,7 +77,7 @@
             android:name=".ui.view.activity.signup.CreatePassActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.course.CourseActivity"
+            android:name=".ui.view.activity.MainActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.signup.BirthdayActivity"
@@ -96,13 +98,10 @@
             android:name=".ui.view.activity.messenger.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.messenger.LoginMessActivity"
+            android:name=".ui.view.activity.course.CourseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.login.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.Timestamp
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.reel.CommentReel
+import com.snapco.techlife.data.model.reel.LikeReel
 import com.snapco.techlife.data.model.reel.Reel
 import com.snapco.techlife.ui.viewmodel.ReelAdapter
 
@@ -35,44 +37,88 @@ class ReelsFragment : Fragment() {
         val videoList = listOf(
             Reel(
                 reelId = "1",
-                caption = "Video của người dùng 1",
-                videoUrl = "https://www.youtube.com/shorts/m2s1HMqwb8o?feature=share",
-                createdAt = Timestamp.now(),  // Thời gian hiện tại
-                likesCount = "120",
-                commentsCount = "5",
                 userId = "user_1",
                 userName = "Người dùng 1",
-                userImageUrl = "https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fmuctim.tuoitre.vn%2Ffacebook-avatar.html&psig=AOvVaw31bqWYwWc2f8-1KYB4bCiu&ust=1731418569789000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJjYtvmy1IkDFQAAAAAdAAAAABAE",
+                userImageUrl = "https://www.example.com/avatar1.png",
+                caption = "Video của người dùng 1",
+                videoUrl = "https://www.youtube.com/shorts/m2s1HMqwb8o?feature=share",
+                likesReelCount = 120,
+                commentsReelCount = 5,
                 isLiked = true,
-                isOwnPost = false
+                likesReel = listOf(
+                    LikeReel(likeReelId = "like_1", reelId = "1", userId = "user_2", likedReelAt = "2024-11-15T10:15:30Z"),
+                    LikeReel(likeReelId = "like_2", reelId = "1", userId = "user_3", likedReelAt = "2024-11-15T10:20:30Z")
+                ),
+                commentsReel = listOf(
+                    CommentReel(
+                        commentReelId = "comment_1", reelId = "1", userId = "user_2",
+                        userName = "Người dùng 2", userImageUrl = "https://www.example.com/avatar2.png",
+                        commentReelText = "Video hay quá!", commentedReelAt = "2024-11-15T10:25:30Z"
+                    ),
+                    CommentReel(
+                        commentReelId = "comment_2", reelId = "1", userId = "user_3",
+                        userName = "Người dùng 3", userImageUrl = "https://www.example.com/avatar3.png",
+                        commentReelText = "Thích video này!", commentedReelAt = "2024-11-15T10:30:30Z"
+                    )
+                )
             ),
             Reel(
                 reelId = "2",
-                caption = "Video của người dùng 2",
-                videoUrl = "https://www.youtube.com/shorts/YBA_ERIN1UU?feature=share",
-                createdAt = Timestamp.now(),  // Thời gian hiện tại
-                likesCount = "250",
-                commentsCount = "15",
                 userId = "user_2",
                 userName = "Người dùng 2",
-                userImageUrl = "https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fmuctim.tuoitre.vn%2Ffacebook-avatar.html&psig=AOvVaw31bqWYwWc2f8-1KYB4bCiu&ust=1731418569789000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJjYtvmy1IkDFQAAAAAdAAAAABAE",
+                userImageUrl = "https://www.example.com/avatar2.png",
+                caption = "Video của người dùng 2",
+                videoUrl = "https://www.youtube.com/shorts/YBA_ERIN1UU?feature=share",
+                likesReelCount = 250,
+                commentsReelCount = 15,
                 isLiked = false,
-                isOwnPost = true
+                likesReel = listOf(
+                    LikeReel(likeReelId = "like_3", reelId = "2", userId = "user_1", likedReelAt = "2024-11-15T11:00:30Z"),
+                    LikeReel(likeReelId = "like_4", reelId = "2", userId = "user_3", likedReelAt = "2024-11-15T11:05:30Z")
+                ),
+                commentsReel = listOf(
+                    CommentReel(
+                        commentReelId = "comment_3", reelId = "2", userId = "user_1",
+                        userName = "Người dùng 1", userImageUrl = "https://www.example.com/avatar1.png",
+                        commentReelText = "Rất thú vị!", commentedReelAt = "2024-11-15T11:10:30Z"
+                    ),
+                    CommentReel(
+                        commentReelId = "comment_4", reelId = "2", userId = "user_3",
+                        userName = "Người dùng 3", userImageUrl = "https://www.example.com/avatar3.png",
+                        commentReelText = "Video xuất sắc!", commentedReelAt = "2024-11-15T11:15:30Z"
+                    )
+                )
             ),
             Reel(
                 reelId = "3",
-                caption = "Video của người dùng 3",
-                videoUrl = "https://www.youtube.com/shorts/lrYbkgaW8xI?feature=share",
-                createdAt = Timestamp.now(),  // Thời gian hiện tại
-                likesCount = "75",
-                commentsCount = "10",
                 userId = "user_3",
                 userName = "Người dùng 3",
-                userImageUrl = "https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fmuctim.tuoitre.vn%2Ffacebook-avatar.html&psig=AOvVaw31bqWYwWc2f8-1KYB4bCiu&ust=1731418569789000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJjYtvmy1IkDFQAAAAAdAAAAABAE",
+                userImageUrl = "https://www.example.com/avatar3.png",
+                caption = "Video của người dùng 3",
+                videoUrl = "https://www.youtube.com/shorts/lrYbkgaW8xI?feature=share",
+                likesReelCount = 75,
+                commentsReelCount = 10,
                 isLiked = true,
-                isOwnPost = false
+                likesReel = listOf(
+                    LikeReel(likeReelId = "like_5", reelId = "3", userId = "user_1", likedReelAt = "2024-11-15T11:30:30Z"),
+                    LikeReel(likeReelId = "like_6", reelId = "3", userId = "user_2", likedReelAt = "2024-11-15T11:35:30Z")
+                ),
+                commentsReel = listOf(
+                    CommentReel(
+                        commentReelId = "comment_5", reelId = "3", userId = "user_1",
+                        userName = "Người dùng 1", userImageUrl = "https://www.example.com/avatar1.png",
+                        commentReelText = "Thích video này lắm!", commentedReelAt = "2024-11-15T11:40:30Z"
+                    ),
+                    CommentReel(
+                        commentReelId = "comment_6", reelId = "3", userId = "user_2",
+                        userName = "Người dùng 2", userImageUrl = "https://www.example.com/avatar2.png",
+                        commentReelText = "Video tuyệt vời!", commentedReelAt = "2024-11-15T11:45:30Z"
+                    )
+                )
             )
         )
+
+
 
 
 

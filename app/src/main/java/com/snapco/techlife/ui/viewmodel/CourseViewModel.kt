@@ -60,6 +60,13 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
             }
         )
     }
+    fun fetchCoursesByUser(idUser: String) {
+        HttpRequest.getCoursesByUser(idUser,
+            onSuccess = { courseList -> courses.value = courseList },
+            onFailure = { error -> errorMessage.value = error }
+        )
+    }
+
 
     fun updateCourse(course: Course) {
         HttpRequest.updateCourse(course.id!!, course, // Bạn cần thêm phương thức updateCourse trong HttpRequest

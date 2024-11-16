@@ -12,9 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.snapco.techlife.R
 import com.snapco.techlife.databinding.FragmentMyCourseBinding
-import com.snapco.techlife.data.model.course.CourseAdapter
+import com.snapco.techlife.data.model.course.MyCourseAdapter
 import com.snapco.techlife.ui.view.activity.course.AddCourse
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
@@ -22,7 +21,7 @@ import com.snapco.techlife.ui.viewmodel.CourseViewModel
 class MyCourseFragment : Fragment() {
     private lateinit var viewModel: CourseViewModel
     private lateinit var binding: FragmentMyCourseBinding
-    private lateinit var courseAdapter: CourseAdapter
+    private lateinit var courseAdapter: MyCourseAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +35,7 @@ class MyCourseFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo adapter rỗng ban đầu cho RecyclerView
-        courseAdapter = CourseAdapter(mutableListOf(), viewModel)
+        courseAdapter = MyCourseAdapter(mutableListOf(), viewModel)
         binding.recyclerView.adapter = courseAdapter
 
         // Quan sát danh sách khóa học từ ViewModel
@@ -50,8 +49,10 @@ class MyCourseFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         })
 
-        // Lấy danh sách khóa học
-        viewModel.fetchCourses()
+        //            val idUser = UserDataHolder.getUserId()
+        val idUser = "672de65842792ca1976f11b9"
+
+        viewModel.fetchCoursesByUser(idUser)
 
         // Xử lý sự kiện khi bấm vào nút Thêm Khóa Học
         binding.btnAddCourse.setOnClickListener {

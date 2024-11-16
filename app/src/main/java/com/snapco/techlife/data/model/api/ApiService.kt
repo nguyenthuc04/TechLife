@@ -10,6 +10,7 @@ import com.snapco.techlife.data.model.LoginResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse
 import com.snapco.techlife.data.model.User
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -45,4 +46,6 @@ interface ApiService {
     suspend fun checkEmail(
         @Body checkEmailRequest: CheckEmailRequest,
     ): CheckEmailResponse
+
+
 }

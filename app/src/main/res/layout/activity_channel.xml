@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
         <ImageButton
-            android:id="@+id/btnDrawNavigation"
+            android:id="@+id/btnBack"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/white"

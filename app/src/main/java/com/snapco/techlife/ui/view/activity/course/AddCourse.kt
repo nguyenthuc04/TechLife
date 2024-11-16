@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.course.Course
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import java.util.UUID
 
 class AddCourse : AppCompatActivity() {
@@ -32,7 +33,16 @@ class AddCourse : AppCompatActivity() {
             val duration = txtCourseDuration.text.toString().trim()
             val date = txtCourseDate.text.toString().trim()
 
-            // Xác thực dữ liệu
+            // Lấy idUser từ UserDataHolder
+//            val idUser = UserDataHolder.getUserId()
+            val idUser = "672de65842792ca1976f11b9"
+
+
+            if (idUser == null) {
+                Toast.makeText(this, "Lỗi: Không tìm thấy thông tin người dùng.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             when {
                 name.isEmpty() -> {
                     txtCourseName.error = "Tên khóa học không được để trống"
@@ -56,7 +66,8 @@ class AddCourse : AppCompatActivity() {
                         name = name,
                         price = price,
                         duration = duration,
-                        date = date
+                        date = date,
+                        idUser = idUser // Truyền khóa ngoại idUser
                     )
 
                     viewModel.addCourse(course)
@@ -77,4 +88,5 @@ class AddCourse : AppCompatActivity() {
         })
     }
 }
+
 

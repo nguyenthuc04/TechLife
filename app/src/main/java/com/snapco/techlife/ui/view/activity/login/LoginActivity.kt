@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -42,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
         setupToolbar()
+
         binding.btnLogin.setOnClickListener {
             login()
         }
@@ -53,21 +53,27 @@ class LoginActivity : AppCompatActivity() {
         ) { response ->
             if (response != null) {
                 Log.d(TAG, "Login successful: $response")
+
                 val user = response.user
+                Log.d("phongday", "Login successful: " + user.id)
+                val tokenChat = response.streamToken.toString()
+
                 if (user != null) {
                     UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
                     Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
+
+                    userViewModel.connectChat(user.id, user.account, tokenChat)
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.btnLogin.text = "Đăng nhập"
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.gone()
                     startActivity<MainActivity>()
                 }, 2000)
             } else {
                 Handler(Looper.getMainLooper()).postDelayed({
                     binding.btnLogin.text = "Đăng nhập"
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.gone()
                     showLoginFailedDialog()
                 }, 100)
             }
@@ -77,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
     private fun login() {
         val account = binding.editAccount.text.toString()
         val password = binding.editPassword.text.toString()
+
         if (account.isEmpty()) {
             showError(binding.txtWR, "Vui lòng điền đầy đủ thông tin")
             binding.txtWR2.gone()

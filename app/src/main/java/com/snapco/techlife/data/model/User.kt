@@ -13,6 +13,7 @@ data class User(
     val bio: String = "",
     val posts: List<String> = emptyList(),
     val accountType: String = "",
+    val streamToken: String? = null // thuoc tinh token cho chat
 )
 
 data class GetUserResponse(
@@ -20,6 +21,7 @@ data class GetUserResponse(
     val followingCount: Int,
     val followersCount: Int,
     val postsCount: Int,
+    val streamToken: String? = null // thuoc tinh token cho chat
 )
 
 data class LoginRequest(
@@ -31,6 +33,8 @@ data class LoginResponse(
     val message: String,
     val token: String,
     val user: User,
+    val streamToken: String? = null,
+    val apiKey: String? = null
 )
 
 data class UpdateUserRequest(

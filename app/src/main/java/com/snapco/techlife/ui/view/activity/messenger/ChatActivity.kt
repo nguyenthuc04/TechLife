@@ -18,17 +18,17 @@ import io.getstream.chat.android.ui.viewmodel.messages.bindView
 
 class ChatActivity : AppCompatActivity() {
 
-    private lateinit var client: ChatClient
     private lateinit var binding: ActivityChatBinding
 
     private val factory: MessageListViewModelFactory by lazy {
-        val channelId = intent.getStringExtra("ID")
+        val channelId = intent.getStringExtra("ID") // nhan du lieu tu activity channel
         MessageListViewModelFactory(
             context = this,
             threadLoadOlderToNewer = true,
             cid = "messaging:$channelId",
         )
     }
+
     private val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
     private val messageListViewModel: MessageListViewModel by viewModels { factory }
     private val messageComposerViewModel: MessageComposerViewModel by viewModels { factory }

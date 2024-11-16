@@ -2,15 +2,21 @@
 
 package com.snapco.techlife.ui.viewmodel
 
+import android.content.Intent
+import android.net.http.HttpException
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapco.techlife.data.model.*
 import com.snapco.techlife.data.model.api.ApiClient
+
+import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class UserViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
@@ -33,6 +39,8 @@ class UserViewModel : ViewModel() {
 
     private val _userResponse = MutableLiveData<GetUserResponse>()
     val userResponse: LiveData<GetUserResponse> get() = _userResponse
+
+    private val client: ChatClient by lazy { ChatClient.instance() }
 
     fun createUser(createUserRequest: CreateUserRequest) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -57,6 +65,19 @@ class UserViewModel : ViewModel() {
             } catch (e: Exception) {
                 _loginResponse.value = null // or set a specific error value
                 Log.e("UserViewModel", "Login failed", e)
+            }
+        }
+    }
+
+    fun connectChat (userId: String,account: String,streamToken: String) {
+        client.connectUser(
+            io.getstream.chat.android.models.User(id = userId, name = account),
+            streamToken
+        ).enqueue { result ->
+            if (result.isSuccess) {
+                Log.d("checkm", "connectChat: connect ok")
+            } else {
+                Log.d("checkm", "connectChat: connect fail ${result.errorOrNull()}")
             }
         }
     }
@@ -108,4 +129,6 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+
 }
