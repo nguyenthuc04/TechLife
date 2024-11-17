@@ -1,6 +1,7 @@
 package com.snapco.techlife.extensions
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -49,3 +50,37 @@ fun Fragment.setupTextToolbar(
         textView?.text = text
     }
 }
+
+fun Context.sharedPreferences(name: String = "${packageName}_default_prefs"): SharedPreferences =
+    getSharedPreferences(name, Context.MODE_PRIVATE)
+
+fun SharedPreferences.put(
+    key: String,
+    value: Any,
+) {
+    with(edit()) {
+        when (value) {
+            is String -> putString(key, value)
+            is Int -> putInt(key, value)
+            is Boolean -> putBoolean(key, value)
+            is Float -> putFloat(key, value)
+            is Long -> putLong(key, value)
+            else -> throw IllegalArgumentException("Unsupported type")
+        }
+        apply()
+    }
+}
+
+// Hàm mở rộng để lấy giá trị từ SharedPreferences
+fun <T> SharedPreferences.get(
+    key: String,
+    default: T,
+): T =
+    when (default) {
+        is String -> getString(key, default) as T
+        is Int -> getInt(key, default) as T
+        is Boolean -> getBoolean(key, default) as T
+        is Float -> getFloat(key, default) as T
+        is Long -> getLong(key, default) as T
+        else -> throw IllegalArgumentException("Unsupported type")
+    }

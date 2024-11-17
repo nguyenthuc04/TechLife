@@ -57,12 +57,12 @@ class CustomCameraActivity : AppCompatActivity() {
         setupToolbar()
         setupWindowInsets()
         setUpOnClick()
+        observeUpdateUserResponse()
         if (allPermissionsGranted()) {
             binding.textureView.surfaceTextureListener = surfaceTextureListener
         } else {
             requestPermissions()
         }
-        observeUpdateUserResponse()
     }
 
     private fun setupToolbar() {
@@ -208,6 +208,7 @@ class CustomCameraActivity : AppCompatActivity() {
         return (sensorOrientation + deviceOrientation + 360) % 360
     }
 
+    @Suppress("ktlint:standard:property-naming")
     private val ORIENTATIONS =
         SparseIntArray().apply {
             append(Surface.ROTATION_0, 0)
@@ -218,7 +219,9 @@ class CustomCameraActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        cameraDevice.close()
+        if (::cameraDevice.isInitialized) {
+            cameraDevice.close()
+        }
     }
 
     private fun getImageUriFromBitmap(
@@ -287,6 +290,9 @@ class CustomCameraActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 binding.textureView.surfaceTextureListener = surfaceTextureListener
+                if (binding.textureView.isAvailable) {
+                    openCamera()
+                }
             } else {
                 finish()
             }

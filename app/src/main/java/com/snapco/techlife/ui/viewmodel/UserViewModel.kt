@@ -2,21 +2,16 @@
 
 package com.snapco.techlife.ui.viewmodel
 
-import android.content.Intent
-import android.net.http.HttpException
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapco.techlife.data.model.*
 import com.snapco.techlife.data.model.api.ApiClient
-
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 class UserViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
@@ -27,6 +22,9 @@ class UserViewModel : ViewModel() {
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse: LiveData<LoginResponse?> get() = _loginResponse
+
+    private val _loginNoHashResponse = MutableLiveData<LoginResponse?>()
+    val loginNoHashResponse: LiveData<LoginResponse?> get() = _loginNoHashResponse
 
     private val _updateUserResponse = MutableLiveData<UpdateUserResponse>()
     val updateUserResponse: LiveData<UpdateUserResponse> get() = _updateUserResponse
@@ -69,17 +67,39 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun connectChat (userId: String,account: String,streamToken: String) {
-        client.connectUser(
-            io.getstream.chat.android.models.User(id = userId, name = account),
-            streamToken
-        ).enqueue { result ->
-            if (result.isSuccess) {
-                Log.d("checkm", "connectChat: connect ok")
-            } else {
-                Log.d("checkm", "connectChat: connect fail ${result.errorOrNull()}")
+    fun loginNoHash(
+        account: String,
+        password: String,
+    ) {
+        viewModelScope.launch {
+            try {
+                val loginRequest = LoginRequest(account, password)
+                val response = ApiClient.apiService.loginNoHash(loginRequest)
+                _loginNoHashResponse.value = response
+            } catch (e: Exception) {
+                _loginNoHashResponse.value = null // or set a specific error value
+                Log.e("UserViewModel", "Login failed", e)
             }
         }
+    }
+
+    fun connectChat(
+        userId: String,
+        account: String,
+        streamToken: String,
+    ) {
+        client
+            .connectUser(
+                io.getstream.chat.android.models
+                    .User(id = userId, name = account),
+                streamToken,
+            ).enqueue { result ->
+                if (result.isSuccess) {
+                    Log.d("checkm", "connectChat: connect ok")
+                } else {
+                    Log.d("checkm", "connectChat: connect fail ${result.errorOrNull()}")
+                }
+            }
     }
 
     fun updateUser(
@@ -129,6 +149,4 @@ class UserViewModel : ViewModel() {
             }
         }
     }
-
-
 }

@@ -29,6 +29,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.activity.login.DeleteSaveAccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.login.LoginRequiresPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.profile.MenuProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.profile.CustomCameraActivity"
             android:exported="false" />
         <activity
@@ -62,10 +71,7 @@
             android:name=".ui.view.activity.signup.NameActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.WelcomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.activity.login.SaveAccActivity"
+            android:name=".ui.view.activity.login.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.signup.TermsAndPoliciesActivity"
@@ -101,7 +107,10 @@
             android:name=".ui.view.activity.course.CourseActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.LoginActivity"
+            android:name=".ui.view.activity.login.SaveAccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.login.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

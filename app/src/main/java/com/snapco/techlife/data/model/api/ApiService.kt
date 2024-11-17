@@ -10,7 +10,6 @@ import com.snapco.techlife.data.model.LoginResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse
 import com.snapco.techlife.data.model.User
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -20,6 +19,11 @@ import retrofit2.http.Path
 interface ApiService {
     @POST("/login")
     suspend fun login(
+        @Body loginRequest: LoginRequest,
+    ): LoginResponse
+
+    @POST("/login1")
+    suspend fun loginNoHash(
         @Body loginRequest: LoginRequest,
     ): LoginResponse
 
@@ -46,6 +50,4 @@ interface ApiService {
     suspend fun checkEmail(
         @Body checkEmailRequest: CheckEmailRequest,
     ): CheckEmailResponse
-
-
 }

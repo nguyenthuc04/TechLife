@@ -9,8 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -19,15 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.databinding.ActivityCustomGalleryBinding
-import com.snapco.techlife.databinding.ItemGalleryImageBinding
 import com.snapco.techlife.extensions.CloudinaryUploader
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.showToast
 import com.snapco.techlife.extensions.visible
+import com.snapco.techlife.ui.view.adapter.GalleryAdapter
 import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -229,35 +226,4 @@ class CustomGalleryActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_CODE = 100
     }
-}
-
-class GalleryAdapter(
-    private val imageUris: List<Uri>,
-    private val onImageSelected: (Uri) -> Unit,
-) : RecyclerView.Adapter<GalleryAdapter.ViewHolder>() {
-    inner class ViewHolder(
-        private val binding: ItemGalleryImageBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(uri: Uri) {
-            binding.imageView.setImageURI(uri)
-            binding.imageView.setOnClickListener { onImageSelected(uri) }
-        }
-    }
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ): ViewHolder {
-        val binding = ItemGalleryImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int,
-    ) {
-        holder.bind(imageUris[position])
-    }
-
-    override fun getItemCount(): Int = imageUris.size
 }

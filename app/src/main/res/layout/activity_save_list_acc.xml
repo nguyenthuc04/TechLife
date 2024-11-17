@@ -8,9 +8,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.view.activity.login.SaveListAccActivity">
-
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_dot_menu" />
+        </androidx.appcompat.widget.Toolbar>
         <Button
-            android:id="@+id/btnForgotPass"
+            android:id="@+id/btnLogin"
             style="@style/CustomButtonStroke"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,11 +44,10 @@
             android:id="@+id/imageView3"
             android:layout_width="0dp"
             android:layout_height="150dp"
-            android:layout_marginTop="64dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar3"
             app:srcCompat="@drawable/techlife_logo" />
 
 

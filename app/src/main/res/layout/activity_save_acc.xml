@@ -10,7 +10,7 @@
         tools:context=".ui.view.activity.login.SaveAccActivity">
 
         <Button
-            android:id="@+id/btnForgotPass"
+            android:id="@+id/btnSignInOther"
             style="@style/CustomButtonLight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -21,21 +21,45 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
-        <Button
-            android:id="@+id/btnLogin"
-            style="@style/CustomButton"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="51dp"
             android:layout_marginEnd="16dp"
-            android:text="Đăng nhập"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
 
+            <Button
+                style="@style/CustomButton"
+                android:id="@+id/btnLogin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Đăng nhập"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ProgressBar
+                android:indeterminateTint="@android:color/white"
+                android:id="@+id/progressBar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -61,8 +85,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,10 +102,20 @@
             android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_dot_menu" />
+        </androidx.appcompat.widget.Toolbar>
+
+
 
         <Button
-            android:id="@+id/btnSignIn"
+            android:id="@+id/btnSignUp"
             style="@style/CustomButtonStroke"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

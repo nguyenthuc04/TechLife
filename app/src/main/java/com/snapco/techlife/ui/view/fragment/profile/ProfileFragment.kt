@@ -16,6 +16,7 @@ import com.snapco.techlife.data.model.GetUserResponse
 import com.snapco.techlife.databinding.FragmentProfileBinding
 import com.snapco.techlife.extensions.*
 import com.snapco.techlife.ui.view.activity.profile.EditProfileActivity
+import com.snapco.techlife.ui.view.activity.profile.MenuProfileActivity
 import com.snapco.techlife.ui.view.adapter.ProfileTabAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetProfileAddFragment
 import com.snapco.techlife.ui.viewmodel.UserViewModel
@@ -53,7 +54,7 @@ class ProfileFragment : Fragment() {
             toolbar = binding.toolbar,
             onUser = { logAction("User clicked") },
             onAddClick = { BottomSheetProfileAddFragment().show(parentFragmentManager, null) },
-            onMenuClick = { logAction("Menu clicked") },
+            onMenuClick = { startActivity<MenuProfileActivity>() },
         )
     }
 
@@ -118,7 +119,7 @@ class ProfileFragment : Fragment() {
             textView4.text = response.postsCount.toString()
             textView17.text = response.user.nickname
             textView18.text = response.user.bio.takeIf { it != "null" } ?: ""
-            imgAvatar.loadImage(response.user.avatar)
+            imgAvatar.loadImage(url = response.user.avatar)
         }
 
     private fun logAction(message: String) = Log.d("ProfileFragment", message)

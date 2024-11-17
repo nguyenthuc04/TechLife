@@ -12,12 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.User
+import com.snapco.techlife.data.model.UserAccount
 import com.snapco.techlife.databinding.ActivityLoginBinding
-import com.snapco.techlife.extensions.getTag
-import com.snapco.techlife.extensions.gone
-import com.snapco.techlife.extensions.isEmailValid
-import com.snapco.techlife.extensions.startActivity
-import com.snapco.techlife.extensions.visible
+import com.snapco.techlife.extensions.*
 import com.snapco.techlife.ui.view.activity.MainActivity
 import com.snapco.techlife.ui.view.activity.signup.SignUpEmailActivity
 import com.snapco.techlife.ui.viewmodel.UserViewModel
@@ -35,48 +33,33 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupWindowInsets()
+        setupToolbar()
+        setupUI()
+        observeLoginResponse()
+    }
+
+    private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        setupToolbar()
+    }
 
-        binding.btnLogin.setOnClickListener {
-            login()
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar4)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(!intent.getBooleanExtra("hideBackButton", false))
+            setDisplayShowTitleEnabled(false)
+            setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_new)
         }
-        binding.btnSignup.setOnClickListener {
-            startActivity<SignUpEmailActivity>()
-        }
-        userViewModel.loginResponse.observe(
-            this,
-        ) { response ->
-            if (response != null) {
-                Log.d(TAG, "Login successful: $response")
+    }
 
-                val user = response.user
-                Log.d("phongday", "Login successful: " + user.id)
-                val tokenChat = response.streamToken.toString()
-
-                if (user != null) {
-                    UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
-                    Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
-
-                    userViewModel.connectChat(user.id, user.account, tokenChat)
-                }
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.btnLogin.text = "Đăng nhập"
-                    binding.progressBar.gone()
-                    startActivity<MainActivity>()
-                }, 2000)
-            } else {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    binding.btnLogin.text = "Đăng nhập"
-                    binding.progressBar.gone()
-                    showLoginFailedDialog()
-                }, 100)
-            }
+    private fun setupUI() {
+        binding.apply {
+            btnLogin.setOnClickListener { login() }
+            btnSignup.setOnClickListener { startActivity<SignUpEmailActivity>() }
         }
     }
 
@@ -84,46 +67,57 @@ class LoginActivity : AppCompatActivity() {
         val account = binding.editAccount.text.toString()
         val password = binding.editPassword.text.toString()
 
-        if (account.isEmpty()) {
-            showError(binding.txtWR, "Vui lòng điền đầy đủ thông tin")
-            binding.txtWR2.gone()
-            return
-        }
-        if (password.isEmpty()) {
-            showError(binding.txtWR2, "Vui lòng điền đầy đủ thông tin")
-            binding.txtWR.gone()
-            return
-        }
-        if (!account.isEmailValid()) {
-            showError(binding.txtWR, "Email không hợp lệ")
-            binding.txtWR2.gone()
-            return
-        }
-        if (password.length < 8) {
-            showError(binding.txtWR2, "Mật khẩu phải có ít nhất 8 ký tự")
-            binding.txtWR.gone()
-            return
-        }
-        binding.txtWR.gone()
-        binding.txtWR2.gone()
-        Log.d(TAG, "Login with account: $account, password: $password")
-        binding.btnLogin.text = ""
-        binding.progressBar.visible()
-        userViewModel.login(account, password)
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar4)
-        supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowTitleEnabled(false)
-            setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_new)
+        when {
+            account.isEmpty() -> showError(binding.txtWR, "Vui lòng điền đầy đủ thông tin")
+            password.isEmpty() -> showError(binding.txtWR2, "Vui lòng điền đầy đủ thông tin")
+            !account.isEmailValid() -> showError(binding.txtWR, "Email không hợp lệ")
+            password.length < 8 -> showError(binding.txtWR2, "Mật khẩu phải có ít nhất 8 ký tự")
+            else -> {
+                binding.txtWR.gone()
+                binding.txtWR2.gone()
+                Log.d(TAG, "Login with account: $account, password: $password")
+                binding.btnLogin.text = ""
+                binding.progressBar.visible()
+                userViewModel.login(account, password)
+            }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return true
+    private fun observeLoginResponse() {
+        userViewModel.loginResponse.observe(this) { response ->
+            response?.let {
+                handleLoginResponse(it.user, it.streamToken.toString())
+            } ?: run {
+                showLoginFailedDialog()
+            }
+        }
+    }
+
+    private fun handleLoginResponse(
+        user: User?,
+        tokenChat: String,
+    ) {
+        user?.let {
+            UserDataHolder.setUserData(it.id, it.account, it.name, it.avatar)
+            val accountManager = AccountManager(this)
+            val userAccount =
+                UserAccount(
+                    id = it.id,
+                    account = it.account,
+                    password = it.password,
+                    avatar = it.avatar,
+                    name = it.name,
+                    state = "false",
+                    status = "true",
+                )
+            accountManager.addAccount(userAccount)
+            userViewModel.connectChat(it.id, it.account, tokenChat)
+            Handler(Looper.getMainLooper()).postDelayed({
+                binding.btnLogin.text = "Đăng nhập"
+                binding.progressBar.gone()
+                startActivity<MainActivity>()
+            }, 2000)
+        }
     }
 
     private fun showError(
@@ -139,8 +133,12 @@ class LoginActivity : AppCompatActivity() {
             .Builder(this)
             .setTitle("Đăng nhập thất bại")
             .setMessage("Tài khoản hoặc mật khẩu của bạn sai")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }.show()
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }
