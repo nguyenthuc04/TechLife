@@ -5,23 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.snapco.techlife.R
 import com.snapco.techlife.adapter.home.PostAdapter
 import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
+import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
 
 class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostAdapter
     private val homeViewModel: HomeViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +42,7 @@ class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
 
         setupRecyclerView()
         observeNewPost()
+
         return binding.root
     }
 

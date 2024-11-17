@@ -67,7 +67,7 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
 
                         val tokenChat = response.streamToken
                         if (tokenChat != null) {
-                            userViewModel.connectChat(user.id, user.name, tokenChat)
+                            userViewModel.connectChat(user.id, user.name, tokenChat,"")
                             Log.d(TAG, "onCreate:  " + tokenChat)
                         }
                     }

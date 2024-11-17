@@ -38,7 +38,7 @@ interface FollowService {
             val retrofit =
                 Retrofit
                     .Builder()
-                    .baseUrl("http://192.168.0.103:3000/")
+                    .baseUrl("http://192.168.0.106:3000/")
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()

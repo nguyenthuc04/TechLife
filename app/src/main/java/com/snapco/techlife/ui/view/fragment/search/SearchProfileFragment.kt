@@ -104,12 +104,12 @@ class SearchProfileFragment : Fragment() {
 
                 listChannelViewModel.checkChannelExists(idCheck1) { check1 ->
                     if (check1) {
-                        // Kênh đã tồn tại với idChannel
+                        // Kênh đã tồn tại với check1
                         startActivity<ChatActivity>(){
                             putExtra("ID", idCheck1)
                         }
                     } else {
-                        // Nếu idChannel không tồn tại, kiểm tra tiếp idCheck
+                        // Nếu idChannel không tồn tại, kiểm tra tiếp check2
                         listChannelViewModel.checkChannelExists(idCheck2) { check2 ->
                             if (check2) {
                                 // Kênh đã tồn tại với idCheck
@@ -118,7 +118,10 @@ class SearchProfileFragment : Fragment() {
                                 }
                             } else {
                                 // Nếu cả idChannel và idCheck không tồn tại, tạo kênh mới với idChannel
-                                createChannel(idCheck2,idUserSearch)
+                                createChannel(idCheck1,idUserSearch)
+                                startActivity<ChatActivity>(){
+                                    putExtra("ID", idCheck1)
+                                }
                             }
                         }
                     }

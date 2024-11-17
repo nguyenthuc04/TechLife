@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
                     status = "true",
                 )
             accountManager.addAccount(userAccount)
-            userViewModel.connectChat(it.id, it.account, tokenChat)
+            userViewModel.connectChat(it.id, it.name, tokenChat,it.avatar)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnLogin.text = "Đăng nhập"
                 binding.progressBar.gone()

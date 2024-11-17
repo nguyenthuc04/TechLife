@@ -85,6 +85,8 @@ class EditProfileActivity : AppCompatActivity() {
                     BottomSheetProfielAvatar().apply {
                         setItems(items)
                     }
+                val idUser = UserDataHolder.getUserId() ?: ""
+                userViewModel.updateAvatarUserChat(idUser, items.toString())
                 bottomSheet.show(supportFragmentManager, bottomSheet.tag)
             }
             textView23.setOnClickListener {

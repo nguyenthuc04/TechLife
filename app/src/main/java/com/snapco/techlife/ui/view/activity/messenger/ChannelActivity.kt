@@ -40,8 +40,7 @@ class ChannelActivity : AppCompatActivity() {
         filter = Filters.and(
             Filters.eq("type", "messaging"),
             Filters.`in`("members", listOf(client.getCurrentUser()!!.id)),
-//            Filters.ne("last_message_at", ""), // loại bỏ các kênh chưa có tin nhắn nào
-//            Filters.greaterThan("last_message_at", 0)
+            Filters.exists("last_message_at")
         ),
         sort = QuerySortByField.descByName("last_updated"),
         limit = 30,
@@ -92,13 +91,6 @@ class ChannelActivity : AppCompatActivity() {
 
     }
 
-    // Log out user function
-//    @SuppressLint("CheckResult")
-//    private fun logOutUser(onLogoutSuccess: () -> Unit) {
-//        client.disconnect(flushPersistence = true)
-//        onLogoutSuccess()
-//    }
-
     private fun setupSearchListener() {
         binding.edtSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -112,8 +104,9 @@ class ChannelActivity : AppCompatActivity() {
                     val filter = Filters.and(
                         Filters.eq("type", "messaging"), // Lọc theo loại kênh
                         Filters.`in`("members", listOf(currentUser.id)), // Lọc theo thành viên
+                        Filters.exists("last_message_at"),
                         Filters.or( // Lọc theo tên người dùng trong extraData
-                            Filters.autocomplete("user1_name", query),
+                            Filters.autocomplete("name", query),
                             Filters.autocomplete("user2_name", query)
                         )
                     )
@@ -124,7 +117,8 @@ class ChannelActivity : AppCompatActivity() {
                     channelListViewModel.setFilters(
                         Filters.and(
                             Filters.eq("type", "messaging"),
-                            Filters.`in`("members", listOf(currentUser!!.id))
+                            Filters.`in`("members", listOf(currentUser!!.id)),
+                            Filters.exists("last_message_at") // loc cac kenh ko co tin nhan
                         )
                     )
                 }
