@@ -106,7 +106,7 @@ class ChannelActivity : AppCompatActivity() {
                         Filters.`in`("members", listOf(currentUser.id)), // Lọc theo thành viên
                         Filters.exists("last_message_at"),
                         Filters.or( // Lọc theo tên người dùng trong extraData
-                            Filters.autocomplete("name", query),
+                            Filters.autocomplete("user1_name", query),
                             Filters.autocomplete("user2_name", query)
                         )
                     )
@@ -127,6 +127,5 @@ class ChannelActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
     }
-
 
 }

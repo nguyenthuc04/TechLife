@@ -51,6 +51,8 @@ class SearchProfileFragment : Fragment() {
     private var isFollowing = false
     private lateinit var currentUserId: String
     private lateinit var profileUserId: String
+    private lateinit var profileUserName: String
+    private lateinit var userName: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +60,7 @@ class SearchProfileFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchProfileBinding.inflate(inflater, container, false)
         listChannelViewModel = ViewModelProvider(this).get(ChannelViewModel::class.java)
+        userName = UserDataHolder.getUserName().toString()
         return binding.root
     }
 
@@ -76,6 +79,7 @@ class SearchProfileFragment : Fragment() {
         // Lấy thông tin người dùng và hiển thị
         searchActivityViewModel.user.observe(viewLifecycleOwner) { user ->
             profileUserId = user._id
+            profileUserName = user.name
             binding.toolbarCustomTitle.text = user.name
             binding.txtNichName.text = user.nickname
             Glide.with(binding.imgAvatar.context).load(user.avatar).into(binding.imgAvatar)
@@ -139,6 +143,28 @@ class SearchProfileFragment : Fragment() {
             } else {
                 followViewModel.followUser(FollowRequest(currentUserId, profileUserId))
             }
+
+            val idCheck1 = profileUserId + currentUserId
+            val idCheck2 = currentUserId + profileUserId
+
+            listChannelViewModel.checkChannelExists(idCheck1) { check1 ->
+                if (check1) {
+                    // Kênh đã tồn tại với check1
+
+                } else {
+                    // Nếu idChannel không tồn tại, kiểm tra tiếp check2
+                    listChannelViewModel.checkChannelExists(idCheck2) { check2 ->
+                        if (check2) {
+                            // Kênh đã tồn tại với idCheck
+
+                        } else {
+                            // Nếu cả idChannel và idCheck không tồn tại, tạo kênh mới với idChannel
+                            createChannel(idCheck1,profileUserId)
+                        }
+                    }
+                }
+            }
+
         }
 
         // Lắng nghe kết quả theo dõi và cập nhật giao diện
@@ -167,9 +193,9 @@ class SearchProfileFragment : Fragment() {
     private fun createChannel(channelId: String, userIdSelect: String) {
         // Tạo extraData với thuộc tính user1_name và user2_name
         val extraData = mapOf(
-            "user_create" to client.getCurrentUser()!!.name,  // Tên người dùng hiện tại
+            "user1_name" to userName,  // Tên người dùng hiện tại
+            "user2_name" to profileUserName,  // Tên người dùng hiện tại
         )
-
         // Gọi phương thức createChannel trong ViewModel
         listChannelViewModel.createChannel(channelId, userIdSelect, extraData)
     }
