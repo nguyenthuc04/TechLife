@@ -55,14 +55,14 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(TAG, "Login successful: $response")
 
                 val user = response.user
-                Log.d("phongday", "Login successful: " + user.id)
+//                Log.d("phongday", "Login successful: " + user.id)
                 val tokenChat = response.streamToken.toString()
 
                 if (user != null) {
                     UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
                     Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
 
-                    userViewModel.connectChat(user.id, user.account, tokenChat)
+                    userViewModel.connectChat(user.id, user.name, tokenChat)
                 }
 
                 Handler(Looper.getMainLooper()).postDelayed({

@@ -46,11 +46,13 @@ data class UpdateUserRequest(
     val bio: String,
     val avatar: String,
     val accountType: String,
+    val streamToken: String? = null // thuoc tinh token cho chat
 )
 
 data class UpdateUserResponse(
     val message: String,
     val user: User,
+    val streamToken: String? = null // thuoc tinh token cho chat
 )
 
 data class CreateUserRequest(
@@ -62,11 +64,13 @@ data class CreateUserRequest(
     val bio: String = "",
     val avatar: String = "",
     val accountType: String = "",
+    val streamToken: String? = null // thuoc tinh token cho chat
 )
 
 data class CreateUserResponse(
     val message: String,
     val user: User,
+    val streamToken: String? = null
 )
 
 data class CheckEmailRequest(
@@ -114,4 +118,12 @@ data class UnfollowResponse(
     val message: String,
     val success: Boolean,
     val updatedUser: User
+)
+
+data class TokenStreamRequest(
+    val userId: String
+)
+
+data class TokenStreamResponse(
+    val streamToken: String,
 )
