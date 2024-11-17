@@ -84,8 +84,7 @@
             android:name=".ui.view.activity.signup.CreatePassActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.LoginActivity"
-
+            android:name=".ui.view.activity.MainActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.signup.BirthdayActivity"

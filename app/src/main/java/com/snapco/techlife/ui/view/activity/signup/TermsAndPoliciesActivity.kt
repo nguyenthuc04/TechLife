@@ -19,9 +19,9 @@ import com.snapco.techlife.extensions.setHighlightedText
 import com.snapco.techlife.extensions.showCustomAlertDialog
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.login.LoginActivity
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.SignUpDataHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
-import com.snapco.techlife.ui.viewmodel.UserViewModel
 
 class TermsAndPoliciesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTermsAndPoliciesBinding
@@ -53,6 +53,7 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
                 },
             )
         }
+
         userViewModel.createUserResponse.observe(
             this,
             Observer { response ->
@@ -60,15 +61,14 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
                     Log.d(TAG, "SignUp successful: $response")
                     val user = response.user
 
-
                     if (user != null) {
                         UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
                         Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
 
                         val tokenChat = response.streamToken
                         if (tokenChat != null) {
-                            userViewModel.connectChat(user.id, user.name,tokenChat)
-                            Log.d(TAG, "onCreate:  " +tokenChat )
+                            userViewModel.connectChat(user.id, user.name, tokenChat)
+                            Log.d(TAG, "onCreate:  " + tokenChat)
                         }
                     }
                     Handler(Looper.getMainLooper()).postDelayed({
@@ -76,9 +76,6 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         startActivity<LoginActivity>()
                     }, 2000)
-
-
-
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         binding.btnNext.text = "Tôi đồng ý"

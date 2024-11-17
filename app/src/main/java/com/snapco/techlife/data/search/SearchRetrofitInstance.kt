@@ -1,5 +1,6 @@
 package com.snapco.techlife.data.repository
 
+import com.snapco.techlife.data.search.SearchApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

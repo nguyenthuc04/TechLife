@@ -1,5 +1,8 @@
 package com.snapco.techlife.data.model
 
+import android.os.Parcel
+import android.os.Parcelable
+
 data class User(
     val id: String = "",
     val account: String = "",
@@ -46,13 +49,13 @@ data class UpdateUserRequest(
     val bio: String,
     val avatar: String,
     val accountType: String,
-    val streamToken: String? = null // thuoc tinh token cho chat
+    val streamToken: String? = null, // thuoc tinh token cho chat
 )
 
 data class UpdateUserResponse(
     val message: String,
     val user: User,
-    val streamToken: String? = null // thuoc tinh token cho chat
+    val streamToken: String? = null, // thuoc tinh token cho chat
 )
 
 data class CreateUserRequest(
@@ -64,13 +67,13 @@ data class CreateUserRequest(
     val bio: String = "",
     val avatar: String = "",
     val accountType: String = "",
-    val streamToken: String? = null // thuoc tinh token cho chat
+    val streamToken: String? = null, // thuoc tinh token cho chat
 )
 
 data class CreateUserResponse(
     val message: String,
     val user: User,
-    val streamToken: String? = null
+    val streamToken: String? = null,
 )
 
 data class CheckEmailRequest(
@@ -141,28 +144,28 @@ data class SearchUserResponse(
 
 data class FollowRequest(
     val followerId: String,
-    val followeeId: String
+    val followeeId: String,
 )
 
 data class FollowResponse(
     val message: String,
     val success: Boolean,
-    val updatedUser: User
+    val updatedUser: User,
 )
 
 data class UnfollowRequest(
     val followerId: String,
-    val followeeId: String
+    val followeeId: String,
 )
 
 data class UnfollowResponse(
     val message: String,
     val success: Boolean,
-    val updatedUser: User
+    val updatedUser: User,
 )
 
 data class TokenStreamRequest(
-    val userId: String
+    val userId: String,
 )
 
 data class TokenStreamResponse(
