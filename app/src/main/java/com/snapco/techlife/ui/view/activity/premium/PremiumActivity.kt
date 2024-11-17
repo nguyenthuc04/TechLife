@@ -1,4 +1,4 @@
-package com.snapco.techlife.ui.view.activity
+package com.snapco.techlife.ui.view.activity.premium
 
 import android.content.Intent
 import android.os.Bundle
