@@ -2,7 +2,6 @@ package com.snapco.techlife.data.model.home.post
 
 import com.snapco.techlife.data.model.home.comment.Comment
 import com.snapco.techlife.data.model.home.like.Like
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -14,19 +13,15 @@ interface PostService {
     @GET("getPost/{postId}")
     fun fetchPostById(@Path("postId") postId: String): Call<Post>
 
-    @Multipart
     @POST("createPost")
     fun createPost(
-        @Part("post_data") postData: String,
-        @Part file: MultipartBody.Part? = null
+        @Body postData: String // JSON string containing post data including `imageUrl`
     ): Call<Post>
 
-    @Multipart
     @PUT("updatePost/{postId}")
     fun updatePost(
         @Path("postId") postId: String,
-        @Part("post_data") postData: String,
-        @Part file: MultipartBody.Part? = null
+        @Body postData: String // JSON string containing updated post data including `imageUrl`
     ): Call<Void>
 
     @DELETE("deletePost/{postId}")

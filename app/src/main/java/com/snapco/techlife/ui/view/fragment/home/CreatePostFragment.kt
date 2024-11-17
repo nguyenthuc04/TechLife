@@ -17,14 +17,14 @@ import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.home.post.Post
 import com.snapco.techlife.databinding.FragmentCreatePostBinding
-import com.snapco.techlife.ui.viewmodel.home.SharedViewModel
+import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 import java.util.UUID
 
 class CreatePostFragment : Fragment() {
     private lateinit var binding: FragmentCreatePostBinding
     private var imageUri: Uri? = null
     private lateinit var imageBitmap: Bitmap
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     companion object {
         const val REQUEST_IMAGE_PICK = 1
@@ -132,7 +132,7 @@ class CreatePostFragment : Fragment() {
                 isLiked = false
             )
 
-            sharedViewModel.createPost(newPost)
+            homeViewModel.createPost(newPost)
             Toast.makeText(context, "Post created successfully!", Toast.LENGTH_SHORT).show()
             resetFields()
         } ?: Toast.makeText(context, "Please select an image.", Toast.LENGTH_SHORT).show()

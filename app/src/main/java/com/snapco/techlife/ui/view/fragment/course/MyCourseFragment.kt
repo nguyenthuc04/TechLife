@@ -54,24 +54,11 @@ class MyCourseFragment : Fragment() {
 
         viewModel.fetchCoursesByUser(idUser)
 
-        // Xử lý sự kiện khi bấm vào nút Thêm Khóa Học
-        binding.btnAddCourse.setOnClickListener {
-            val intent = Intent(activity, AddCourse::class.java)
-            startActivityForResult(intent, REQUEST_CODE_ADD_COURSE)
-        }
+
 
         // Trả về root view của binding để sử dụng với View Binding
         return binding.root
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_ADD_COURSE && resultCode == AppCompatActivity.RESULT_OK) {
-            viewModel.fetchCourses() // Lấy lại danh sách khóa học sau khi thêm
-        }
-    }
 
-    companion object {
-        private const val REQUEST_CODE_ADD_COURSE = 1
-    }
 }
