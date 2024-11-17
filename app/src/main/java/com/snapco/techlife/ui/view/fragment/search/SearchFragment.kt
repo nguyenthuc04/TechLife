@@ -1,10 +1,8 @@
 package com.snapco.techlife.ui.view.fragment.search
 
 import SearchAdapter
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +13,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.snapco.techlife.R
 import com.snapco.techlife.databinding.FragmentSearchBinding
 import com.snapco.techlife.extensions.replaceFragment
-import com.snapco.techlife.ui.view.activity.PremiumActivity
+import com.snapco.techlife.ui.view.activity.premium.PremiumActivity
 import com.snapco.techlife.ui.viewmodel.SearchViewModel
-import com.snapco.techlife.ui.viewmodel.UserViewModel
-import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class SearchFragment : Fragment() {
 
