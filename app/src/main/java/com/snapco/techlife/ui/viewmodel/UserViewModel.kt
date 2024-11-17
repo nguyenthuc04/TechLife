@@ -2,16 +2,22 @@
 
 package com.snapco.techlife.ui.viewmodel
 
+import android.content.Intent
+import android.net.http.HttpException
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapco.techlife.data.model.*
 import com.snapco.techlife.data.model.api.ApiClient
+
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class UserViewModel : ViewModel() {
     private val _user = MutableLiveData<User>()
@@ -44,6 +50,7 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ApiClient.apiService.createUser(createUserRequest)
+                Log.d("DATVMD", "createUser: token = ${response.streamToken}")
                 _createUserResponse.postValue(response)
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Create user failed", e)
@@ -100,6 +107,43 @@ class UserViewModel : ViewModel() {
                     Log.d("checkm", "connectChat: connect fail ${result.errorOrNull()}")
                 }
             }
+
+    fun connectChat (userId: String,name: String,streamToken: String) {
+        client.connectUser(
+            io.getstream.chat.android.models.User(id = userId, name = name),
+            streamToken
+        ).enqueue { result ->
+            if (result.isSuccess) {
+                Log.d("checkm", "connectChat: connect ok")
+            } else {
+                Log.d("checkm", "connectChat: connect fail ${result.errorOrNull()}")
+            }
+        }
+    }
+
+    fun updateNameUserChat(userId: String, newName: String) {
+        // Lấy thông tin user hiện tại từ ChatClient
+        val currentUser = ChatClient.instance().getCurrentUser()
+
+        if (currentUser != null && currentUser.id == userId) {
+            // Tạo một đối tượng User mới với tên cập nhật
+            val updatedUser = io.getstream.chat.android.models.User(
+                id = currentUser.id,
+                name = newName,
+                image = currentUser.image, // Giữ nguyên ảnh đại diện nếu có
+            )
+
+            // Cập nhật thông tin user trên server của GetStream
+            client.updateUser(updatedUser).enqueue { result ->
+                if(result.isSuccess){
+                    Log.d("UpdateUser", "Cập nhật tên thành công: ${result.getOrNull()!!.name}")
+                } else{
+                    Log.e("UpdateUser", "Cập nhật tên thất bại: ${result.errorOrNull()!!.message}")
+                }
+            }
+        } else {
+            println("Người dùng không tồn tại hoặc không trùng khớp ID.")
+        }
     }
 
     fun updateUser(
@@ -149,4 +193,6 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+
 }

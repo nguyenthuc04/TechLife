@@ -59,15 +59,26 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
                 if (response != null) {
                     Log.d(TAG, "SignUp successful: $response")
                     val user = response.user
+
+
                     if (user != null) {
                         UserDataHolder.setUserData(user.id, user.account, user.name, user.avatar)
                         Log.d(TAG, "User data: ${UserDataHolder.getUserId()}")
+
+                        val tokenChat = response.streamToken
+                        if (tokenChat != null) {
+                            userViewModel.connectChat(user.id, user.name,tokenChat)
+                            Log.d(TAG, "onCreate:  " +tokenChat )
+                        }
                     }
                     Handler(Looper.getMainLooper()).postDelayed({
                         binding.btnNext.text = "Tôi đồng ý"
                         binding.progressBar.visibility = View.GONE
                         startActivity<LoginActivity>()
                     }, 2000)
+
+
+
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         binding.btnNext.text = "Tôi đồng ý"
@@ -84,6 +95,7 @@ class TermsAndPoliciesActivity : AppCompatActivity() {
         binding.btnNext.text = ""
         binding.progressBar.visibility = View.VISIBLE
         val oldUser = SignUpDataHolder.getUser()
+
         val user =
             oldUser?.copy(
                 accountType = "mentee",

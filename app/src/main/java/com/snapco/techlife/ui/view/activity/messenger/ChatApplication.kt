@@ -2,6 +2,7 @@ package com.snapco.techlife.ui.view.activity.messenger
 
 import android.app.Application
 import com.cloudinary.android.MediaManager
+
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.models.UploadAttachmentsNetworkType
 import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
