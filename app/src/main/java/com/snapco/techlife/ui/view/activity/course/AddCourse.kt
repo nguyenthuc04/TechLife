@@ -26,12 +26,14 @@ class AddCourse : AppCompatActivity() {
         val txtCoursePrice = findViewById<EditText>(R.id.edtCoursePrice)
         val txtCourseDuration = findViewById<EditText>(R.id.edtCourseDuration)
         val txtCourseDate = findViewById<EditText>(R.id.edtCourseDate)
+        val txtCourseDescribe = findViewById<EditText>(R.id.edtCourseDescribe)
 
         findViewById<Button>(R.id.btnSaveCourse).setOnClickListener {
             val name = txtCourseName.text.toString().trim()
             val price = txtCoursePrice.text.toString().trim()
             val duration = txtCourseDuration.text.toString().trim()
             val date = txtCourseDate.text.toString().trim()
+            val describe = txtCourseDescribe.text.toString().trim()
 
             // Lấy idUser từ UserDataHolder
 //            val idUser = UserDataHolder.getUserId()
@@ -60,6 +62,10 @@ class AddCourse : AppCompatActivity() {
                     txtCourseDate.error = "Ngày tạo không được để trống"
                     txtCourseDate.requestFocus()
                 }
+                describe.isEmpty() -> {
+                    txtCourseDescribe.error = "Mô tả khóa học không được để trống"
+                    txtCourseDescribe.requestFocus()
+                }
                 else -> {
                     val course = Course(
                         id = UUID.randomUUID().toString(),
@@ -67,12 +73,14 @@ class AddCourse : AppCompatActivity() {
                         price = price,
                         duration = duration,
                         date = date,
+                        describe = describe,
                         idUser = idUser // Truyền khóa ngoại idUser
                     )
 
                     viewModel.addCourse(course)
                 }
             }
+
         }
 
         viewModel.isCourseAdded.observe(this, Observer { isAdded ->

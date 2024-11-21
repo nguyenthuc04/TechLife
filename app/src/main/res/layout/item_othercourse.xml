@@ -10,25 +10,47 @@
     android:background="@drawable/layout_course">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Name: "
+        android:textColor="#C0C0C0"
+        android:textSize="10sp" />
+    <TextView
         android:id="@+id/txtCourseName_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Course Name"
         android:textColor="#FFFFFF" />
-
     <TextView
-        android:id="@+id/txtCourseDate_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Course Date"
+        android:text="Course Describe: "
+        android:textColor="#C0C0C0"
+        android:textSize="10sp" />
+    <TextView
+        android:id="@+id/txtCourseDescribe_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Describe"
         android:textColor="#FFFFFF" />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Price: "
+        android:textColor="#C0C0C0"
+        android:textSize="10sp" />
     <TextView
         android:id="@+id/txtCoursePrice_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Course Price"
         android:textColor="#FFFFFF" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Duration: "
+        android:textColor="#C0C0C0"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/txtCourseDuration_other"
@@ -36,5 +58,20 @@
         android:layout_height="wrap_content"
         android:text="Course Duration"
         android:textColor="#FFFFFF" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Date: "
+        android:textColor="#C0C0C0"
+        android:textSize="10sp" />
+    <TextView
+        android:id="@+id/txtCourseDate_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Date"
+        android:textColor="#FFFFFF" />
+
+
+
 
 </LinearLayout>

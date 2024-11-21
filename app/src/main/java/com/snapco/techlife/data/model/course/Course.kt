@@ -8,5 +8,6 @@ data class Course(
     val date: String,
     val price: String,
     val duration: String,
+    val describe: String,
     val idUser: String?
 )

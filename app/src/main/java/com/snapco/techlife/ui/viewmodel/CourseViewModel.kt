@@ -27,23 +27,29 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
     fun addCourse(course: Course) {
         HttpRequest.addCourse(course,
             onSuccess = {
-                fetchCourses() // Gọi lại fetchCourses để làm mới danh sách
-                isCourseAdded.value = true
+                if (course.idUser != null) {
+                    fetchCoursesByUser(course.idUser) // Gọi lại fetchCourses để làm mới danh sách
+                    isCourseAdded.value = true
+                } else {
+                    errorMessage.value = "Lỗi: Không có thông tin người dùng"
+                }
             },
             onFailure = { error -> errorMessage.value = error }
         )
     }
-    fun deleteCourse(courseId: String) {
-        // Thêm kiểm tra cho ID
+    fun deleteCourse(courseId: String, idUser: String) {
         if (courseId.isEmpty()) {
             Log.e("CourseViewModel", "Invalid courseId: $courseId")
             return
         }
         HttpRequest.deleteCourse(courseId,
-            onSuccess = { fetchCourses() },
-            onFailure = { errorMessage.value = it } // Sửa để lấy thông báo lỗi từ phản hồi
+            onSuccess = {
+                fetchCoursesByUser(idUser) // Lấy danh sách khóa học theo idUser
+            },
+            onFailure = { errorMessage.value = it }
         )
     }
+
 
     fun getCourseById(courseId: String) {
         HttpRequest.getCourseById(courseId,
@@ -69,12 +75,13 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
 
 
     fun updateCourse(course: Course) {
-        HttpRequest.updateCourse(course.id!!, course, // Bạn cần thêm phương thức updateCourse trong HttpRequest
+        HttpRequest.updateCourse(course.id!!, course,
             onSuccess = {
-                fetchCourses() // Lấy lại danh sách khóa học
+                fetchCoursesByUser(course.idUser!!) // Lấy danh sách theo idUser của khóa học
                 isCourseUpdated.value = true
             },
             onFailure = { error -> errorMessage.value = error }
         )
     }
+
 }
