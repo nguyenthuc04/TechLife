@@ -43,6 +43,9 @@ class HomeViewModel : ViewModel() {
     private val _reelListProfile = MutableLiveData<ReelProfileResponse>()
     val reelListProfile: LiveData<ReelProfileResponse> get() = _reelListProfile
 
+    private val _randomPosts = MutableLiveData<List<Post>>()
+    val randomPosts: LiveData<List<Post>> get() = _randomPosts
+
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
             try {
@@ -158,4 +161,5 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
 }
