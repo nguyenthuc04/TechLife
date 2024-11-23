@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.course.Course
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
 class OtherCourseAdapter(

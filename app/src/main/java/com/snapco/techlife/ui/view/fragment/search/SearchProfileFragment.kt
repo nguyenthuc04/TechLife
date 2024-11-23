@@ -1,34 +1,25 @@
 // SearchProfileFragment.kt
 package com.snapco.techlife.ui.view.fragment.search
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayoutMediator
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.FollowRequest
 import com.snapco.techlife.data.model.UnfollowRequest
-import com.snapco.techlife.databinding.FragmentSearchProfileBinding import com.snapco.techlife.ui.view.fragment.profile.LoadableFragment
-import com.snapco.techlife.ui.viewmodel.FollowViewModel
-import com.snapco.techlife.ui.viewmodel.SearchViewModel
-import com.snapco.techlife.ui.viewmodel.UserViewModel
-import com.snapco.techlife.data.model.follow.FollowRepository
+import com.snapco.techlife.databinding.FragmentSearchProfileBinding
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChatActivity
+import com.snapco.techlife.ui.viewmodel.SearchViewModel
+import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import io.getstream.chat.android.client.ChatClient
@@ -39,29 +30,26 @@ class SearchProfileFragment : Fragment() {
     private lateinit var listChannelViewModel: ChannelViewModel
     private val searchActivityViewModel: SearchViewModel by activityViewModels()
     private val client: ChatClient by lazy { ChatClient.instance() }
-    private val followViewModel: FollowViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val repository = FollowRepository() // Khởi tạo FollowRepository
-                return FollowViewModel(repository) as T // Tạo FollowViewModel với repository
-            }
-        }
-    }
+    private val userViewModel: UserViewModel by viewModels()
 
     private var isFollowing = false
     private lateinit var currentUserId: String
     private lateinit var profileUserId: String
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentSearchProfileBinding.inflate(inflater, container, false)
         listChannelViewModel = ViewModelProvider(this).get(ChannelViewModel::class.java)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         // Khởi tạo currentUserId
@@ -71,7 +59,6 @@ class SearchProfileFragment : Fragment() {
         binding.toolbarCustomBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
 
         // Lấy thông tin người dùng và hiển thị
         searchActivityViewModel.user.observe(viewLifecycleOwner) { user ->
@@ -96,7 +83,6 @@ class SearchProfileFragment : Fragment() {
 
             // chuyen sang messenger
             binding.btnMessenger.setOnClickListener {
-
                 val idUserSearch = user._id // id nguoi dc tim kiem
                 val idMe = (client.getCurrentUser()?.id ?: "") // id nguoi dung
                 val idCheck1 = idUserSearch + idMe
@@ -105,7 +91,7 @@ class SearchProfileFragment : Fragment() {
                 listChannelViewModel.checkChannelExists(idCheck1) { check1 ->
                     if (check1) {
                         // Kênh đã tồn tại với idChannel
-                        startActivity<ChatActivity>(){
+                        startActivity<ChatActivity> {
                             putExtra("ID", idCheck1)
                         }
                     } else {
@@ -118,54 +104,63 @@ class SearchProfileFragment : Fragment() {
                                 }
                             } else {
                                 // Nếu cả idChannel và idCheck không tồn tại, tạo kênh mới với idChannel
-                                createChannel(idCheck2,idUserSearch)
+                                createChannel(idCheck2, idUserSearch)
                             }
                         }
                     }
                 }
             }
-
         }
-
-
 
         // Xử lý nút theo dõi/bỏ theo dõi
         binding.btnFollow.setOnClickListener {
             if (isFollowing) {
-                followViewModel.unfollowUser(UnfollowRequest(currentUserId, profileUserId))
+                userViewModel.unfollowUser(UnfollowRequest(currentUserId, profileUserId))
             } else {
-                followViewModel.followUser(FollowRequest(currentUserId, profileUserId))
+                userViewModel.followUser(FollowRequest(currentUserId, profileUserId))
             }
         }
 
         // Lắng nghe kết quả theo dõi và cập nhật giao diện
-        followViewModel.followResponse.observe(viewLifecycleOwner) { response ->
-            if (response.success) {
+        userViewModel.followResponse.observe(viewLifecycleOwner) { response ->
+            if (response!!.success) {
                 isFollowing = true
                 updateFollowButton()
                 binding.txtFollower.text =
-                    (binding.txtFollower.text.toString().toInt() + 1).toString()
+                    (
+                        binding.txtFollower.text
+                            .toString()
+                            .toInt() + 1
+                    ).toString()
                 Toast.makeText(requireContext(), "Đã theo dõi", Toast.LENGTH_SHORT).show()
             }
         }
 
         // Lắng nghe kết quả bỏ theo dõi và cập nhật giao diện
-        followViewModel.unfollowResponse.observe(viewLifecycleOwner) { response ->
-            if (response.success) {
+        userViewModel.unfollowResponse.observe(viewLifecycleOwner) { response ->
+            if (response!!.success) {
                 isFollowing = false
                 updateFollowButton()
                 binding.txtFollower.text =
-                    (binding.txtFollower.text.toString().toInt() - 1).toString()
+                    (
+                        binding.txtFollower.text
+                            .toString()
+                            .toInt() - 1
+                    ).toString()
                 Toast.makeText(requireContext(), "Đã bỏ theo dõi", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun createChannel(channelId: String, userIdSelect: String) {
+    private fun createChannel(
+        channelId: String,
+        userIdSelect: String,
+    ) {
         // Tạo extraData với thuộc tính user1_name và user2_name
-        val extraData = mapOf(
-            "user_create" to client.getCurrentUser()!!.name,  // Tên người dùng hiện tại
-        )
+        val extraData =
+            mapOf(
+                "user_create" to client.getCurrentUser()!!.name, // Tên người dùng hiện tại
+            )
 
         // Gọi phương thức createChannel trong ViewModel
         listChannelViewModel.createChannel(channelId, userIdSelect, extraData)
@@ -178,20 +173,19 @@ class SearchProfileFragment : Fragment() {
             binding.btnFollow.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    R.color.light_gray
-                )
+                    R.color.light_gray,
+                ),
             )
         } else {
             binding.btnFollow.text = "Theo dõi"
             binding.btnFollow.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    R.color.blueLogo
-                )
+                    R.color.blueLogo,
+                ),
             )
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

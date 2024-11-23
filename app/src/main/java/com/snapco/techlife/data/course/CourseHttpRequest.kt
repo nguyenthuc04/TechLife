@@ -1,5 +1,6 @@
 package com.snapco.techlife.data.course
 
+import com.snapco.techlife.data.model.course.Course
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

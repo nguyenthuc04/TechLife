@@ -10,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.snapco.techlife.data.course.MyCourseAdapter
+import com.snapco.techlife.data.course.OtherCourseAdapter
 import com.snapco.techlife.databinding.FragmentMyCourseBinding
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
 class MyCourseFragment : Fragment() {
     private lateinit var viewModel: CourseViewModel
     private lateinit var binding: FragmentMyCourseBinding
-    private lateinit var courseAdapter: MyCourseAdapter
+    private lateinit var courseAdapter: OtherCourseAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +32,7 @@ class MyCourseFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo adapter rỗng ban đầu cho RecyclerView
-        courseAdapter = MyCourseAdapter(mutableListOf(), viewModel)
+        courseAdapter = OtherCourseAdapter(mutableListOf(), viewModel)
         binding.recyclerView.adapter = courseAdapter
 
         // Quan sát danh sách khóa học từ ViewModel
