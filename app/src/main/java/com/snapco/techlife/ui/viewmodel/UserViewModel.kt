@@ -127,7 +127,41 @@ class UserViewModel : ViewModel() {
                 io.getstream.chat.android.models.User(
                     id = currentUser.id,
                     name = newName,
-                    image = currentUser.image, // Giữ nguyên ảnh đại diện nếu có
+                )
+
+            // Cập nhật thông tin user trên server của GetStream
+            client.updateUser(updatedUser).enqueue { result ->
+                if (result.isSuccess) {
+                    Log.d("UpdateUser", "Cập nhật tên thành công: ${result.getOrNull()!!.name}")
+                } else {
+                    Log.e(
+                        "UpdateUser",
+                        "Cập nhật tên thất bại: ${result.errorOrNull()!!.message}",
+                    )
+                }
+            }
+        } else {
+            println("Người dùng không tồn tại hoặc không trùng khớp ID.")
+        }
+    }
+
+    fun updateAvatarUserChat(
+        userId: String,
+        avatar: String?
+    ) {
+        // Lấy thông tin user hiện tại từ ChatClient
+        val currentUser = ChatClient.instance().getCurrentUser()
+
+        if (currentUser != null && currentUser.id == userId) {
+            // Tạo một đối tượng User mới với tên cập nhật
+            val updatedUser =
+                io.getstream.chat.android.models.User(
+                    id = currentUser.id,
+                    image = if (avatar != "") {
+                        avatar
+                    } else {
+                        currentUser.image
+                    }.toString(), // Giữ nguyên ảnh đại diện nếu có
                 )
 
             // Cập nhật thông tin user trên server của GetStream
@@ -148,13 +182,20 @@ class UserViewModel : ViewModel() {
 
     fun connectChat(
         userId: String,
-        account: String,
+        name: String,
         streamToken: String,
+        avatar: String?
     ) {
         client
             .connectUser(
                 io.getstream.chat.android.models
-                    .User(id = userId, name = account),
+                    .User(
+                        id = userId, name = name, image = (if (avatar != "") {
+                            avatar
+                        } else {
+                            "https://s3.ap-southeast-1.amazonaws.com/cdn.vntre.vn/default/avatar-mac-dinh-15-1724862465.jpg"
+                        }).toString()
+                    ),
                 streamToken,
             ).enqueue { result ->
                 if (result.isSuccess) {

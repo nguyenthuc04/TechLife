@@ -13,11 +13,11 @@
       android:id="@+id/toolbar"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:background="?attr/colorPrimary"
       style="@style/CustomButtonLight"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      android:background="#276ab8"
       app:titleTextColor="@android:color/white">
 
     <!-- Nút Back -->

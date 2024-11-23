@@ -1,4 +1,4 @@
-package com.snapco.techlife.data.course
+package com.snapco.techlife.data.model.course
 
 import android.app.AlertDialog
 import android.util.Log
@@ -15,35 +15,30 @@ import com.snapco.techlife.ui.viewmodel.CourseViewModel
 
 class MyCourseAdapter(
     private var courses: MutableList<Course>,
-    private val viewModel: CourseViewModel,
+    private val viewModel: CourseViewModel
 ) : RecyclerView.Adapter<MyCourseAdapter.CourseViewHolder>() {
-    inner class CourseViewHolder(
-        view: View,
-    ) : RecyclerView.ViewHolder(view) {
+
+    inner class CourseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val courseName: TextView = view.findViewById(R.id.txtCourseName)
         val coursePrice: TextView = view.findViewById(R.id.txtCoursePrice)
         val courseDuration: TextView = view.findViewById(R.id.txtCourseDuration)
         val courseDate: TextView = view.findViewById(R.id.txtCourseDate)
+        val courseDescribe: TextView = view.findViewById(R.id.txtCourseDescribe)
         val btnDelete: Button = view.findViewById(R.id.btnDeleteCourse)
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ): CourseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_mycourse, parent, false)
         return CourseViewHolder(view)
     }
 
-    override fun onBindViewHolder(
-        holder: CourseViewHolder,
-        position: Int,
-    ) {
+    override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         val course = courses[position]
         holder.courseName.text = course.name
         holder.coursePrice.text = course.price
         holder.courseDuration.text = course.duration
         holder.courseDate.text = course.date
+        holder.courseDescribe.text = course.describe
 
         val courseId = course.id
         if (courseId == null) {
@@ -57,7 +52,7 @@ class MyCourseAdapter(
                 deleteDialogBuilder.setMessage("Bạn có chắc chắn muốn xóa khóa học này không?")
 
                 deleteDialogBuilder.setPositiveButton("Đồng ý") { dialog, _ ->
-                    viewModel.deleteCourse(id)
+                    viewModel.deleteCourse(id, course.idUser!!)
                     dialog.dismiss()
                 }
 
@@ -72,18 +67,21 @@ class MyCourseAdapter(
             }
         }
 
+
         holder.itemView.setOnLongClickListener {
             val dialogView = LayoutInflater.from(holder.itemView.context).inflate(R.layout.dialog_edit_course, null)
             val edtCourseName = dialogView.findViewById<EditText>(R.id.edtCourseName_ed)
             val edtCoursePrice = dialogView.findViewById<EditText>(R.id.edtCoursePrice_ed)
             val edtCourseDuration = dialogView.findViewById<EditText>(R.id.edtCourseDuration_ed)
             val edtCourseDate = dialogView.findViewById<EditText>(R.id.edtCourseDate_ed)
+            val edtCourseDescribe = dialogView.findViewById<EditText>(R.id.edtCourseDescribe_ed)
             val btnSave = dialogView.findViewById<Button>(R.id.btnSaveCourse_ed)
 
             edtCourseName.setText(course.name)
             edtCoursePrice.setText(course.price)
             edtCourseDuration.setText(course.duration)
             edtCourseDate.setText(course.date)
+            edtCourseDescribe.setText(course.describe)
 
             val dialogBuilder = AlertDialog.Builder(holder.itemView.context)
             dialogBuilder.setView(dialogView)
@@ -95,6 +93,7 @@ class MyCourseAdapter(
                 val price = edtCoursePrice.text.toString().trim()
                 val duration = edtCourseDuration.text.toString().trim()
                 val date = edtCourseDate.text.toString().trim()
+                val describe = edtCourseDescribe.text.toString().trim()
 
                 when {
                     name.isEmpty() -> {
@@ -114,15 +113,15 @@ class MyCourseAdapter(
                         edtCourseDate.requestFocus()
                     }
                     else -> {
-                        val updatedCourse =
-                            Course(
-                                id = course.id,
-                                name = name,
-                                price = price,
-                                duration = duration,
-                                date = date,
-                                idUser = course.idUser, // Giữ nguyên idUser khi cập nhật
-                            )
+                        val updatedCourse = Course(
+                            id = course.id,
+                            name = name,
+                            price = price,
+                            duration = duration,
+                            date = date,
+                            describe = describe,
+                            idUser = course.idUser // Giữ nguyên idUser khi cập nhật
+                        )
 
                         viewModel.updateCourse(updatedCourse)
                         dialog.dismiss()
@@ -142,3 +141,4 @@ class MyCourseAdapter(
         notifyDataSetChanged()
     }
 }
+

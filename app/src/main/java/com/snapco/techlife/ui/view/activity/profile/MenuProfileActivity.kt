@@ -2,6 +2,7 @@ package com.snapco.techlife.ui.view.activity.profile
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,9 +16,12 @@ import com.snapco.techlife.ui.view.activity.login.SaveAccActivity
 import com.snapco.techlife.ui.view.activity.login.SaveListAccActivity
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.models.User
 
 class MenuProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuProfileBinding
+    private val client: ChatClient by lazy { ChatClient.instance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +117,7 @@ class MenuProfileActivity : AppCompatActivity() {
         } else {
             startActivity<SaveListAccActivity>()
         }
+        disConnectGetStream()
         finish()
     }
 
@@ -128,5 +133,17 @@ class MenuProfileActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    fun disConnectGetStream () {
+        client.disconnect(flushPersistence = false).enqueue { disconnectResult ->
+            if (disconnectResult.isSuccess) {
+                // Nếu ngắt kết nối thành công, hiển thị thông báo đăng xuất
+                Log.d("DISCONECTCHAT", "disConnectGetStream: ok")
+            } else {
+                // Xử lý lỗi khi ngắt kết nối
+                Log.d("DISCONECTCHAT", "disConnectGetStream: fail")
+            }
+        }
     }
 }

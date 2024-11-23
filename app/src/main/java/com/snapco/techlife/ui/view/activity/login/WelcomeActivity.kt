@@ -57,7 +57,7 @@ class WelcomeActivity : AppCompatActivity() {
                 accountManager.updateAccount(updatedAccount)
                 Log.d("AccountManager", "Account updated: $updatedAccount")
             } ?: Log.d("AccountManager", "Account not found")
-            userViewModel.connectChat(it.id, it.account, tokenChat)
+            userViewModel.connectChat(it.id, it.account, tokenChat,it.avatar)
         }
         startActivity<MainActivity>()
     }

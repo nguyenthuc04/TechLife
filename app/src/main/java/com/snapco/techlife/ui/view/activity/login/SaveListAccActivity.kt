@@ -90,7 +90,7 @@ class SaveListAccActivity : AppCompatActivity() {
                 accountManager.updateAccount(updatedAccount)
                 Log.d("AccountManager", "Account updated: $updatedAccount")
             } ?: Log.d("AccountManager", "Account not found")
-            userViewModel.connectChat(it.id, it.account, tokenChat)
+            userViewModel.connectChat(it.id, it.account, tokenChat,it.avatar)
             Handler(Looper.getMainLooper()).postDelayed({
                 startActivity<MainActivity>()
             }, 2000)

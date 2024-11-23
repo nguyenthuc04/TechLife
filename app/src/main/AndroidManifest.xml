@@ -115,10 +115,10 @@
             android:name=".ui.view.activity.messenger.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.course.CourseActivity"
+            android:name=".ui.view.activity.login.SaveAccActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.SaveAccActivity"
+            android:name=".ui.view.activity.course.CourseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.login.WelcomeActivity"

@@ -1,4 +1,4 @@
-package com.snapco.techlife.data.course
+package com.snapco.techlife.data.model.course
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,5 +8,6 @@ data class Course(
     val date: String,
     val price: String,
     val duration: String,
-    val idUser: String?,
+    val describe: String,
+    val idUser: String?
 )

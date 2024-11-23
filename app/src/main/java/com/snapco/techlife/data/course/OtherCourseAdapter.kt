@@ -20,6 +20,7 @@ class OtherCourseAdapter(
         val coursePrice: TextView = view.findViewById(R.id.txtCoursePrice_other)
         val courseDuration: TextView = view.findViewById(R.id.txtCourseDuration_other)
         val courseDate: TextView = view.findViewById(R.id.txtCourseDate_other)
+        val courseDescribe: TextView = view.findViewById(R.id.txtCourseDescribe_other)
     }
 
     override fun onCreateViewHolder(
@@ -39,6 +40,7 @@ class OtherCourseAdapter(
         holder.coursePrice.text = course.price
         holder.courseDuration.text = course.duration
         holder.courseDate.text = course.date
+        holder.courseDescribe.text = course.describe
 
         val courseId = course.id
         if (courseId == null) {
