@@ -10,6 +10,8 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,12 +19,19 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.PremiumRequest
 import com.snapco.techlife.databinding.ActivityPayPremiumBinding
 import com.snapco.techlife.extensions.CloudinaryUploader
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.MainActivity
+import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class PayPremiumActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPayPremiumBinding
-
+    private val userViewModel: UserViewModel by viewModels()
     private lateinit var cloudinaryUploader: CloudinaryUploader
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
@@ -35,7 +44,6 @@ class PayPremiumActivity : AppCompatActivity() {
         // Khởi tạo layout bằng ViewBinding
         binding = ActivityPayPremiumBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         // Áp dụng window insets cho view chính
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -52,7 +60,7 @@ class PayPremiumActivity : AppCompatActivity() {
         binding.btnConfirm.setOnClickListener {
             uploadImage()
         }
-
+        observeCreatePremiumResponse()
     }
 
     private fun checkPermissionAndPickImage() {
@@ -75,7 +83,7 @@ class PayPremiumActivity : AppCompatActivity() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
-                permission
+                permission,
             ) == PackageManager.PERMISSION_GRANTED -> {
                 pickImage()
             }
@@ -91,11 +99,12 @@ class PayPremiumActivity : AppCompatActivity() {
     }
 
     private fun showPermissionRationale(permission: String) {
-        Toast.makeText(
-            this,
-            "Ứng dụng cần quyền truy cập hình ảnh để chọn và tải lên",
-            Toast.LENGTH_LONG
-        ).show()
+        Toast
+            .makeText(
+                this,
+                "Ứng dụng cần quyền truy cập hình ảnh để chọn và tải lên",
+                Toast.LENGTH_LONG,
+            ).show()
         requestPermission(permission)
     }
 
@@ -111,7 +120,7 @@ class PayPremiumActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -119,18 +128,23 @@ class PayPremiumActivity : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickImage()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Quyền truy cập bị từ chối. Không thể chọn hình ảnh.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast
+                        .makeText(
+                            this,
+                            "Quyền truy cập bị từ chối. Không thể chọn hình ảnh.",
+                            Toast.LENGTH_LONG,
+                        ).show()
                     showManualPermissionInstructions()
                 }
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             selectedImageUri = data.data
@@ -149,39 +163,76 @@ class PayPremiumActivity : AppCompatActivity() {
         selectedImageUri?.let { uri ->
             binding.progressBar.visibility = View.VISIBLE
             binding.textViewStatus.text = "Đang tải lên..."
-            cloudinaryUploader.uploadMedia(uri, false, object : CloudinaryUploader.UploadCallback {
-                override fun onProgress(progress: Int) {
-                    binding.progressBar.progress = progress
-                }
+            cloudinaryUploader.uploadMedia(
+                uri,
+                false,
+                object : CloudinaryUploader.UploadCallback {
+                    override fun onProgress(progress: Int) {
+                        binding.progressBar.progress = progress
+                    }
 
-                override fun onSuccess(url: String) {
-                    binding.progressBar.visibility = View.GONE
-                    binding.textViewStatus.text = "Tải lên thành công"
-                    showUploadedImage(url)
-                }
+                    override fun onSuccess(url: String) {
+                        binding.textViewStatus.text = "Tải lên thành công"
+                        putPremium(url)
+                    }
 
-                override fun onError(errorMessage: String) {
-                    binding.progressBar.visibility = View.GONE
-                    binding.textViewStatus.text = "Lỗi: $errorMessage"
-                }
-            })
+                    override fun onError(errorMessage: String) {
+                        binding.progressBar.visibility = View.GONE
+                        binding.textViewStatus.text = "Lỗi: $errorMessage"
+                    }
+                },
+            )
         } ?: run {
             Toast.makeText(this, "Vui lòng chọn một hình ảnh", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun showUploadedImage(url: String) {
-        Glide.with(this).load(url).into(binding.imgBill)
-        binding.imgBill.visibility = View.VISIBLE
+    private fun putPremium(url: String) {
+        GetUserResponseHolder.getGetUserResponse()?.let { response ->
+            UserDataHolder.getUserId()?.let {
+                val createPremiumRequest =
+                    PremiumRequest(
+                        userId = it,
+                        userName = response.user.nickname,
+                        userImageUrl = response.user.avatar,
+                        imageUrl = url,
+                    )
+                userViewModel.createPremium(createPremiumRequest)
+            }
+        }
+    }
+
+    private fun observeCreatePremiumResponse() {
+        userViewModel.createPremiumResponse.observe(this) { response ->
+            response?.let {
+                if (response.success) {
+                    binding.imgBill.visibility = View.VISIBLE
+                    binding.progressBar.gone()
+                    startActivity<MainActivity>()
+                    finish()
+                } else {
+                    showUpdateErrorDialog()
+                }
+            }
+        }
+    }
+
+    private fun showUpdateErrorDialog() {
+        AlertDialog
+            .Builder(this)
+            .setTitle("Lỗi")
+            .setMessage("Gửi thất bại. Vui lòng thử lại.")
+            .setPositiveButton("OK", null)
+            .show()
     }
 
     private fun showManualPermissionInstructions() {
-        val message = "Để cấp quyền thủ công, vui lòng:\n" +
+        val message =
+            "Để cấp quyền thủ công, vui lòng:\n" +
                 "1. Mở Cài đặt điện thoại\n" +
                 "2. Tìm và chọn ứng dụng này\n" +
                 "3. Chọn Quyền\n" +
                 "4. Cấp quyền truy cập Hình ảnh"
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-
 }

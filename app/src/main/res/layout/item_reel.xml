@@ -17,7 +17,9 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0" >
+
+        </VideoView>
 
         <TextView
             android:id="@+id/userName"
@@ -44,12 +46,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
+         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgAvata"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="56dp"
+             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -65,6 +68,7 @@
             app:layout_constraintStart_toEndOf="@+id/userName" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/btnPlay"
             android:layout_width="58dp"
             android:layout_height="65dp"
@@ -79,7 +83,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toTopOf="@+id/btnComment"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_heart"
@@ -91,16 +95,18 @@
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnShare"
+            app:layout_constraintBottom_toTopOf="@+id/commentCount"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_comment" />
+            app:srcCompat="@drawable/ic_comment_reel" />
 
-        <ImageView
-            android:id="@+id/btnShare"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="52dp"
+        <TextView
+            android:id="@+id/commentCount"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/btnMore"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_send"
@@ -116,6 +122,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_more" />
 
+        <TextView
+            android:id="@+id/likesCount"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/btnComment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnHeart"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

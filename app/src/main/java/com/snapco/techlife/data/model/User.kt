@@ -19,6 +19,19 @@ data class User(
     val streamToken: String? = null, // thuoc tinh token cho chat
 )
 
+data class PremiumRequest(
+    val userId: String,
+    val userName: String,
+    val userImageUrl: String?,
+    val imageUrl: String,
+)
+
+data class CreatePremiumResponse(
+    val success: Boolean,
+    val message: String? = null,
+    val premium: PremiumRequest?,
+)
+
 data class GetUserResponse(
     val user: User,
     val followingCount: Int,

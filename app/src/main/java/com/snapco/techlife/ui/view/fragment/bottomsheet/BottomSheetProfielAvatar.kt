@@ -48,7 +48,8 @@ class BottomSheetProfielAvatar : BottomSheetDialogFragment() {
             parent: ViewGroup,
             viewType: Int,
         ): ViewHolder {
-            val binding = BottomSheetItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding =
+                BottomSheetItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ViewHolder(binding)
         }
 

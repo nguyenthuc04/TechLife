@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.snapco.techlife.R
-import com.snapco.techlife.data.model.course.Course
+import com.snapco.techlife.data.course.Course
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
-import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import java.util.UUID
 
 class AddCourse : AppCompatActivity() {
@@ -37,7 +36,6 @@ class AddCourse : AppCompatActivity() {
 //            val idUser = UserDataHolder.getUserId()
             val idUser = "672de65842792ca1976f11b9"
 
-
             if (idUser == null) {
                 Toast.makeText(this, "Lỗi: Không tìm thấy thông tin người dùng.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -61,32 +59,37 @@ class AddCourse : AppCompatActivity() {
                     txtCourseDate.requestFocus()
                 }
                 else -> {
-                    val course = Course(
-                        id = UUID.randomUUID().toString(),
-                        name = name,
-                        price = price,
-                        duration = duration,
-                        date = date,
-                        idUser = idUser // Truyền khóa ngoại idUser
-                    )
+                    val course =
+                        Course(
+                            id = UUID.randomUUID().toString(),
+                            name = name,
+                            price = price,
+                            duration = duration,
+                            date = date,
+                            idUser = idUser, // Truyền khóa ngoại idUser
+                        )
 
                     viewModel.addCourse(course)
                 }
             }
         }
 
-        viewModel.isCourseAdded.observe(this, Observer { isAdded ->
-            if (isAdded) {
-                Toast.makeText(this, "Thêm khóa học thành công!", Toast.LENGTH_SHORT).show()
-                setResult(AppCompatActivity.RESULT_OK)
-                finish()
-            }
-        })
+        viewModel.isCourseAdded.observe(
+            this,
+            Observer { isAdded ->
+                if (isAdded) {
+                    Toast.makeText(this, "Thêm khóa học thành công!", Toast.LENGTH_SHORT).show()
+                    setResult(AppCompatActivity.RESULT_OK)
+                    finish()
+                }
+            },
+        )
 
-        viewModel.errorMessage.observe(this, Observer { message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        viewModel.errorMessage.observe(
+            this,
+            Observer { message ->
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            },
+        )
     }
 }
-
-

@@ -1,109 +1,85 @@
 package com.snapco.techlife.ui.view.fragment.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.R
-import com.snapco.techlife.adapter.home.PostAdapter
-import com.snapco.techlife.data.model.home.post.Post
+import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
+import com.snapco.techlife.ui.view.adapter.PostAdapter
+import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragment
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
-class HomeFragment : Fragment(), PostAdapter.OnPostActionListener {
-
+class HomeFragment :
+    Fragment(),
+    PostAdapter.OnPostActionListener {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostAdapter
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
-        binding.btnNextActivityChannel.setOnClickListener{
+        binding.btnNextActivityChannel.setOnClickListener {
             startActivity<ChannelActivity>()
         }
 
         setupRecyclerView()
-        observeNewPost()
+        homeViewModel.getListPosts()
+        observePosts()
         return binding.root
     }
 
     private fun setupRecyclerView() {
-        postAdapter = PostAdapter(homeViewModel.postList.value ?: mutableListOf(), this)
-        binding.recyclerViewId.adapter = postAdapter
+        postAdapter = PostAdapter(mutableListOf(), this)
+        binding.recyclerViewId.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = postAdapter
+        }
     }
 
-    private fun observeNewPost() {
-        homeViewModel.postList.observe(viewLifecycleOwner) { postList ->
+    private fun observePosts() {
+        homeViewModel.posts.observe(viewLifecycleOwner) { postList ->
+            Log.d("HomeFragment", "observePosts: $postList")
             postList?.let {
-                postAdapter.notifyDataSetChanged()
+                postAdapter.updatePosts(it.reversed())
             }
         }
     }
 
     override fun onPostLongClicked(position: Int) {
-        showPostOptionsDialog(position)
     }
 
     override fun onEditPost(position: Int) {
-        showEditPostDialog(position)
     }
 
     override fun onDeletePost(position: Int) {
-        homeViewModel.deletePost(homeViewModel.postList.value?.get(position)?.postId ?: "")
     }
 
-    override fun onLikePost(post: Post, position: Int) {
-        TODO("Not yet implemented")
+    override fun onLikePost(
+        post: Post,
+        position: Int,
+    ) {
+        postAdapter.updateLikeButtonAt(position)
+        // Gọi ViewModel để cập nhật API
+        UserDataHolder.getUserId()?.let { homeViewModel.likePost(post._id, it) }
     }
 
     override fun onCommentPost(postId: String) {
-        TODO("Not yet implemented")
-    }
-
-    private fun showPostOptionsDialog(position: Int) {
-        val options = arrayOf("Edit", "Delete")
-        AlertDialog.Builder(requireContext())
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showEditPostDialog(position)
-                    1 -> deletePost(position)
-                }
-            }
-            .show()
-    }
-
-    private fun showEditPostDialog(position: Int) {
-        val post = homeViewModel.postList.value?.get(position)
-        val editText = EditText(context).apply { setText(post?.caption) }
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Edit Post")
-            .setView(editText)
-            .setPositiveButton("Update") { _, _ ->
-                val updatedCaption = editText.text.toString()
-                val updatedPost = post?.copy(caption = updatedCaption)
-
-                if (updatedPost != null) {
-                    homeViewModel.updatePost(updatedPost)
-                    postAdapter.notifyItemChanged(position)
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun deletePost(position: Int) {
-        homeViewModel.deletePost(homeViewModel.postList.value?.get(position)?.postId ?: "")
+        val bottomSheet = BottomSheetCommentFragment.newInstance(postId)
+        bottomSheet.show(parentFragmentManager, BottomSheetCommentFragment::class.java.simpleName)
     }
 }

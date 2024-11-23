@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.snapco.techlife.data.api.ApiClient
 import com.snapco.techlife.data.model.*
-import com.snapco.techlife.data.model.api.ApiClient
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +22,12 @@ class UserViewModel : ViewModel() {
 
     private val _loginResponse = MutableLiveData<LoginResponse?>()
     val loginResponse: LiveData<LoginResponse?> get() = _loginResponse
+
+    private val _followResponse = MutableLiveData<FollowResponse?>()
+    val followResponse: LiveData<FollowResponse?> get() = _followResponse
+
+    private val _unfollowResponse = MutableLiveData<UnfollowResponse?>()
+    val unfollowResponse: LiveData<UnfollowResponse?> get() = _unfollowResponse
 
     private val _loginNoHashResponse = MutableLiveData<LoginResponse?>()
     val loginNoHashResponse: LiveData<LoginResponse?> get() = _loginNoHashResponse
@@ -38,7 +44,20 @@ class UserViewModel : ViewModel() {
     private val _userResponse = MutableLiveData<GetUserResponse>()
     val userResponse: LiveData<GetUserResponse> get() = _userResponse
 
+    private val _createPremiumResponse = MutableLiveData<CreatePremiumResponse>()
+    val createPremiumResponse: LiveData<CreatePremiumResponse> get() = _createPremiumResponse
     private val client: ChatClient by lazy { ChatClient.instance() }
+
+    fun createPremium(premiumRequest: PremiumRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.createPremium(premiumRequest)
+                _createPremiumResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("ReelViewModel", "Create Post failed", e)
+            }
+        }
+    }
 
     fun createUser(createUserRequest: CreateUserRequest) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -179,6 +198,30 @@ class UserViewModel : ViewModel() {
                 _users.value = response
             } catch (e: Exception) {
                 Log.e("UserViewModel", "Get list users failed", e)
+            }
+        }
+    }
+
+    fun followUser(followRequest: FollowRequest) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.followUser(followRequest)
+                _followResponse.value = response
+                Log.d("UserViewModel", "Follow user success: ${response.success}")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Follow user failed", e)
+            }
+        }
+    }
+
+    fun unfollowUser(unfollowRequest: UnfollowRequest) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.unfollowUser(unfollowRequest)
+                _unfollowResponse.value = response
+                Log.d("UserViewModel", "Unfollow user success: ${response.success}")
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Unfollow user failed", e)
             }
         }
     }
