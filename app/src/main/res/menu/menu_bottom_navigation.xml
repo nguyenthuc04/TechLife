@@ -10,7 +10,7 @@
         android:title="search" />
     <item
         android:id="@+id/menu_camera"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/course_icon_selector"
         android:title="camera" />
     <item
         android:id="@+id/menu_reels"

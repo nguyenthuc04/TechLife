@@ -51,10 +51,15 @@ class CourseActivity : AppCompatActivity() {
             onBackPressed()
         }
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_COURSE && resultCode == AppCompatActivity.RESULT_OK) {
-            viewModel.fetchCourses() // Lấy lại danh sách khóa học sau khi thêm
+//            viewModel.fetchCourses() // Lấy lại danh sách khóa học sau khi thêm
         }
     }
 

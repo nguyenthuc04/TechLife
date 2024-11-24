@@ -3,7 +3,6 @@ package com.snapco.techlife.ui.view.activity
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -17,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityMainBinding
 import com.snapco.techlife.ui.view.fragment.camera.CameraFragment
+import com.snapco.techlife.ui.view.fragment.course.OtherCoursesFragment
 import com.snapco.techlife.ui.view.fragment.home.HomeFragment
 import com.snapco.techlife.ui.view.fragment.profile.ProfileFragment
 import com.snapco.techlife.ui.view.fragment.reels.ReelsFragment
@@ -49,20 +49,12 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frameLayout, HomeFragment())
             .commit()
 
-
         binding.bottomNavigationView.setOnItemSelectedListener {
             val fragment =
                 when (it.itemId) {
                     R.id.menu_home -> HomeFragment()
                     R.id.menu_search -> SearchFragment()
-                    R.id.menu_camera -> {
-                        if (!checkPermissions()) {
-                            CameraFragment()
-                        } else {
-                            requestPermissions()
-                            null
-                        }
-                    }
+                    R.id.menu_camera -> OtherCoursesFragment()
                     R.id.menu_reels -> ReelsFragment()
                     R.id.menu_profile -> ProfileFragment()
                     else -> throw IllegalArgumentException("Unknown menu item")
@@ -82,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                 GetUserResponseHolder.setGetUserResponse(response)
             }
         }
-
     }
 
     private fun fetchUserData() {

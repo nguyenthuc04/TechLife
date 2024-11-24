@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.BottomSheetProfilePlusBinding
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.course.AddCourse
 import com.snapco.techlife.ui.view.activity.home.CreatePostActivity
 import com.snapco.techlife.ui.view.activity.home.CreateReelActivity
 import com.snapco.techlife.ui.view.activity.premium.PremiumActivity
@@ -38,6 +39,9 @@ class BottomSheetProfileAddFragment : BottomSheetDialogFragment() {
         }
         binding.textView30.setOnClickListener {
             startActivity<PremiumActivity>()
+        }
+        binding.textView31.setOnClickListener {
+            startActivity<AddCourse>()
         }
     }
 
