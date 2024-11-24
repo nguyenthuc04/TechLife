@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_gravity="start"
@@ -6,14 +8,17 @@
 
 
 
-    <ImageView
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_margin="3dp"
-        android:background="@drawable/borders"
-        android:src="@drawable/image_placeholder"
 
-        android:id="@+id/postImage"/>
+    <ImageView
+        android:id="@+id/postImage"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+    android:layout_margin="3dp"
+    android:layout_gravity="center"
+    android:background="@drawable/borders"
+    android:scaleType="centerCrop"
+    android:src="@drawable/image_placeholder"/>
 
 
 </LinearLayout>
+</layout>
