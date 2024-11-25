@@ -6,6 +6,10 @@ import com.snapco.techlife.data.model.AddCommentRequest
 import com.snapco.techlife.data.model.AddCommentResponse
 import com.snapco.techlife.data.model.CheckEmailRequest
 import com.snapco.techlife.data.model.CheckEmailResponse
+import com.snapco.techlife.data.model.Course
+import com.snapco.techlife.data.model.CourseProfileResponse
+import com.snapco.techlife.data.model.CourseResponse
+import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.data.model.CreatePostRequest
 import com.snapco.techlife.data.model.CreatePostResponse
 import com.snapco.techlife.data.model.CreatePremiumResponse
@@ -29,17 +33,45 @@ import com.snapco.techlife.data.model.Reel
 import com.snapco.techlife.data.model.ReelProfileResponse
 import com.snapco.techlife.data.model.UnfollowRequest
 import com.snapco.techlife.data.model.UnfollowResponse
+import com.snapco.techlife.data.model.UpdateCourseRequest
+import com.snapco.techlife.data.model.UpdateCourseResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse
 import com.snapco.techlife.data.model.User
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
+    @DELETE("/deleteCourse/{courseId}")
+    suspend fun deleteCourse(
+        @Path("courseId") courseId: String,
+    ): Response<Unit>
+
+    @PUT("/updateCourse/{courseId}")
+    suspend fun updateCourse(
+        @Path("courseId") courseId: String,
+        @Body updateCourseRequest: UpdateCourseRequest,
+    ): UpdateCourseResponse
+
+    @GET("/getCoursesByUser/{userId}")
+    suspend fun getCoursesByUser(
+        @Path("userId") userId: String,
+    ): CourseProfileResponse
+
+    @POST("/createCourse")
+    suspend fun createCourse(
+        @Body createCourseRequest: CreateCourseRequest,
+    ): CourseResponse
+
+    @GET("getListCourses")
+    suspend fun getCourses(): List<Course>
+
     @POST("/login")
     suspend fun login(
         @Body loginRequest: LoginRequest,

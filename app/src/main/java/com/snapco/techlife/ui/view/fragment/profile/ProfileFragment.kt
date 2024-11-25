@@ -19,6 +19,7 @@ import com.snapco.techlife.ui.view.activity.profile.EditProfileActivity
 import com.snapco.techlife.ui.view.activity.profile.MenuProfileActivity
 import com.snapco.techlife.ui.view.adapter.ProfileTabAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetProfileAddFragment
+import com.snapco.techlife.ui.view.fragment.course.MyCourseFragment
 import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -46,6 +47,7 @@ class ProfileFragment : Fragment() {
         GetUserResponseHolder.getGetUserResponse()?.let { response ->
             updateUI(response)
         }
+        binding.button2.setOnClickListener { replaceFragment(MyCourseFragment()) }
         binding.button.setOnClickListener { startActivity<EditProfileActivity>() }
     }
 
