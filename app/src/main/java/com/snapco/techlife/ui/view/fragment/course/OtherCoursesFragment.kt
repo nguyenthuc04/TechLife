@@ -7,14 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.databinding.FragmentOtherCoursesBinding
+import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.ui.view.adapter.OtherCourseAdapter
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
+import com.snapco.techlife.ui.viewmodel.SearchViewModel
 
 class OtherCoursesFragment : Fragment() {
     private val courseViewModel: CourseViewModel by viewModels()
+    private val courseActivityViewModel: CourseViewModel by activityViewModels()
+
     private lateinit var binding: FragmentOtherCoursesBinding
     private lateinit var othercourseAdapter: OtherCourseAdapter
 
@@ -27,7 +32,11 @@ class OtherCoursesFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        othercourseAdapter = OtherCourseAdapter(mutableListOf())
+        othercourseAdapter = OtherCourseAdapter(mutableListOf()){ course ->
+            courseActivityViewModel.setCours(course)
+            replaceFragment(CourseDetailsFragment())
+        }
+
         binding.recyclerView.adapter = othercourseAdapter
         courseViewModel.getListCourses()
         courseViewModel.courses.observe(viewLifecycleOwner) { courseList ->

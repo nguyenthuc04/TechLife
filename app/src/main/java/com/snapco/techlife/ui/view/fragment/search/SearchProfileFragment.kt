@@ -1,6 +1,7 @@
 // SearchProfileFragment.kt
 package com.snapco.techlife.ui.view.fragment.search
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,7 @@ class SearchProfileFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -128,10 +130,10 @@ class SearchProfileFragment : Fragment() {
                 updateFollowButton()
                 binding.txtFollower.text =
                     (
-                        binding.txtFollower.text
-                            .toString()
-                            .toInt() + 1
-                    ).toString()
+                            binding.txtFollower.text
+                                .toString()
+                                .toInt() + 1
+                            ).toString()
                 Toast.makeText(requireContext(), "Đã theo dõi", Toast.LENGTH_SHORT).show()
             }
         }
@@ -143,10 +145,10 @@ class SearchProfileFragment : Fragment() {
                 updateFollowButton()
                 binding.txtFollower.text =
                     (
-                        binding.txtFollower.text
-                            .toString()
-                            .toInt() - 1
-                    ).toString()
+                            binding.txtFollower.text
+                                .toString()
+                                .toInt() - 1
+                            ).toString()
                 Toast.makeText(requireContext(), "Đã bỏ theo dõi", Toast.LENGTH_SHORT).show()
             }
         }
