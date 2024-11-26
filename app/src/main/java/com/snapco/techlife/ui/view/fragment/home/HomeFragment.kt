@@ -13,6 +13,7 @@ import com.snapco.techlife.R
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.NotificationActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
 import com.snapco.techlife.ui.view.adapter.PostAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragment
@@ -35,6 +36,9 @@ class HomeFragment :
 
         binding.btnNextActivityChannel.setOnClickListener {
             startActivity<ChannelActivity>()
+        }
+        binding.btnNotification.setOnClickListener{
+            startActivity<NotificationActivity>()
         }
 
         setupRecyclerView()

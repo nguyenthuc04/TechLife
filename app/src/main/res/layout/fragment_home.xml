@@ -33,6 +33,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/frameLayout">
 
                 <ImageView
+                    android:id="@+id/btnNotification"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp"
