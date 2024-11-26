@@ -11,4 +11,7 @@
     <color name="bottom_nav_selected">#000000</color>
     <color name="bottom_nav_unselected">#757575</color>
     <color name="gray">#BDBDBD</color>
+    <color name="pastel_blue">#DDECF8</color>
+    <color name="bright_blue">#CDEDFD</color>
+    <color name="dark_gray">#3B3B3B</color>
 </resources>

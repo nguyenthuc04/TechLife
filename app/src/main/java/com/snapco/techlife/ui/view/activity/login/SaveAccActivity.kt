@@ -94,7 +94,7 @@ class SaveAccActivity : AppCompatActivity() {
                 accountManager.updateAccount(updatedAccount)
                 Log.d("AccountManager", "Account updated: $updatedAccount")
             } ?: Log.d("AccountManager", "Account not found")
-            userViewModel.connectChat(it.id, it.account, tokenChat,it.avatar)
+            userViewModel.connectChat(it.id, it.name, tokenChat,it.avatar)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnLogin.text = "Đăng nhập"
                 binding.progressBar.gone()

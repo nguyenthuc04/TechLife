@@ -45,6 +45,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @DELETE("/deleteCourse/{courseId}")
@@ -191,4 +192,9 @@ interface ApiService {
         @Path("postId") postId: String,
         @Body updateRequest: Map<String, String>
     ): Response<Unit>
+
+    @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
+    suspend fun searchCourses(
+        @Path("name") name: String,
+    ): CourseResponse
 }

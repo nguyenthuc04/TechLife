@@ -31,6 +31,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.fragment.course.CourseFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.login.WelcomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.home.CreateReelActivity"
             android:exported="false" />
         <activity
@@ -125,8 +131,10 @@
             android:name=".ui.view.activity.course.CourseActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.activity.NotificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.login.WelcomeActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
