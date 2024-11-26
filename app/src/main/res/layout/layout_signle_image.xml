@@ -4,7 +4,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/singleImage"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="300dp"
     android:adjustViewBounds="true"
     android:contentDescription="TODO"
     android:scaleType="centerCrop" />
