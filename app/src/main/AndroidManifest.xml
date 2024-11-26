@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -29,6 +30,18 @@
         android:theme="@style/Theme.TechLife"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.view.activity.forgotpassword.CreateNewPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.forgotpassword.ConfirmAccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.forgotpassword.ForgotPasswordEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.profile.ChangePasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.view.activity.home.CreateReelActivity"
             android:exported="false" />
@@ -122,7 +135,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.login.WelcomeActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

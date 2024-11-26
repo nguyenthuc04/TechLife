@@ -48,7 +48,10 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleLoginResponse(user: User? ,tokenChat: String) {
+    private fun handleLoginResponse(
+        user: User?,
+        tokenChat: String,
+    ) {
         user?.let {
             UserDataHolder.setUserData(it.id, it.account, it.name, it.avatar)
             val accountManager = AccountManager(this)
@@ -57,7 +60,8 @@ class WelcomeActivity : AppCompatActivity() {
                 accountManager.updateAccount(updatedAccount)
                 Log.d("AccountManager", "Account updated: $updatedAccount")
             } ?: Log.d("AccountManager", "Account not found")
-            userViewModel.connectChat(it.id, it.account, tokenChat,it.avatar)
+            userViewModel.connectChat(it.id, it.account, tokenChat, it.avatar)
+            userViewModel.updateLastLogin(it.id)
         }
         startActivity<MainActivity>()
     }

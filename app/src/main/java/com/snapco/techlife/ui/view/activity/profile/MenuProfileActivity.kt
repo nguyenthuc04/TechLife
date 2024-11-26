@@ -2,7 +2,6 @@ package com.snapco.techlife.ui.view.activity.profile
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import com.snapco.techlife.ui.view.activity.login.SaveListAccActivity
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.models.User
 
 class MenuProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuProfileBinding
@@ -34,6 +32,9 @@ class MenuProfileActivity : AppCompatActivity() {
     }
 
     private fun setupOnClickListeners() {
+        binding.textView33.setOnClickListener {
+            startActivity<ChangePasswordActivity>()
+        }
         binding.btnSigout.setOnClickListener {
             val accountManager = AccountManager(this@MenuProfileActivity)
             val idUser = UserDataHolder.getUserId()
@@ -135,7 +136,7 @@ class MenuProfileActivity : AppCompatActivity() {
         return true
     }
 
-    fun disConnectGetStream () {
+    fun disConnectGetStream() {
         client.disconnect(flushPersistence = false).enqueue { disconnectResult ->
             if (disconnectResult.isSuccess) {
                 // Nếu ngắt kết nối thành công, hiển thị thông báo đăng xuất
