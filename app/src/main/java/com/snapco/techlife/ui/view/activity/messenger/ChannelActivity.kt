@@ -2,6 +2,7 @@
 
 package com.snapco.techlife.ui.view.activity.messenger
 
+import ChatViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -33,6 +34,7 @@ import io.getstream.chat.android.ui.viewmodel.channels.bindView
 class ChannelActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChannelBinding
     private lateinit var listChannelViewModel: ChannelViewModel
+    private lateinit var chatViewModel: ChatViewModel
     private val client: ChatClient by lazy { ChatClient.instance() }
 
     // phuong thuc hien thi data tren list channel
@@ -53,11 +55,13 @@ class ChannelActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         listChannelViewModel = ViewModelProvider(this)[ChannelViewModel::class]
+        chatViewModel = ViewModelProvider(this)[ChatViewModel::class]
         // Binding the view models to the UI
         channelListViewModel.bindView(binding.channelListView, this)
 
         // Set up click listeners for the channel list
         binding.channelListView.setChannelItemClickListener { channel ->
+            chatViewModel.markChannelAsRead("messaging:$channel") // goi sk danh dau la tn da doc
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra("ID", channel.id) // gui id channel sang activity chat
             startActivity(intent)

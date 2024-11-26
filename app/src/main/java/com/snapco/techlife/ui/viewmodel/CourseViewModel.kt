@@ -11,6 +11,7 @@ import com.snapco.techlife.data.model.CourseDeleteResponse
 import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
 import com.snapco.techlife.data.model.CreateCourseRequest
+import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,13 @@ class CourseViewModel : ViewModel() {
 
     private val _deleteCourseResponse = MutableLiveData<CourseDeleteResponse>()
     val deleteCourseResponse: LiveData<CourseDeleteResponse> get() = _deleteCourseResponse
+
+    private val _searchCourses = MutableLiveData<List<Course>>()
+    val searchCourses: LiveData<List<Course>> = _searchCourses
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> = _error
+
 
     fun deleteCourse(courseId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -95,4 +103,20 @@ class CourseViewModel : ViewModel() {
             }
         }
     }
+
+    fun searchCourses(name : String) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.searchCourses(name)
+                if (response.success) {
+                    _searchCourses.value = response.data
+                } else {
+                    _error.value = response.message
+                }
+            } catch (e: Exception) {
+                _error.value = e.localizedMessage
+            }
+        }
+    }
+
 }
