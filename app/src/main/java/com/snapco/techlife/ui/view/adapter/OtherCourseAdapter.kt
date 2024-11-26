@@ -1,5 +1,6 @@
 package com.snapco.techlife.ui.view.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.snapco.techlife.extensions.loadImage
 
 class OtherCourseAdapter(
     private var courses: MutableList<Course>,
+    private val onItemClickListener: (Course) -> Unit, // Thêm callback cho sự kiện bấm vào item
 ) : RecyclerView.Adapter<OtherCourseAdapter.CourseViewHolder>() {
     inner class CourseViewHolder(
         private val binding: ItemOthercourseBinding,
@@ -16,10 +18,14 @@ class OtherCourseAdapter(
         fun bind(course: Course) {
             binding.textView34.text = course.name
             binding.imageView11.loadImage(course.imageUrl)
-            binding.imgAvatar.loadImage(course.userImageUrl)
             binding.textView20.text = course.userName
             binding.textView34.text = course.name
-            binding.textView38.text = "Số lượng còn lại: ${course.quantity}"
+
+            binding.root.setOnClickListener {
+                onItemClickListener(course) // Gọi callback khi bấm vào item
+                Log.d("OtherCourseAdapter", "Course clicked: $course")
+            }
+
         }
     }
 

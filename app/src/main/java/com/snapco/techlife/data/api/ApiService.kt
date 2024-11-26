@@ -207,4 +207,10 @@ interface ApiService {
     suspend fun createPremium(
         @Body createPremiumRequest: PremiumRequest,
     ): CreatePremiumResponse
+
+    @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
+    suspend fun searchCourses(
+        @Path("name") name: String,
+    ): CourseResponse
+
 }
