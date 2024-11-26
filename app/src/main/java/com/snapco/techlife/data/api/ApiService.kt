@@ -181,4 +181,20 @@ interface ApiService {
     suspend fun createPremium(
         @Body createPremiumRequest: PremiumRequest,
     ): CreatePremiumResponse
+
+    @DELETE("/deletePost/{postId}")
+    suspend fun deletePost(
+        @Path("postId") postId: String,
+    ): Response<Unit>
+
+    @PUT("/updatePost/{postId}")
+    suspend fun updatePost(
+        @Path("postId") postId: String,
+        @Body updateRequest: Map<String, String>
+    ): Response<Unit>
+
+    @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
+    suspend fun searchCourses(
+        @Path("name") name: String,
+    ): CourseResponse
 }

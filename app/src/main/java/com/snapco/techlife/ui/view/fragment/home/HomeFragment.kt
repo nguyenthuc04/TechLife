@@ -1,5 +1,6 @@
 package com.snapco.techlife.ui.view.fragment.home
 
+import ChatViewModel
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,12 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
+import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.extensions.visible
+import com.snapco.techlife.ui.view.activity.NotificationActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
 import com.snapco.techlife.ui.view.adapter.PostAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragment
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
+import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.events.NotificationMessageNewEvent
 
 class HomeFragment :
     Fragment(),
@@ -25,6 +32,8 @@ class HomeFragment :
     private lateinit var binding: FragmentHomeBinding
     private lateinit var postAdapter: PostAdapter
     private val homeViewModel: HomeViewModel by viewModels()
+    private val chatViewModel: ChatViewModel by viewModels()
+    private val channelViewModel : ChannelViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,9 +42,25 @@ class HomeFragment :
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
+        channelViewModel.getListChannel(UserDataHolder.getUserId().toString())
+        chatViewModel.unreadMessagesCount.observe(viewLifecycleOwner) { unreadCount ->
+            binding.txtUnread.text = unreadCount.toString()
+            if(unreadCount > 0) {
+                binding.txtUnread.visible()
+            } else {
+                binding.txtUnread.gone()
+            }
+        }
+
         binding.btnNextActivityChannel.setOnClickListener {
             startActivity<ChannelActivity>()
         }
+        binding.btnNotification.setOnClickListener{
+            startActivity<NotificationActivity>()
+        }
+
+
+
 
         setupRecyclerView()
         homeViewModel.getListPosts()
@@ -64,9 +89,27 @@ class HomeFragment :
     }
 
     override fun onEditPost(position: Int) {
+        val post = postAdapter.modelList[position]
+        Log.d("HomeFragment", "Editing post: $post")
+
+        // Navigate to EditPostActivity, passing the post details
+        val context = requireContext()
+        context.startActivity<EditPostActivity> {
+            putExtra("POST_ID", post._id)
+            putExtra("USER_NAME", post.userName)
+            putExtra("CAPTION", post.caption)
+            putExtra("USER_IMAGE_URL", post.userImageUrl)
+            putStringArrayListExtra("IMAGES", ArrayList(post.imageUrl))
+        }
     }
 
     override fun onDeletePost(position: Int) {
+        val post = postAdapter.modelList[position]
+        // Remove post from adapter
+        postAdapter.modelList.removeAt(position)
+        postAdapter.notifyItemRemoved(position)
+        // Perform API call to delete post
+        homeViewModel.deletePost(post._id)
     }
 
     override fun onLikePost(

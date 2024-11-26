@@ -6,17 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapco.techlife.data.api.ApiClient
-import com.snapco.techlife.data.model.AddCommentRequest
-import com.snapco.techlife.data.model.AddCommentResponse
-import com.snapco.techlife.data.model.CreatePostRequest
-import com.snapco.techlife.data.model.CreatePostResponse
-import com.snapco.techlife.data.model.GetCommentResponse
-import com.snapco.techlife.data.model.LikeResponse
-import com.snapco.techlife.data.model.Post
-import com.snapco.techlife.data.model.PostProfileResponse
-import com.snapco.techlife.data.model.ReelProfileResponse
+import com.snapco.techlife.data.model.*
+import com.snapco.techlife.data.request.UpdatePostRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class HomeViewModel : ViewModel() {
     private val _postList = MutableLiveData<MutableList<Post>?>()
@@ -46,6 +40,15 @@ class HomeViewModel : ViewModel() {
     private val _randomPosts = MutableLiveData<List<Post>>()
     val randomPosts: LiveData<List<Post>> get() = _randomPosts
 
+    private val _deletePostResponse = MutableLiveData<Boolean>()
+    val deletePostResponse: LiveData<Boolean> get() = _deletePostResponse
+
+    private val _updatePostResponse = MutableLiveData<Response<UpdatePostResponse>>()
+    val updatePostResponse: LiveData<Response<UpdatePostResponse>> get() = _updatePostResponse
+
+    private val _updateResult = MutableLiveData<Result<Boolean>>()
+    val updateResult: LiveData<Result<Boolean>> get() = _updateResult
+
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
             try {
@@ -63,7 +66,7 @@ class HomeViewModel : ViewModel() {
                 val response = ApiClient.apiService.getReelsByUser(userId)
                 _reelListProfile.value = response
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Get posts by user failed", e)
+                Log.e("HomeViewModel", "Get reels by user failed", e)
             }
         }
     }
@@ -78,20 +81,18 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _addCommentResponse.value = response.body()
                 } else {
-                    _addCommentResponse.value =
-                        AddCommentResponse(
-                            success = false,
-                            message = "Thêm bình luận thất bại!",
-                            post = null,
-                        )
-                }
-            } catch (e: Exception) {
-                _addCommentResponse.value =
-                    AddCommentResponse(
+                    _addCommentResponse.value = AddCommentResponse(
                         success = false,
-                        message = "Có lỗi xảy ra!",
+                        message = "Failed to add comment!",
                         post = null,
                     )
+                }
+            } catch (e: Exception) {
+                _addCommentResponse.value = AddCommentResponse(
+                    success = false,
+                    message = "An error occurred!",
+                    post = null,
+                )
             }
         }
     }
@@ -107,10 +108,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun likePost(
-        postId: String,
-        userId: String,
-    ) {
+    fun likePost(postId: String, userId: String) {
         viewModelScope.launch {
             try {
                 val userIdMap = mapOf("userId" to userId)
@@ -122,16 +120,13 @@ class HomeViewModel : ViewModel() {
                         val index = currentList.indexOfFirst { it._id == postId }
                         if (index >= 0) {
                             currentList[index] = updatedPost
-                            _posts.value = currentList // Dùng setValue để cập nhật _posts
-                            _likeResponse.value = response.body() // Gửi phản hồi về like
+                            _posts.value = currentList
+                            _likeResponse.value = response.body()
                             Log.d("HomeViewModel", "Like post success: ${response.body()}")
                         }
                     }
                 } else {
-                    Log.e(
-                        "HomeViewModel",
-                        "Error liking post: ${response.errorBody()?.string()}",
-                    )
+                    Log.e("HomeViewModel", "Error liking post: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error liking post", e)
@@ -162,4 +157,45 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun deletePost(postId: String) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.deletePost(postId)
+                if (response.isSuccessful) {
+                    // Remove deleted post from the list
+                    val currentList = _posts.value?.toMutableList() ?: mutableListOf()
+                    val index = currentList.indexOfFirst { it._id == postId }
+                    if (index >= 0) {
+                        currentList.removeAt(index)
+                        _posts.value = currentList
+                        _deletePostResponse.value = true
+                        Log.d("HomeViewModel", "Post deleted successfully: $postId")
+                    }
+                } else {
+                    _deletePostResponse.value = false
+                    Log.e("HomeViewModel", "Error deleting post: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                _deletePostResponse.value = false
+                Log.e("HomeViewModel", "Error deleting post", e)
+            }
+        }
+    }
+
+    fun updatePost(postId: String, updatedCaption: String) {
+        viewModelScope.launch {
+            try {
+                val updateRequest = mapOf("caption" to updatedCaption)
+                val response = ApiClient.apiService.updatePost(postId, updateRequest)
+                if (response.isSuccessful) {
+                    _updateResult.postValue(Result.success(true))
+                } else {
+                    _updateResult.postValue(Result.failure(Exception("Failed to update post")))
+                }
+            } catch (e: Exception) {
+                _updateResult.postValue(Result.failure(e))
+                Log.e("HomeViewModel", "Error updating post", e)
+            }
+        }
+    }
 }

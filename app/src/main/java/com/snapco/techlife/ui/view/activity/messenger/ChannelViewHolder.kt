@@ -54,6 +54,15 @@ class CustomChannelViewHolder(
             // Lấy nội dung tin nhắn mới nhất
             val lastMess = ChatUI.messagePreviewFormatter.formatMessagePreview(channel, lastMessage, ChatClient.instance().getCurrentUser())
             binding.txtLastMessenger.text = lastMess
+            if (channel.unreadCount > 0 ) {
+                // Nếu có tin nhắn chưa đọc, set màu đen
+                binding.txtLastMessenger.setTextColor(itemView.context.getColor(R.color.black))
+                binding.txtLastTimeMessenger.setTextColor(itemView.context.getColor(R.color.black))
+            } else {
+                // Nếu không có tin nhắn chưa đọc, set màu xám
+                binding.txtLastMessenger.setTextColor(itemView.context.getColor(R.color.stream_gray_dark))
+                binding.txtLastTimeMessenger.setTextColor(itemView.context.getColor(R.color.stream_gray_dark))
+            }
 
             // Lấy thời gian gửi tin nhắn
             val timestamp = lastMessage.createdAt
