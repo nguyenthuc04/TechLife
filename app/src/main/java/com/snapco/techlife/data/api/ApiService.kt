@@ -45,7 +45,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface ApiService {
     @DELETE("/deleteCourse/{courseId}")
@@ -181,4 +180,15 @@ interface ApiService {
     suspend fun createPremium(
         @Body createPremiumRequest: PremiumRequest,
     ): CreatePremiumResponse
+
+    @DELETE("/deletePost/{postId}")
+    suspend fun deletePost(
+        @Path("postId") postId: String,
+    ): Response<Unit>
+
+    @PUT("/updatePost/{postId}")
+    suspend fun updatePost(
+        @Path("postId") postId: String,
+        @Body updateRequest: Map<String, String>
+    ): Response<Unit>
 }
