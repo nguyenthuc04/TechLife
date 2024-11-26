@@ -52,7 +52,7 @@
 
                 <!-- EditText tìm kiếm -->
                 <EditText
-                    android:id="@+id/editTextText2"
+                    android:id="@+id/edtSearchCourse"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
@@ -66,7 +66,7 @@
 
                 <!-- Nút lọc -->
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/imgFilter"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="8dp"

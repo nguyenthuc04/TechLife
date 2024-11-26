@@ -36,7 +36,7 @@ class OtherCoursesFragment : Fragment() {
     private val courseActivityViewModel: CourseViewModel by activityViewModels()
 
     private lateinit var binding: FragmentOtherCoursesBinding
-    private lateinit var othercourseAdapter: OtherCourseAdapter
+    private lateinit var otherCourseAdapter: OtherCourseAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +48,7 @@ class OtherCoursesFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo adapter với callback xử lý nút
-        othercourseAdapter = OtherCourseAdapter(
+        otherCourseAdapter = OtherCourseAdapter(
             mutableListOf(),
             onItemClickListener = { course ->
                 // Xử lý khi bấm vào item
@@ -61,13 +61,12 @@ class OtherCoursesFragment : Fragment() {
             startActivity<CourseFilterActivity>()
         }
 
-        othercourseAdapter = OtherCourseAdapter(mutableListOf())
-        binding.recyclerView.adapter = othercourseAdapter
+        binding.recyclerView.adapter = otherCourseAdapter
 
         courseViewModel.getListCourses()
 
         courseViewModel.courses.observe(viewLifecycleOwner) { courseList ->
-            othercourseAdapter.updateCourses(courseList)
+            otherCourseAdapter.updateCourses(courseList)
         }
 
         binding.edtSearchCourse.addTextChangedListener(object : TextWatcher {
@@ -77,7 +76,7 @@ class OtherCoursesFragment : Fragment() {
                 val query = s.toString().trim()
                 courseViewModel.searchCourses(query)
                 courseViewModel.searchCourses.observe(viewLifecycleOwner) { courseList ->
-                    othercourseAdapter.updateCourses(courseList)
+                    otherCourseAdapter.updateCourses(courseList)
                 }
             }
 
@@ -87,6 +86,7 @@ class OtherCoursesFragment : Fragment() {
         return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
