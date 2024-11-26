@@ -17,6 +17,7 @@ import com.snapco.techlife.R
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.databinding.FragmentMyCourseBinding
+import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.ui.view.activity.course.EditCourse
 import com.snapco.techlife.ui.view.adapter.MyCourseAdapter
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
@@ -42,7 +43,10 @@ class MyCourseFragment :
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        courseAdapter = MyCourseAdapter(mutableListOf(), this)
+        courseAdapter = MyCourseAdapter(mutableListOf(), this){
+            replaceFragment(CourseDetailsProfileFragment())
+        }
+
         binding.recyclerView.adapter = courseAdapter
         UserDataHolder.getUserId()?.let { courseViewModel.getCoursesByUser(it) }
 
