@@ -50,8 +50,7 @@ class SearchFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchAdapter =
-            SearchAdapter(emptyList()) { user ->
+        searchAdapter = SearchAdapter(emptyList()) { user ->
                 searchActivityViewModel.setUser(user)
                 replaceFragment(SearchProfileFragment())
             }
@@ -103,6 +102,7 @@ class SearchFragment : Fragment() {
         binding.searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.cancelText.visibility = View.VISIBLE
+                binding.recyclerPostView.visibility = View.GONE // Ẩn recyclerPostView khi tìm kiếm
             } else {
                 binding.cancelText.visibility = View.GONE
             }
@@ -112,10 +112,12 @@ class SearchFragment : Fragment() {
             binding.searchView.setQuery("", false)
             binding.searchView.clearFocus()
             binding.cancelText.visibility = View.GONE
+            binding.recyclerPostView.visibility = View.VISIBLE // Hiện recyclerPostView khi bấm hủy
         }
 
         val randomPostAdapter = ImagePostAdapter(emptyList())
-        binding.recyclerPostView.layoutManager = GridLayoutManager(requireContext(), 3) // Sử dụng GridLayoutManager với 3 cột
+        binding.recyclerPostView.layoutManager =
+            GridLayoutManager(requireContext(), 3) // Sử dụng GridLayoutManager với 3 cột
         binding.recyclerPostView.adapter = randomPostAdapter
 
         // Lấy danh sách bài viết từ API
@@ -129,11 +131,24 @@ class SearchFragment : Fragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (searchViewModel.isSearching.value == true) {
+            binding.recyclerView.visibility = View.VISIBLE
+            binding.recyclerPostView.visibility = View.GONE
+        } else {
+            binding.recyclerView.visibility = View.GONE
+            binding.recyclerPostView.visibility = View.VISIBLE
+        }
+    }
 }
 
-class ImagePostAdapter(private var posts: List<Post>) : RecyclerView.Adapter<ImagePostAdapter.ViewHolder>() {
+class ImagePostAdapter(private var posts: List<Post>) :
+    RecyclerView.Adapter<ImagePostAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: PostitemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: PostitemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
             // Lấy ảnh đầu tiên trong mảng imageUrl
             val firstImageUrl = post.imageUrl?.get(0)

@@ -16,4 +16,9 @@
         <item name="android:background">?attr/colorBackgroundFloating</item>
     </style>
 
+    <style name="ShapeAppearance_MaterialComponents_CircularImageView" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

@@ -12,6 +12,7 @@ import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
 import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.data.model.PostProfileResponse
+import com.snapco.techlife.data.model.SearchUserResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,13 @@ class CourseViewModel : ViewModel() {
 
     private val _deleteCourseResponse = MutableLiveData<CourseDeleteResponse>()
     val deleteCourseResponse: LiveData<CourseDeleteResponse> get() = _deleteCourseResponse
+
+    private val _courseDetails = MutableLiveData<Course>()
+    val coursesDetails: LiveData<Course> get() = _courseDetails
+
+    fun setCours(course: Course) {
+        _courseDetails.value = course
+    }
 
     private val _searchCourses = MutableLiveData<List<Course>>()
     val searchCourses: LiveData<List<Course>> = _searchCourses
@@ -118,5 +126,7 @@ class CourseViewModel : ViewModel() {
             }
         }
     }
+
+
 
 }
