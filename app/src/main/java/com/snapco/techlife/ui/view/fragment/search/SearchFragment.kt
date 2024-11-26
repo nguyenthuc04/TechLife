@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import com.snapco.techlife.databinding.PostitemBinding
 import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.ui.view.adapter.ImageAdapter
 import com.snapco.techlife.ui.view.adapter.SearchAdapter
+import com.snapco.techlife.ui.view.fragment.home.HomeFragment
 import com.snapco.techlife.ui.viewmodel.SearchViewModel
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
@@ -157,6 +159,27 @@ class ImagePostAdapter(private var posts: List<Post>) :
                 .load(firstImageUrl) // Dùng URL đầu tiên trong mảng
                 .placeholder(R.drawable.image_placeholder) // Placeholder nếu chưa tải xong
                 .into(binding.postImage)
+            binding.postImage.setOnClickListener {
+                // Khi người dùng click vào hình ảnh, thực hiện hành động
+                // Truyền postId vào Bundle và thay thế HomeFragment
+                val bundle = Bundle().apply {
+                    putString("postId", post._id)  // Truyền ID bài viết
+                }
+
+                val postDetailfrg = PostDetailFragment().apply {
+                    arguments = bundle  // Truyền bundle vào HomeFragment
+                }
+
+                // Thay thế fragment hiện tại bằng HomeFragment
+                itemView.context
+                    .let { context ->
+                        (context as? FragmentActivity)?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.replace(R.id.frameLayout, postDetailfrg)  // Đảm bảo ID container đúng
+                            ?.addToBackStack(null)
+                            ?.commit()
+                    }
+            }
         }
     }
 
