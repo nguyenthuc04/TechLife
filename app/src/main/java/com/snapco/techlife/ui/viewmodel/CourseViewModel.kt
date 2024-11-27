@@ -11,8 +11,7 @@ import com.snapco.techlife.data.model.CourseDeleteResponse
 import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
 import com.snapco.techlife.data.model.CreateCourseRequest
-import com.snapco.techlife.data.model.PostProfileResponse
-import com.snapco.techlife.data.model.SearchUserResponse
+import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +30,9 @@ class CourseViewModel : ViewModel() {
     private val _updateCourseResponse = MutableLiveData<UpdateCourseResponse>()
     val updateCourseResponse: LiveData<UpdateCourseResponse> get() = _updateCourseResponse
 
+    private val _registerCourseResponse = MutableLiveData<UpdateCourseResponse>()
+    val registerCourseResponse: LiveData<UpdateCourseResponse> get() = _registerCourseResponse
+
     private val _deleteCourseResponse = MutableLiveData<CourseDeleteResponse>()
     val deleteCourseResponse: LiveData<CourseDeleteResponse> get() = _deleteCourseResponse
 
@@ -46,7 +48,6 @@ class CourseViewModel : ViewModel() {
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
-
 
     fun deleteCourse(courseId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -77,6 +78,20 @@ class CourseViewModel : ViewModel() {
             }
         }
     }
+
+    fun registerCourse(courseId: String, registerCourseRequest: RegisterCourseRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.registerCourse(courseId, registerCourseRequest)
+                _registerCourseResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("CourseViewModel", "Register course failed", e)
+                // Xử lý lỗi, ví dụ đăng kết quả lỗi
+                _error.postValue(e.localizedMessage ?: "An error occurred")
+            }
+        }
+    }
+
 
     fun getCoursesByUser(userId: String) {
         viewModelScope.launch {
@@ -126,7 +141,5 @@ class CourseViewModel : ViewModel() {
             }
         }
     }
-
-
 
 }

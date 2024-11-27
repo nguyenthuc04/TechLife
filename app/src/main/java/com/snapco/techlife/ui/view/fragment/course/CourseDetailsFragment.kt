@@ -11,8 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
 import com.snapco.techlife.data.model.Course
-import com.snapco.techlife.data.model.UpdateCourseRequest
-import com.snapco.techlife.data.model.UserCourse
+import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -48,138 +47,81 @@ class CourseDetailsFragment : Fragment() {
             binding.courseDescription.text = course.describe
             binding.mentorImage.loadImage(course.userImageUrl)
             binding.mentorName.text = course.userName
+
+            // Kiểm tra nếu người dùng đã đăng ký khóa học
+            val currentUserId = UserDataHolder.getUserId()
+            if (currentUserId != null) {
+                val isRegistered = isUserRegistered(course, currentUserId)
+                binding.registerButton.visibility = if (isRegistered) View.GONE else View.VISIBLE
+            } else {
+                binding.registerButton.visibility = View.VISIBLE // Ẩn nếu không có user ID
+            }
         }
 
         binding.registerButton.setOnClickListener {
-            // Gọi hàm xử lý đăng kýkhóa học
+            courseActivityViewModel.coursesDetails.value?.let {
+                handleRegisterOrCancelCourse(it)
+            }
         }
     }
 
     private fun handleRegisterOrCancelCourse(course: Course) {
         val currentUserId = UserDataHolder.getUserId()
         val currentUserName = UserDataHolder.getUserName()
+        val currentUserAvatar = UserDataHolder.getUserAvatar()
 
         if (currentUserId == null || currentUserName == null) {
             Toast.makeText(requireContext(), "Thông tin người dùng không hợp lệ", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Kiểm tra xem người dùng đã đăng ký khóa học này chưa
-        val existingUserCourse = course.user.find { it.userId == currentUserId }
+        // Luôn thực hiện đăng ký (bỏ kiểm tra đã đăng ký trước đó)
+        showConfirmationDialog(
+            title = "Xác nhận đăng ký",
+            message = "Bạn có muốn đăng ký khóa học '${course.name}' không?",
+            onConfirm = {
+                registerCourse(course, currentUserId, currentUserName, currentUserAvatar)
+            }
+        )
+    }
 
-        if (existingUserCourse != null) {
-            // Nếu người dùng đã đăng ký, hiển thị Dialog hỏi muốn hủy đăng ký không
-            val alertDialog = AlertDialog.Builder(requireContext())
-                .setTitle("Xác nhận hủy đăng ký")
-                .setMessage("Bạn có muốn hủy đăng ký khóa học '${course.name}' này không?")
-                .setPositiveButton("Có") { _, _ ->
-                    // Xử lý khi người dùng chọn "Có" để hủy đăng ký
-                    cancelRegistration(course)
-                }
-                .setNegativeButton("Không") { dialog, _ ->
-                    // Đóng dialog khi người dùng chọn "Không"
-                    dialog.dismiss()
-                }
-                .create()
+    private fun registerCourse(course: Course, userId: String, userName: String, avatar: String?) {
+        val currentDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
-            // Hiển thị Dialog
-            alertDialog.show()
-        } else {
-            // Nếu người dùng chưa đăng ký, tiến hành đăng ký khóa học
-            val alertDialog = AlertDialog.Builder(requireContext())
-                .setTitle("Xác nhận đăng ký")
-                .setMessage("Bạn có muốn đăng ký khóa học '${course.name}' này không?")
-                .setPositiveButton("Có") { _, _ ->
-                    // Xử lý khi người dùng chọn "Có" để đăng ký
-//                    registerCourse(course)
-                }
-                .setNegativeButton("Không") { dialog, _ ->
-                    // Đóng dialog khi người dùng chọn "Không"
-                    dialog.dismiss()
-                }
-                .create()
+        // Tạo request để gửi lên server
+        val registerRequest = RegisterCourseRequest(
+            id = userId,
+            userName = userName,
+            avatar = avatar ?: "",
+            date = currentDate,
+        )
 
-            // Hiển thị Dialog
-            alertDialog.show()
+        courseActivityViewModel.registerCourse(course.id ?: "", registerRequest)
+
+        // Quan sát kết quả đăng ký
+        courseActivityViewModel.registerCourseResponse.observe(viewLifecycleOwner) { response ->
+            if (response.success) {
+                Toast.makeText(requireContext(), "Đăng ký khóa học thành công!", Toast.LENGTH_SHORT).show()
+                binding.registerButton.visibility = View.GONE // Ẩn nút ngay sau khi đăng ký
+                courseActivityViewModel.getCoursesByUser(userId) // Cập nhật dữ liệu
+            } else {
+                Toast.makeText(requireContext(), "Đăng ký thất bại: ${response.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-//    private fun registerCourse(course: Course) {
-//        // Lấy thông tin người dùng (ID, tên, avatar)
-//        val currentUserId = UserDataHolder.getUserId() // Cần thay bằng ID người dùng thật
-//        val currentUserName = UserDataHolder.getUserName() // Thay bằng tên người dùng thật
-//        val currentUserImageUrl = UserDataHolder.getUserAvatar() // Thay bằng URL ảnh đại diện của người dùng
-//
-//        // Kiểm tra nếu thông tin người dùng là null, xử lý lỗi
-//        if (currentUserId == null || currentUserName == null) {
-//            // Nếu ID hoặc tên người dùng là null, hiển thị thông báo lỗi và thoát khỏi hàm
-//            Toast.makeText(requireContext(), "Thông tin người dùng không hợp lệ", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//
-//        // Lấy thời gian hiện tại dưới định dạng "yyyy-MM-dd HH:mm:ss"
-//        val currentDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-//        // Cập nhật mảng user của khóa học
-//        // Tạo đối tượng UserCourse cho người dùng đăng ký mới
-//        val newUserCourse = UserCourse(
-//            userId = currentUserId, // ID người dùng đã xác thực
-//            name = currentUserName, // Tên người dùng đã xác thực
-//            date = currentDate, // Ngày hiện tại
-//            status = "Đã đăng ký" // Trạng thái đăng ký
-//        )
-//        // Cập nhật mảng user của khóa học, thêm người dùng mới vào danh sách
-//        val updatedUserList = course.user.toMutableList() // Copy danh sách hiện tại
-//        updatedUserList.add(newUserCourse) // Thêm người dùng mới vào danh sách
-//
-//        // Tạo đối tượng UpdateCourseRequest với thông tin cần cập nhật
-//        val updateCourseRequest = UpdateCourseRequest(
-//            name = course.name, // Giữ nguyên tên khóa học
-//            quantity = (course.quantity.toInt() - 1).toString(), // Giảm số lượng khi đăng ký
-//            imageUrl = course.imageUrl, // Giữ nguyên hình ảnh
-//            price = course.price, // Giữ nguyên giá
-//            duration = course.duration, // Giữ nguyên thời gian
-//            describe = course.describe, // Giữ nguyên mô tả
-//        )
-//
-//        // Gọi hàm updateCourse để cập nhật khóa học với danh sách người dùng mới
-//        courseActivityViewModel.updateCourse(course.id ?: "", updateCourseRequest)
-//
-//        // Quan sát kết quả từ viewModel để cập nhật UI hoặc thông báo cho người dùng
-//        courseActivityViewModel.updateCourseResponse.observe(viewLifecycleOwner) { response ->
-//            if (response.success) {
-//                // Cập nhật danh sách người dùng thành công, có thể thêm logic khác nếu cần
-//            } else {
-//                // Thông báo lỗi khi cập nhật
-//            }
-//        }
-//    }
+// Bỏ hàm cancelRegistration vì không cần nữa
+    private fun showConfirmationDialog(title: String, message: String, onConfirm: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Có") { _, _ -> onConfirm() }
+            .setNegativeButton("Không") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
 
-    private fun cancelRegistration(course: Course) {
-        val currentUserId = UserDataHolder.getUserId()
-
-        // Lọc người dùng khỏi danh sách user
-        val updatedUserList = course.user.filterNot { it.userId == currentUserId }
-
-        // Tạo đối tượng UpdateCourseRequest chỉ chứa danh sách user
-        val updateCourseRequest = UpdateCourseRequest(
-            name = course.name,
-            quantity = (course.quantity.toInt() - 1).toString(), // Giảm số lượng khi hủy đăng ký
-            imageUrl = course.imageUrl,
-            price = course.price,
-            duration = course.duration,
-            describe = course.describe
-        )
-
-        // Gọi hàm updateCourse để cập nhật khóa học với danh sách người dùng đã sửa đổi
-        courseActivityViewModel.updateCourse(course.id ?: "", updateCourseRequest)
-
-        // Quan sát kết quả từ viewModel để cập nhật UI hoặc thông báo cho người dùng
-        courseActivityViewModel.updateCourseResponse.observe(viewLifecycleOwner) { response ->
-            if (response.success) {
-                Toast.makeText(requireContext(), "Hủy đăng ký thành công!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Hủy đăng ký thất bại", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun isUserRegistered(course: Course, userId: String): Boolean {
+        return course.user.any { it.userId == userId }
     }
 }
