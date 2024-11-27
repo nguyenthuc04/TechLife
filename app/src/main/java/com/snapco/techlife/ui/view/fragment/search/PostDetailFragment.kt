@@ -37,7 +37,9 @@ class PostDetailFragment : Fragment(), PostAdapter.OnPostActionListener {
         savedInstanceState: Bundle?,
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_detail, container, false)
-
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed() // Quay lại fragment trước đó
+        }
         arguments?.let {
             postId = it.getString("postId")
         }
