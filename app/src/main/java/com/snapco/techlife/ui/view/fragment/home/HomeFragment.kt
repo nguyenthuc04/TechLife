@@ -17,6 +17,7 @@ import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.activity.NotificationActivity
+import com.snapco.techlife.ui.view.activity.home.EditPostActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
 import com.snapco.techlife.ui.view.adapter.PostAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragment
@@ -89,9 +90,27 @@ class HomeFragment :
     }
 
     override fun onEditPost(position: Int) {
+        val post = postAdapter.modelList[position]
+        Log.d("HomeFragment", "Editing post: $post")
+
+        // Navigate to EditPostActivity, passing the post details
+        val context = requireContext()
+        context.startActivity<EditPostActivity> {
+            putExtra("POST_ID", post._id)
+            putExtra("USER_NAME", post.userName)
+            putExtra("CAPTION", post.caption)
+            putExtra("USER_IMAGE_URL", post.userImageUrl)
+            putStringArrayListExtra("IMAGES", ArrayList(post.imageUrl))
+        }
     }
 
     override fun onDeletePost(position: Int) {
+        val post = postAdapter.modelList[position]
+        // Remove post from adapter
+        postAdapter.modelList.removeAt(position)
+        postAdapter.notifyItemRemoved(position)
+        // Perform API call to delete post
+        homeViewModel.deletePost(post._id)
     }
 
     override fun onLikePost(

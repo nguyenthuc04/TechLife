@@ -139,6 +139,9 @@
             android:name=".ui.view.activity.NotificationActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.activity.home.EditPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.login.WelcomeActivity"
 
             android:exported="true">

@@ -1,12 +1,16 @@
 package com.snapco.techlife.ui.view.adapter
 
+import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.snapco.techlife.R
 import com.snapco.techlife.extensions.ImageLayoutType
 import com.snapco.techlife.extensions.ImageViewHolder
+import com.snapco.techlife.ui.view.fragment.home.ImagePreviewFragment
 
 class ImageAdapter(
     private val images: List<String>,
@@ -69,6 +73,9 @@ class ImageAdapter(
         position: Int,
     ) {
         Glide.with(holder.itemView.context).load(images[0]).into(holder.image)
+        holder.image.setOnClickListener {
+            showImagePreview(holder.itemView.context, 0)
+        }
     }
 
     private fun bindTwoImages(
@@ -77,6 +84,12 @@ class ImageAdapter(
     ) {
         Glide.with(holder.itemView.context).load(images[0]).into(holder.image1)
         Glide.with(holder.itemView.context).load(images[1]).into(holder.image2)
+        holder.image1.setOnClickListener {
+            showImagePreview(holder.itemView.context, 0)
+        }
+        holder.image2.setOnClickListener {
+            showImagePreview(holder.itemView.context, 1)
+        }
     }
 
     private fun bindThreeImages(
@@ -86,6 +99,15 @@ class ImageAdapter(
         Glide.with(holder.itemView.context).load(images[0]).into(holder.image1)
         Glide.with(holder.itemView.context).load(images[1]).into(holder.image2)
         Glide.with(holder.itemView.context).load(images[2]).into(holder.image3)
+        holder.image1.setOnClickListener {
+            showImagePreview(holder.itemView.context, 0)
+        }
+        holder.image2.setOnClickListener {
+            showImagePreview(holder.itemView.context, 1)
+        }
+        holder.image3.setOnClickListener {
+            showImagePreview(holder.itemView.context, 2)
+        }
     }
 
     private fun bindFourImages(
@@ -96,6 +118,18 @@ class ImageAdapter(
         Glide.with(holder.itemView.context).load(images[1]).into(holder.image2)
         Glide.with(holder.itemView.context).load(images[2]).into(holder.image3)
         Glide.with(holder.itemView.context).load(images[3]).into(holder.image4)
+        holder.image1.setOnClickListener {
+            showImagePreview(holder.itemView.context, 0)
+        }
+        holder.image2.setOnClickListener {
+            showImagePreview(holder.itemView.context, 1)
+        }
+        holder.image3.setOnClickListener {
+            showImagePreview(holder.itemView.context, 2)
+        }
+        holder.image4.setOnClickListener {
+            showImagePreview(holder.itemView.context, 3)
+        }
     }
 
     private fun bindFiveOrMoreImages(
@@ -107,6 +141,21 @@ class ImageAdapter(
         Glide.with(holder.itemView.context).load(images[2]).into(holder.image3)
         Glide.with(holder.itemView.context).load(images[3]).into(holder.image4)
         Glide.with(holder.itemView.context).load(images[4]).into(holder.image5)
+        holder.image1.setOnClickListener {
+            showImagePreview(holder.itemView.context, 0)
+        }
+        holder.image2.setOnClickListener {
+            showImagePreview(holder.itemView.context, 1)
+        }
+        holder.image3.setOnClickListener {
+            showImagePreview(holder.itemView.context, 2)
+        }
+        holder.image4.setOnClickListener {
+            showImagePreview(holder.itemView.context, 3)
+        }
+        holder.image5.setOnClickListener {
+            showImagePreview(holder.itemView.context, 4)
+        }
 
         if (images.size > 5) {
             holder.overlayText.text = "+${images.size - 5}"
@@ -114,4 +163,23 @@ class ImageAdapter(
             holder.overlayText.text = ""
         }
     }
+    private fun showImagePreview(context: Context, startPosition: Int) {
+        val bundle = Bundle().apply {
+            putStringArrayList("images", ArrayList(images)) // Chuyển đổi danh sách sang ArrayList
+            putInt("startPosition", startPosition)
+        }
+
+        val fragment = ImagePreviewFragment().apply {
+            arguments = bundle
+        }
+
+        (context as? FragmentActivity)?.supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.frameLayout, fragment)
+            ?.addToBackStack(null)
+            ?.commit()
+    }
 }
+
+
+

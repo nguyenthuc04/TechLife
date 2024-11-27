@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.databinding.FragmentMyCourseBinding
+import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.ui.view.activity.course.EditCourse
 import com.snapco.techlife.ui.view.adapter.MyCourseAdapter
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
@@ -29,6 +31,8 @@ class MyCourseFragment :
     private lateinit var binding: FragmentMyCourseBinding
     private lateinit var courseAdapter: MyCourseAdapter
     private var currentPopupMenu: PopupMenu? = null
+    private val courseActivityViewModel: CourseViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +46,11 @@ class MyCourseFragment :
         }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        courseAdapter = MyCourseAdapter(mutableListOf(), this)
+        courseAdapter = MyCourseAdapter(mutableListOf(), this){ course ->
+            courseActivityViewModel.setCours(course)
+            replaceFragment(CourseDetailsProfileFragment())
+        }
+
         binding.recyclerView.adapter = courseAdapter
         UserDataHolder.getUserId()?.let { courseViewModel.getCoursesByUser(it) }
 

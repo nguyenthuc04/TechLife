@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ import com.snapco.techlife.databinding.PostitemBinding
 import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.ui.view.adapter.ImageAdapter
 import com.snapco.techlife.ui.view.adapter.SearchAdapter
+import com.snapco.techlife.ui.view.fragment.home.HomeFragment
 import com.snapco.techlife.ui.viewmodel.SearchViewModel
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
@@ -150,13 +152,30 @@ class ImagePostAdapter(private var posts: List<Post>) :
     inner class ViewHolder(private val binding: PostitemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
-            // Lấy ảnh đầu tiên trong mảng imageUrl
+
             val firstImageUrl = post.imageUrl?.get(0)
 
             Glide.with(binding.root.context)
-                .load(firstImageUrl) // Dùng URL đầu tiên trong mảng
-                .placeholder(R.drawable.image_placeholder) // Placeholder nếu chưa tải xong
+                .load(firstImageUrl)
+                .placeholder(R.drawable.image_placeholder)
                 .into(binding.postImage)
+            binding.postImage.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("postId", post._id)
+                }
+
+                val postDetailfrg = PostDetailFragment().apply {
+                    arguments = bundle
+                }
+                itemView.context
+                    .let { context ->
+                        (context as? FragmentActivity)?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.replace(R.id.frameLayout, postDetailfrg)  // Đảm bảo ID container đúng
+                            ?.addToBackStack(null)
+                            ?.commit()
+                    }
+            }
         }
     }
 
