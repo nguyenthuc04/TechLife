@@ -11,8 +11,6 @@ import com.snapco.techlife.extensions.ImageViewHolder
 class ImageAdapter(
     private val images: List<String>,
 ) : RecyclerView.Adapter<ImageViewHolder>() {
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,

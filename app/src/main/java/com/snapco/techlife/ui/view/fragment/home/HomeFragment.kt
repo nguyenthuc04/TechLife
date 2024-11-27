@@ -23,8 +23,6 @@ import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragme
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
-import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.client.events.NotificationMessageNewEvent
 
 class HomeFragment :
     Fragment(),
@@ -33,7 +31,7 @@ class HomeFragment :
     private lateinit var postAdapter: PostAdapter
     private val homeViewModel: HomeViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
-    private val channelViewModel : ChannelViewModel by viewModels()
+    private val channelViewModel: ChannelViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +43,7 @@ class HomeFragment :
         channelViewModel.getListChannel(UserDataHolder.getUserId().toString())
         chatViewModel.unreadMessagesCount.observe(viewLifecycleOwner) { unreadCount ->
             binding.txtUnread.text = unreadCount.toString()
-            if(unreadCount > 0) {
+            if (unreadCount > 0) {
                 binding.txtUnread.visible()
             } else {
                 binding.txtUnread.gone()
@@ -55,17 +53,19 @@ class HomeFragment :
         binding.btnNextActivityChannel.setOnClickListener {
             startActivity<ChannelActivity>()
         }
-        binding.btnNotification.setOnClickListener{
+        binding.btnNotification.setOnClickListener {
             startActivity<NotificationActivity>()
         }
-
-
-
 
         setupRecyclerView()
         homeViewModel.getListPosts()
         observePosts()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.getListPosts()
     }
 
     private fun setupRecyclerView() {
