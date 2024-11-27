@@ -17,6 +17,9 @@ data class Course(
     val userName: String?,
     val userImageUrl: String?,
     val user: List<UserCourse>,
+    val startDate: String,
+    val endDate: String,
+    val type: String,
 )
 
 data class UserCourse(
@@ -24,12 +27,15 @@ data class UserCourse(
     val name: String,
     val date: String,
     val status: String,
+    val userName : String,
+    val avatar: String,
+
 )
 
 data class CourseResponse(
     val success: Boolean,
     val message: String,
-    val data: Course?,
+    val data: List<Course>,
 )
 
 data class CreateCourseRequest(
