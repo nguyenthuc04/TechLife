@@ -27,6 +27,9 @@ data class UserCourse(
     val name: String,
     val date: String,
     val status: String,
+    val userName : String,
+    val avatar: String,
+
 )
 
 data class CourseResponse(

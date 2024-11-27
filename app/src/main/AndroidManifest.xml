@@ -34,9 +34,6 @@
             android:name=".ui.view.fragment.course.CourseFilterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.WelcomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.view.activity.home.CreateReelActivity"
             android:exported="false" />
         <activity
