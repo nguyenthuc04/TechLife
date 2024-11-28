@@ -208,7 +208,6 @@ interface ApiService {
     suspend fun searchCourses(
         @Path("name") name: String,
     ): CourseResponse
-
     @GET("getListNotification")
     suspend fun getListNotification(): NotificationResponse
 
@@ -225,5 +224,4 @@ interface ApiService {
         @Path("notificationId") notificationId: String,
         @Body request: Map<String, String>
     ): Response<Unit>
-
 }

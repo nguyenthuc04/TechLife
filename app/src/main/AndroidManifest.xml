@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
+
     <application
         android:name=".ui.view.activity.messenger.ChatApplication"
         android:allowBackup="true"
@@ -146,8 +147,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
 
         <provider
             android:name="androidx.core.content.FileProvider"

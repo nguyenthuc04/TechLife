@@ -17,6 +17,7 @@ import com.snapco.techlife.databinding.FragmentPostDetailBinding
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.extensions.visible
+import com.snapco.techlife.ui.view.activity.NotificationActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChannelActivity
 import com.snapco.techlife.ui.view.adapter.PostAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragment

@@ -33,3 +33,4 @@ data class AddNotificationResponse(
     val message: String,
     val notification: Notification?
 )
+
