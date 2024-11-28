@@ -4,6 +4,8 @@ import com.snapco.techlife.data.model.AddCommentReelRequest
 import com.snapco.techlife.data.model.AddCommentReelResponse
 import com.snapco.techlife.data.model.AddCommentRequest
 import com.snapco.techlife.data.model.AddCommentResponse
+import com.snapco.techlife.data.model.AddNotificationRequest
+import com.snapco.techlife.data.model.AddNotificationResponse
 import com.snapco.techlife.data.model.CheckEmailRequest
 import com.snapco.techlife.data.model.CheckEmailResponse
 import com.snapco.techlife.data.model.Course
@@ -26,6 +28,8 @@ import com.snapco.techlife.data.model.LikeReelResponse
 import com.snapco.techlife.data.model.LikeResponse
 import com.snapco.techlife.data.model.LoginRequest
 import com.snapco.techlife.data.model.LoginResponse
+import com.snapco.techlife.data.model.Notification
+import com.snapco.techlife.data.model.NotificationResponse
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.PremiumRequest
@@ -197,4 +201,22 @@ interface ApiService {
     suspend fun searchCourses(
         @Path("name") name: String,
     ): CourseResponse
+
+    @GET("getListNotification")
+    suspend fun getListNotification(): NotificationResponse
+
+    @GET("notifications/user/{myId}")
+    suspend fun getNotificationsByUser(@Path("myId") myId: String): Response<List<Notification>>
+
+    @POST("/addNotification")
+    suspend fun addNotification(
+        @Body request: AddNotificationRequest
+    ): Response<AddNotificationResponse>
+
+    @PUT("/updateNotificationStatus/{notificationId}")
+    suspend fun updateNotificationStatus(
+        @Path("notificationId") notificationId: String,
+        @Body request: Map<String, String>
+    ): Response<Unit>
+
 }
