@@ -28,6 +28,9 @@ import com.snapco.techlife.data.model.LikeReelResponse
 import com.snapco.techlife.data.model.LikeResponse
 import com.snapco.techlife.data.model.LoginRequest
 import com.snapco.techlife.data.model.LoginResponse
+import com.snapco.techlife.data.model.Notification
+import com.snapco.techlife.data.model.Notification
+import com.snapco.techlife.data.model.NotificationResponse
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.PremiumRequest
@@ -38,10 +41,15 @@ import com.snapco.techlife.data.model.ResetPasswordRequest
 import com.snapco.techlife.data.model.ResetPasswordResponse
 import com.snapco.techlife.data.model.SendEmailRequest
 import com.snapco.techlife.data.model.SendEmailResponse
+import com.snapco.techlife.data.model.ResetPasswordRequest
+import com.snapco.techlife.data.model.ResetPasswordResponse
+import com.snapco.techlife.data.model.SendEmailRequest
+import com.snapco.techlife.data.model.SendEmailResponse
 import com.snapco.techlife.data.model.UnfollowRequest
 import com.snapco.techlife.data.model.UnfollowResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
+import com.snapco.techlife.data.model.UpdateLastLoginResponse
 import com.snapco.techlife.data.model.UpdateLastLoginResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse
@@ -60,20 +68,19 @@ interface ApiService {
         @Path("courseId") courseId: String,
         @Body registerCourseRequest: RegisterCourseRequest,
     ): UpdateCourseResponse
-
     @POST("/sendEmail")
     suspend fun sendEmail(
-        @Body request: SendEmailRequest,
+        @Body request: SendEmailRequest ,
     ): SendEmailResponse
 
     @POST("/resetPassword")
     suspend fun resetPassword(
-        @Body resetPasswordRequest: ResetPasswordRequest,
+        @Body resetPasswordRequest: ResetPasswordRequest ,
     ): ResetPasswordResponse
 
     @POST("/changepassword")
     suspend fun changepassword(
-        @Body changepasswordRequest: ChangepasswordRequest,
+        @Body changepasswordRequest: ChangepasswordRequest ,
     ): ChangepasswordResponse
 
     @PUT("/updateLastLogin/{id}")
@@ -215,19 +222,36 @@ interface ApiService {
         @Body createPremiumRequest: PremiumRequest,
     ): CreatePremiumResponse
 
-    @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
-    suspend fun searchCourses(
-        @Path("name") name: String,
-    ): CourseResponse
-
     @DELETE("/deletePost/{postId}")
     suspend fun deletePost(
         @Path("postId") postId: String,
     ): Response<Unit>
 
+    
     @PUT("/updatePost/{postId}")
     suspend fun updatePost(
         @Path("postId") postId: String,
-        @Body updateRequest: Map<String, String>,
+        @Body updateRequest: Map<String, String>
+    ): Response<Unit>
+
+    @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
+    suspend fun searchCourses(
+        @Path("name") name: String,
+    ): CourseResponse
+    @GET("getListNotification")
+    suspend fun getListNotification(): NotificationResponse
+
+    @GET("notifications/user/{myId}")
+    suspend fun getNotificationsByUser(@Path("myId") myId: String): Response<List<Notification>>
+
+    @POST("/addNotification")
+    suspend fun addNotification(
+        @Body request: AddNotificationRequest
+    ): Response<AddNotificationResponse>
+
+    @PUT("/updateNotificationStatus/{notificationId}")
+    suspend fun updateNotificationStatus(
+        @Path("notificationId") notificationId: String,
+        @Body request: Map<String, String>
     ): Response<Unit>
 }

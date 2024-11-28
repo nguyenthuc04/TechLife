@@ -39,7 +39,7 @@ class CreatePassActivity : AppCompatActivity() {
                         "Có ít nhất một chữ cái viết thường.\n" +
                         "Có ít nhất một chữ số.\n" +
                         "Có ít nhất một ký tự đặc biệt (trong các ký tự @\$!%*?&).\n" +
-                        "Độ dài tối thiểu là 6 ký tự.",
+                        "Độ dài tối thiểu là 8 ký tự.",
                 )
                 return@setOnClickListener
             }

@@ -2,6 +2,7 @@ package com.snapco.techlife.ui.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -20,6 +21,8 @@ class PostAdapter(
     var modelList: MutableList<Post>,
     private val onPostActionListener: OnPostActionListener?,
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+
+    private val currentUserId = UserDataHolder.getUserId()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = TechlifePostBinding.inflate(
@@ -60,8 +63,7 @@ class PostAdapter(
     }
 
     private fun setLikeButtonState(likeButton: ImageButton, isLiked: List<String>?) {
-        val userId = UserDataHolder.getUserId()
-        if (isLiked?.contains(userId) == true) {
+        if (isLiked?.contains(currentUserId) == true) {
             likeButton.setImageResource(R.drawable.ic_favorite_red) // Icon for liked state
         } else {
             likeButton.setImageResource(R.drawable.ic_favorite) // Icon for not liked state
@@ -79,10 +81,15 @@ class PostAdapter(
             binding.likesCount.text = "${post.likesCount} likes"
             binding.commentsCount.text = "View all ${post.commentsCount} comments"
             binding.userImageUrl.loadImage(post.userImageUrl)
-            binding.userImageUrl.loadImage(post.userImageUrl)
 
-            binding.menuIcon.setOnClickListener {
-                showBottomSheetDialog(position, itemView.context)
+            // Check if the post belongs to the current user
+            if (post.userId == currentUserId) {
+                binding.menuIcon.visibility = View.VISIBLE
+                binding.menuIcon.setOnClickListener {
+                    showBottomSheetDialog(position, itemView.context)
+                }
+            } else {
+                binding.menuIcon.visibility = View.GONE
             }
 
             // Like button state
@@ -100,17 +107,6 @@ class PostAdapter(
 
             binding.commentsCount.setOnClickListener {
                 onPostActionListener?.onCommentPost(post._id)
-            }
-
-            // Handle long click on post
-            itemView.setOnLongClickListener {
-                onPostActionListener?.onPostLongClicked(position)
-                true
-            }
-
-            // Handle menu icon click to show BottomSheetDialog
-            binding.menuIcon.setOnClickListener {
-                showBottomSheetDialog(position, itemView.context)
             }
 
             // Set up images in RecyclerView
@@ -138,7 +134,6 @@ class PostAdapter(
 
             // Handle Delete action
             deleteOption.setOnClickListener {
-                // Show custom delete confirmation dialog
                 showDeleteConfirmationDialog(context) {
                     onPostActionListener?.onDeletePost(position)
                     bottomSheetDialog.dismiss()
@@ -149,31 +144,21 @@ class PostAdapter(
         }
 
         private fun showDeleteConfirmationDialog(context: Context, onDeleteConfirmed: () -> Unit) {
-            // Inflate the custom layout
             val dialogView =
                 LayoutInflater.from(context).inflate(R.layout.dialog_delete_confirmation, null)
-
-            // Create the dialog
             val builder = AlertDialog.Builder(context)
             builder.setView(dialogView)
             val dialog = builder.create()
 
-            // Set up views in the custom dialog
             val btnCancel = dialogView.findViewById<Button>(R.id.btn_cancel)
             val btnConfirm = dialogView.findViewById<Button>(R.id.btn_confirm)
 
-            // Handle Cancel button
-            btnCancel.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            // Handle Confirm button
+            btnCancel.setOnClickListener { dialog.dismiss() }
             btnConfirm.setOnClickListener {
                 onDeleteConfirmed()
                 dialog.dismiss()
             }
 
-            // Show the dialog with transparent background
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
             dialog.show()
         }
