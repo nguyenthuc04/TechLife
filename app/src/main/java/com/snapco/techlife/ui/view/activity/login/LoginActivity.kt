@@ -17,6 +17,7 @@ import com.snapco.techlife.data.model.UserAccount
 import com.snapco.techlife.databinding.ActivityLoginBinding
 import com.snapco.techlife.extensions.*
 import com.snapco.techlife.ui.view.activity.MainActivity
+import com.snapco.techlife.ui.view.activity.forgotpassword.ForgotPasswordEmailActivity
 import com.snapco.techlife.ui.view.activity.signup.SignUpEmailActivity
 import com.snapco.techlife.ui.viewmodel.UserViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -60,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
         binding.apply {
             btnLogin.setOnClickListener { login() }
             btnSignup.setOnClickListener { startActivity<SignUpEmailActivity>() }
+            btnForgotPass.setOnClickListener { startActivity<ForgotPasswordEmailActivity>() }
         }
     }
 
@@ -110,8 +112,9 @@ class LoginActivity : AppCompatActivity() {
                     state = "false",
                     status = "true",
                 )
+            userViewModel.updateLastLogin(it.id)
             accountManager.addAccount(userAccount)
-            userViewModel.connectChat(it.id, it.name, tokenChat,it.avatar)
+            userViewModel.connectChat(it.id, it.name, tokenChat, it.avatar)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnLogin.text = "Đăng nhập"
                 binding.progressBar.gone()
@@ -129,6 +132,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginFailedDialog() {
+        binding.progressBar.gone()
+        binding.btnLogin.text = "Đăng nhập"
         AlertDialog
             .Builder(this)
             .setTitle("Đăng nhập thất bại")

@@ -25,7 +25,7 @@ data class Course(
 data class UserCourse(
     val userId: String,
     val date: String,
-    val userName : String,
+    val userName: String,
     val avatar: String,
 )
 
@@ -66,7 +66,6 @@ data class RegisterCourseRequest(
     val avatar: String,
     val date: String,
 )
-
 
 data class UpdateCourseResponse(
     val success: Boolean,
