@@ -9,35 +9,35 @@
         android:layout_height="match_parent"
         tools:context=".ui.view.fragment.course.CourseFilterActivity">
 
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/baseline_keyboard_arrow_left_24"
+            app:title="Bộ lọc tìm kiếm"
+            app:titleTextColor="@android:color/black" />
+
+        <!-- ScrollView -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
 
-                <!-- Tiêu đề bộ lọc tìm kiếm -->
-                <ImageButton
-                    android:id="@+id/btnBack"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/white"
-                    android:src="@drawable/baseline_keyboard_arrow_left_24" />
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/btnBack"
-                    android:text="Bộ lọc tìm kiếm"
-                    android:textSize="27sp"
-                    android:textStyle="bold" />
-
-                <!-- Các phần tử sắp xếp theo -->
                 <TextView
                     android:id="@+id/sortByLabel"
                     android:layout_width="wrap_content"
@@ -69,7 +69,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
 
                 <TextView
@@ -91,7 +92,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/leastParticipants"
@@ -112,7 +114,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
 
                 <TextView
@@ -146,7 +149,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/under2Hours"
@@ -167,7 +171,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/id2To5"
@@ -188,7 +193,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/over5Hours"
@@ -209,7 +215,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/uploadDateLabel"
@@ -219,7 +226,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:text="Ngày tải lên"
+                    android:text="Ngày bắt đầu"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -242,7 +249,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/today"
@@ -263,7 +271,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/thisWeek"
@@ -284,7 +293,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/thisMonth"
@@ -305,7 +315,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/courseTypeLabel"
@@ -320,10 +331,32 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/basic"
+                    android:id="@+id/alltype"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/courseTypeLabel"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Tất cả"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/checkmart_alltype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/alltype"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/basic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/alltype"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
@@ -338,7 +371,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/advanced"
@@ -359,7 +393,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/specialized"
@@ -380,11 +415,11 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_checkmart" />
+                    android:src="@drawable/ic_checkmart"
+                    android:visibility="gone" />
+
+
             </RelativeLayout>
-
         </ScrollView>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -152,25 +152,21 @@ class ImagePostAdapter(private var posts: List<Post>) :
     inner class ViewHolder(private val binding: PostitemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
-            // Lấy ảnh đầu tiên trong mảng imageUrl
+
             val firstImageUrl = post.imageUrl?.get(0)
 
             Glide.with(binding.root.context)
-                .load(firstImageUrl) // Dùng URL đầu tiên trong mảng
-                .placeholder(R.drawable.image_placeholder) // Placeholder nếu chưa tải xong
+                .load(firstImageUrl)
+                .placeholder(R.drawable.image_placeholder)
                 .into(binding.postImage)
             binding.postImage.setOnClickListener {
-                // Khi người dùng click vào hình ảnh, thực hiện hành động
-                // Truyền postId vào Bundle và thay thế HomeFragment
                 val bundle = Bundle().apply {
-                    putString("postId", post._id)  // Truyền ID bài viết
+                    putString("postId", post._id)
                 }
 
                 val postDetailfrg = PostDetailFragment().apply {
-                    arguments = bundle  // Truyền bundle vào HomeFragment
+                    arguments = bundle
                 }
-
-                // Thay thế fragment hiện tại bằng HomeFragment
                 itemView.context
                     .let { context ->
                         (context as? FragmentActivity)?.supportFragmentManager

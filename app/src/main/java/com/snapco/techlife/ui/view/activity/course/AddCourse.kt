@@ -7,7 +7,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.databinding.ActivityAddCourseBinding
@@ -24,6 +27,9 @@ import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AddCourse : AppCompatActivity() {
     private val courseViewModel: CourseViewModel by viewModels()
@@ -47,6 +53,33 @@ class AddCourse : AppCompatActivity() {
         binding.btnDone.setOnClickListener {
             uploadImage()
         }
+
+        binding.edtNgayBD.setOnClickListener {
+            openDatePicker { selectedDate ->
+                binding.edtNgayBD.setText(selectedDate)
+            }
+        }
+
+        binding.edtNgayKT.setOnClickListener {
+            openDatePicker { selectedDate ->
+                binding.edtNgayKT.setText(selectedDate)
+            }
+        }
+
+        val typeKH = listOf("Cơ bản", "Nâng cao", "Chuyên môn hoá")
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item, // Layout mặc định cho item
+            typeKH
+        )
+
+        // Thiết lập giao diện dropdown
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Gắn adapter vào Spinner
+        binding.spinnerLoaiKH.adapter = adapter
+
         observeCreatePremiumResponse()
     }
 
@@ -181,9 +214,12 @@ class AddCourse : AppCompatActivity() {
                         imageUrl = url,
                         name = binding.editTextText3.text.toString(),
                         quantity = binding.editTextText4.text.toString(),
-                        price = binding.editTextText7.text.toString(),
+                        price = binding.edtGiaKH.text.toString(),
                         duration = binding.editTextText5.text.toString(),
                         describe = binding.editTextText6.text.toString(),
+                        startDate = binding.edtNgayBD.text.toString(),
+                        endDate = binding.edtNgayKT.text.toString(),
+                        type = binding.spinnerLoaiKH.selectedItem.toString()
                     )
                 courseViewModel.createCourse(createCourseRequest)
             }
@@ -234,5 +270,24 @@ class AddCourse : AppCompatActivity() {
             setDisplayShowTitleEnabled(false)
             setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_new)
         }
+    }
+
+    // Hàm mở DatePicker
+    private fun openDatePicker(onDateSelected: (String) -> Unit) {
+        // Tạo DatePicker
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Chọn ngày")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+
+        // Lắng nghe khi người dùng chọn ngày
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            val date = Date(selection)
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+            onDateSelected(dateFormat.format(date))
+        }
+
+        // Hiển thị DatePicker
+        datePicker.show(supportFragmentManager, "DATE_PICKER")
     }
 }
