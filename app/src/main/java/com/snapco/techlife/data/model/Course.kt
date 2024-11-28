@@ -45,6 +45,9 @@ data class CreateCourseRequest(
     val userId: String,
     val userName: String?,
     val userImageUrl: String?,
+    val startDate: String,
+    val endDate: String,
+    val type: String,
 )
 
 @Parcelize
