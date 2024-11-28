@@ -25,7 +25,7 @@ data class Course(
 data class UserCourse(
     val userId: String,
     val date: String,
-    val userName : String,
+    val userName: String,
     val avatar: String,
 )
 
@@ -45,6 +45,9 @@ data class CreateCourseRequest(
     val userId: String,
     val userName: String?,
     val userImageUrl: String?,
+    val startDate: String,
+    val endDate: String,
+    val type: String,
 )
 
 @Parcelize
@@ -63,7 +66,6 @@ data class RegisterCourseRequest(
     val avatar: String,
     val date: String,
 )
-
 
 data class UpdateCourseResponse(
     val success: Boolean,

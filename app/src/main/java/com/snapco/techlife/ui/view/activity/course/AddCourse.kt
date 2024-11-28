@@ -1,6 +1,7 @@
 package com.snapco.techlife.ui.view.activity.course
 
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -24,6 +25,7 @@ import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import java.util.*
 
 class AddCourse : AppCompatActivity() {
     private val courseViewModel: CourseViewModel by viewModels()
@@ -32,6 +34,8 @@ class AddCourse : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
     private val PERMISSION_REQUEST_CODE = 2
+    private var startTime: String? = null
+    private var endTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +51,25 @@ class AddCourse : AppCompatActivity() {
         binding.btnDone.setOnClickListener {
             uploadImage()
         }
+        binding.editTextText2.setOnClickListener {
+            showDatePickerDialog()
+        }
         observeCreatePremiumResponse()
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(this, { _, startYear, startMonth, startDay ->
+            startTime = String.format("%02d-%02d-%d", startDay, startMonth + 1, startYear)
+            DatePickerDialog(this, { _, endYear, endMonth, endDay ->
+                endTime = String.format("%02d-%02d-%d", endDay, endMonth + 1, endYear)
+                binding.editTextText2.setText("Start: $startTime, End: $endTime")
+            }, year, month, day).show()
+        }, year, month, day).show()
     }
 
     private fun checkPermissionAndPickImage() {
@@ -184,6 +206,9 @@ class AddCourse : AppCompatActivity() {
                         price = binding.editTextText7.text.toString(),
                         duration = binding.editTextText5.text.toString(),
                         describe = binding.editTextText6.text.toString(),
+                        startDate = startTime!!,
+                        endDate = endTime!!,
+                        type = binding.editTextText8.text.toString(),
                     )
                 courseViewModel.createCourse(createCourseRequest)
             }
