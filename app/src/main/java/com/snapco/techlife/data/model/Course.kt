@@ -24,9 +24,9 @@ data class Course(
 
 data class UserCourse(
     val userId: String,
-    val name: String,
     val date: String,
-    val status: String,
+    val userName : String,
+    val avatar: String,
 )
 
 data class CourseResponse(
@@ -59,6 +59,14 @@ data class UpdateCourseRequest(
     val duration: String,
     val describe: String,
 ) : Parcelable
+
+data class RegisterCourseRequest(
+    val id: String,
+    val userName: String,
+    val avatar: String,
+    val date: String,
+)
+
 
 data class UpdateCourseResponse(
     val success: Boolean,

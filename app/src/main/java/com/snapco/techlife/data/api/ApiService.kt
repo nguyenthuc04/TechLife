@@ -31,6 +31,7 @@ import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.PremiumRequest
 import com.snapco.techlife.data.model.Reel
 import com.snapco.techlife.data.model.ReelProfileResponse
+import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.data.model.UnfollowRequest
 import com.snapco.techlife.data.model.UnfollowResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
@@ -45,9 +46,15 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface ApiService {
+    @PUT("/registerCourse/{courseId}")
+    suspend fun registerCourse(
+        @Path("courseId") courseId: String,
+        @Body registerCourseRequest: RegisterCourseRequest,
+    ): UpdateCourseResponse
+
+
     @DELETE("/deleteCourse/{courseId}")
     suspend fun deleteCourse(
         @Path("courseId") courseId: String,
@@ -182,9 +189,19 @@ interface ApiService {
         @Body createPremiumRequest: PremiumRequest,
     ): CreatePremiumResponse
 
+    @DELETE("/deletePost/{postId}")
+    suspend fun deletePost(
+        @Path("postId") postId: String,
+    ): Response<Unit>
+
+    @PUT("/updatePost/{postId}")
+    suspend fun updatePost(
+        @Path("postId") postId: String,
+        @Body updateRequest: Map<String, String>
+    ): Response<Unit>
+
     @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
     suspend fun searchCourses(
         @Path("name") name: String,
     ): CourseResponse
-
 }
