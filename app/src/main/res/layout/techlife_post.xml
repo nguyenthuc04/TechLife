@@ -19,6 +19,7 @@
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center"
+                android:layout_margin="5dp"
                 android:background="@drawable/bg_round_gradient"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,23 +35,24 @@
 
             <TextView
                 android:id="@+id/user_name"
+                android:text="ten user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/user_image_container"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/caption"
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="location"
+                android:text="Gio dang bai"
                 android:textColor="#616161"
-                android:textSize="9sp"
+                android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="@+id/user_name"
                 app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
@@ -78,6 +80,7 @@
                 android:id="@+id/like_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
                 android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_favorite"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -85,9 +88,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
             <ImageView
                 android:id="@+id/commment_button"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_marginLeft="5dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_comment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/like_button"
@@ -110,7 +113,6 @@
             android:id="@+id/caption_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textColor="@color/black"
@@ -120,7 +122,7 @@
             android:id="@+id/comments_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="3dp"
             android:text="View all 4 comments"
             android:textColor="#616161"
@@ -128,22 +130,22 @@
             app:layout_constraintStart_toStartOf="@+id/user_name"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center|start"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:gravity="center|start"-->
+<!--            android:orientation="horizontal">-->
 
-            <ImageView
-                android:id="@+id/user_profile_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_margin="1dp"
-                android:background="@drawable/bg_round"
-                android:padding="1dp"
-                android:src="@drawable/techlife_logo" />
-        </LinearLayout>
+<!--            <ImageView-->
+<!--                android:id="@+id/user_profile_icon"-->
+<!--                android:layout_width="28dp"-->
+<!--                android:layout_height="28dp"-->
+<!--                android:layout_margin="1dp"-->
+<!--                android:background="@drawable/bg_round"-->
+<!--                android:padding="1dp"-->
+<!--                android:src="@drawable/techlife_logo" />-->
+<!--        </LinearLayout>-->
 
     </LinearLayout>
 

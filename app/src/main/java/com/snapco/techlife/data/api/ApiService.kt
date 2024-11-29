@@ -4,6 +4,8 @@ import com.snapco.techlife.data.model.AddCommentReelRequest
 import com.snapco.techlife.data.model.AddCommentReelResponse
 import com.snapco.techlife.data.model.AddCommentRequest
 import com.snapco.techlife.data.model.AddCommentResponse
+import com.snapco.techlife.data.model.AddNotificationRequest
+import com.snapco.techlife.data.model.AddNotificationResponse
 import com.snapco.techlife.data.model.ChangepasswordRequest
 import com.snapco.techlife.data.model.ChangepasswordResponse
 import com.snapco.techlife.data.model.CheckEmailRequest
@@ -29,7 +31,6 @@ import com.snapco.techlife.data.model.LikeResponse
 import com.snapco.techlife.data.model.LoginRequest
 import com.snapco.techlife.data.model.LoginResponse
 import com.snapco.techlife.data.model.Notification
-import com.snapco.techlife.data.model.Notification
 import com.snapco.techlife.data.model.NotificationResponse
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.data.model.PostProfileResponse
@@ -41,15 +42,11 @@ import com.snapco.techlife.data.model.ResetPasswordRequest
 import com.snapco.techlife.data.model.ResetPasswordResponse
 import com.snapco.techlife.data.model.SendEmailRequest
 import com.snapco.techlife.data.model.SendEmailResponse
-import com.snapco.techlife.data.model.ResetPasswordRequest
-import com.snapco.techlife.data.model.ResetPasswordResponse
-import com.snapco.techlife.data.model.SendEmailRequest
-import com.snapco.techlife.data.model.SendEmailResponse
+
 import com.snapco.techlife.data.model.UnfollowRequest
 import com.snapco.techlife.data.model.UnfollowResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
-import com.snapco.techlife.data.model.UpdateLastLoginResponse
 import com.snapco.techlife.data.model.UpdateLastLoginResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse

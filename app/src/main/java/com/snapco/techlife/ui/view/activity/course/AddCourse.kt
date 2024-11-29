@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -54,6 +55,18 @@ class AddCourse : AppCompatActivity() {
         binding.editTextText2.setOnClickListener {
             showDatePickerDialog()
         }
+        val typeKH = listOf("Cơ bản", "Nâng cao", "Chuyên môn hoá")
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item, // Layout mặc định cho item
+            typeKH
+        )
+
+
+        // Thiết lập giao diện dropdown
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spnType.adapter = adapter
         observeCreatePremiumResponse()
     }
 
@@ -208,7 +221,7 @@ class AddCourse : AppCompatActivity() {
                         describe = binding.editTextText6.text.toString(),
                         startDate = startTime!!,
                         endDate = endTime!!,
-                        type = binding.editTextText8.text.toString(),
+                        type = binding.spnType.selectedItem.toString(),
                     )
                 courseViewModel.createCourse(createCourseRequest)
             }
