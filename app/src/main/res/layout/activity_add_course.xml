@@ -76,6 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_marginStart="16dp"
+
             android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,86 +100,112 @@
 
         <EditText
             android:id="@+id/editTextText3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="tên khóa học"
+            android:hint="Tên khóa học"
+            android:padding="8dp"
+            android:background="@drawable/bg_edt_addcourse"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView11" />
-
-        <EditText
-            android:id="@+id/editTextText4"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linerLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="9dp"
-            android:ems="10"
-            android:hint="số lượng"
-            android:inputType="text"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextText3">
+            <EditText
+                android:id="@+id/editTextText4"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Số lượng"
+                android:padding="8dp"
+                android:background="@drawable/bg_edt_addcourse"
+                android:inputType="text"/>
+            <EditText
+                android:id="@+id/editTextText5"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:ems="10"
+                android:padding="8dp"
+                android:background="@drawable/bg_edt_addcourse"
+                android:hint="Ngày học"
+                android:inputType="text" />
 
-        <EditText
-            android:id="@+id/editTextText5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:ems="10"
-            android:hint="thời gian khóa học"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextText6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="19dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="mô tả chi tiết"
+            android:hint="Mô tả chi tiết"
+            android:background="@drawable/bg_edt_addcourse"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:padding="8dp"
+            android:gravity="top"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText5" />
+            app:layout_constraintTop_toBottomOf="@+id/linerLayout1" />
 
 
         <EditText
             android:id="@+id/editTextText7"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="Giá khóa học"
+            android:padding="8dp"
+            android:background="@drawable/bg_edt_addcourse"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextText6" />
 
         <EditText
             android:id="@+id/editTextText2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="thời gian bắt đầu thời gian kết thúc"
+            android:hint="Thời gian bắt đầu - Thời gian kết thúc"
             android:inputType="none"
             android:focusable="false"
+            android:padding="8dp"
+            android:background="@drawable/bg_edt_addcourse"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextText7" />
         <EditText
             android:id="@+id/editTextText8"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_edt_addcourse"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:ems="10"
-            android:hint="kiểu"
+            android:hint="Kiểu"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
