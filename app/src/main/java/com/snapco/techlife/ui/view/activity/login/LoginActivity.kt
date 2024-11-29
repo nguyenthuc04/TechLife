@@ -102,6 +102,7 @@ class LoginActivity : AppCompatActivity() {
         user?.let {
             UserDataHolder.setUserData(it.id, it.account, it.name, it.avatar)
             val accountManager = AccountManager(this)
+
             val userAccount =
                 UserAccount(
                     id = it.id,

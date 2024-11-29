@@ -1,36 +1,34 @@
 package com.snapco.techlife.data.model
 
-data class Notification(
+data class NotificationPost(
     val _id: String,
-    val name: String,
-    val message: String,
-    val image: String,
-    val time: String,
-    val idPostReel: String,
-    val myID: String,
+    val contentId: String,
+    val userId: String,
+    val imgUser: String,
+    val nameUser: String,
     val yourID: String,
-    val isSeen: String = "false",
+    val time: String,
+    val read: Boolean,
+    val processed: Boolean,
+    val type: String,
+    val contentType: String,
+)
 
-    )
+data class LikeNotificationRequest(
+    val userId: String,
+    val imgUser: String,
+    val nameUser: String,
+    val yourID: String,
+)
+
+data class LikeReelNotificationRequest(
+    val userId: String,
+    val imgUser: String,
+    val nameUser: String,
+    val yourID: String,
+)
+
 data class NotificationResponse(
     val success: Boolean,
-    val notifications: List<Notification>
+    val notifications: List<NotificationPost>,
 )
-
-data class AddNotificationRequest(
-    val name: String,
-    val message: String,
-    val image: String,
-    val time: String,
-    val idPostReel: String? = null,
-    val myID: String,
-    val yourID: String,
-    val isSeen: String
-)
-
-data class AddNotificationResponse(
-    val success: Boolean,
-    val message: String,
-    val notification: Notification?
-)
-

@@ -1,40 +1,35 @@
 package com.snapco.techlife.ui.view.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.snapco.techlife.data.model.Notification
+import com.snapco.techlife.data.model.NotificationPost
 import com.snapco.techlife.databinding.ItemNotificationBinding
+import com.snapco.techlife.extensions.loadImage
 import io.getstream.chat.android.core.internal.InternalStreamChatApi
-import io.getstream.chat.android.ui.utils.load
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 class NotificationAdapter(
-    private val notifications: List<Notification>,
-    private val onClick: (Notification) -> Unit
+    private var notifications: List<NotificationPost>,
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
-
-    inner class NotificationViewHolder(private val binding: ItemNotificationBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class NotificationViewHolder(
+        private val binding: ItemNotificationBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
         @OptIn(InternalStreamChatApi::class)
-        fun bind(notification: Notification) {
+        fun bind(notification: NotificationPost) {
             binding.apply {
-                tvName.text = notification.name
-                tvMessage.text = notification.message
+                tvName.text = notification.nameUser
+                tvMessage.text =
+                    if (notification.type == "like") {
+                        "${notification.nameUser} đã thích bài viết của bạn"
+                    } else {
+                        "${notification.nameUser} đã thích reel của bạn"
+                    }
                 tvTime.text = getFormattedTimeDifference(notification.time)
-                ivImage.load(notification.image) // Sử dụng thư viện như Glide hoặc Coil
-                root.setOnClickListener { onClick(notification) }
-
-                if (notification.isSeen == "false") { // Check for false explicitly
-                    root.setBackgroundColor(Color.parseColor("#D6EAF8"))
-                } else {
-                    root.setBackgroundColor(Color.parseColor("#FFFFFF"))
-                }
+                ivImage.loadImage(notification.imgUser)
             }
-
         }
 
         fun getFormattedTimeDifference(notificationTime: String): String {
@@ -50,19 +45,30 @@ class NotificationAdapter(
                 else -> "${minutes / 1440} ngày trước"
             }
         }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        val binding = ItemNotificationBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): NotificationViewHolder {
+        val binding =
+            ItemNotificationBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return NotificationViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
+    fun updateNotifications(notificationPost: List<NotificationPost>) {
+        notifications = notificationPost
+        notifyDataSetChanged()
+    }
+
+    override fun onBindViewHolder(
+        holder: NotificationViewHolder,
+        position: Int,
+    ) {
         holder.bind(notifications[position])
     }
 

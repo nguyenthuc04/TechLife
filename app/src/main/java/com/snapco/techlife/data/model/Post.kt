@@ -20,6 +20,7 @@ data class AddCommentRequest(
     val userName: String,
     val userImageUrl: String,
     val text: String,
+    val yourID: String,
 )
 
 data class AddCommentResponse(

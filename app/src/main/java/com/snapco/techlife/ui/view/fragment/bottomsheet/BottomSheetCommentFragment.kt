@@ -21,10 +21,14 @@ class BottomSheetCommentFragment : BottomSheetDialogFragment() {
     companion object {
         private const val ARG_POST_ID = "postId"
 
-        fun newInstance(postId: String): BottomSheetCommentFragment {
+        fun newInstance(
+            postId: String,
+            userId: String,
+        ): BottomSheetCommentFragment {
             val fragment = BottomSheetCommentFragment()
             val args = Bundle()
             args.putString(ARG_POST_ID, postId)
+            args.putString("userId", userId)
             fragment.arguments = args
             return fragment
         }
@@ -47,6 +51,7 @@ class BottomSheetCommentFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentBottomSheetCommentBinding.inflate(inflater, container, false)
         val postId = arguments?.getString(ARG_POST_ID) ?: return null
+        val userId = arguments?.getString("userId") ?: return null
         val userImageUrl = UserDataHolder.getUserAvatar() ?: ""
         binding.imgAvatar.loadImage(userImageUrl)
         // Cài đặt RecyclerView
@@ -64,7 +69,7 @@ class BottomSheetCommentFragment : BottomSheetDialogFragment() {
                     .toString()
                     .trim()
             if (commentText.isNotEmpty()) {
-                addComment(postId, commentText, adapter)
+                addComment(postId, commentText, adapter, userId)
             } else {
                 binding.editText.error = "Nội dung bình luận không được để trống!"
             }
@@ -76,6 +81,7 @@ class BottomSheetCommentFragment : BottomSheetDialogFragment() {
         postId: String,
         commentText: String,
         adapter: CommentAdapter,
+        yourID: String,
     ) {
         val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
@@ -89,6 +95,7 @@ class BottomSheetCommentFragment : BottomSheetDialogFragment() {
                 userName = userName,
                 userImageUrl = userImageUrl,
                 text = commentText,
+                yourID = yourID,
             )
 
         homeViewModel.addComment(postId, commentRequest)

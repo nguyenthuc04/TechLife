@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.LikeNotificationRequest
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.gone
@@ -118,12 +119,21 @@ class HomeFragment :
         position: Int,
     ) {
         postAdapter.updateLikeButtonAt(position)
-        // Gọi ViewModel để cập nhật API
-        UserDataHolder.getUserId()?.let { homeViewModel.likePost(post._id, it) }
+        val likeRequest =
+            LikeNotificationRequest(
+                userId = UserDataHolder.getUserId().toString(),
+                yourID = post.userId,
+                nameUser = UserDataHolder.getUserName().toString(),
+                imgUser = UserDataHolder.getUserAvatar().toString(),
+            )
+        homeViewModel.likePost(post._id, likeRequest)
     }
 
-    override fun onCommentPost(postId: String) {
-        val bottomSheet = BottomSheetCommentFragment.newInstance(postId)
+    override fun onCommentPost(
+        postId: String,
+        userId: String,
+    ) {
+        val bottomSheet = BottomSheetCommentFragment.newInstance(postId, userId)
         bottomSheet.show(parentFragmentManager, BottomSheetCommentFragment::class.java.simpleName)
     }
 }

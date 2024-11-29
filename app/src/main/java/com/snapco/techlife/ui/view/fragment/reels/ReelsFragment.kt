@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.Reel
 import com.snapco.techlife.databinding.FragmentReelsBinding
 import com.snapco.techlife.ui.view.adapter.ReelAdapter
@@ -65,17 +66,22 @@ class ReelsFragment :
         position: Int,
     ) {
         reelAdapter.updateLikeButtonAt(position)
-
-        UserDataHolder.getUserId()?.let {
-            reelViewModel.likeReel(post._id, it)
-        }
+        val likeRequest =
+            LikeReelNotificationRequest(
+                userId = UserDataHolder.getUserId().toString(),
+                yourID = post.userId,
+                nameUser = UserDataHolder.getUserName().toString(),
+                imgUser = UserDataHolder.getUserAvatar().toString(),
+            )
+        reelViewModel.likeReel(post._id, likeRequest)
     }
 
     override fun onCommentPost(
         postId: String,
         position: Int,
+        userId: String,
     ) {
-        val bottomSheet = BottomSheetCommentReelFragment.newInstance(postId)
+        val bottomSheet = BottomSheetCommentReelFragment.newInstance(postId, userId)
         bottomSheet.show(parentFragmentManager, BottomSheetCommentReelFragment::class.java.simpleName)
         reelAdapter.updateCommentCountAt(position)
     }

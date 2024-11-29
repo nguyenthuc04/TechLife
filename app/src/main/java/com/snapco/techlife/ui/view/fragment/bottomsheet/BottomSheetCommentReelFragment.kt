@@ -21,10 +21,14 @@ class BottomSheetCommentReelFragment : BottomSheetDialogFragment() {
     companion object {
         private const val ARG_POST_ID = "postId"
 
-        fun newInstance(postId: String): BottomSheetCommentReelFragment {
+        fun newInstance(
+            postId: String,
+            userId: String,
+        ): BottomSheetCommentReelFragment {
             val fragment = BottomSheetCommentReelFragment()
             val args = Bundle()
             args.putString(ARG_POST_ID, postId)
+            args.putString("userId", userId)
             fragment.arguments = args
             return fragment
         }
@@ -47,6 +51,7 @@ class BottomSheetCommentReelFragment : BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentBottomSheetCommentBinding.inflate(inflater, container, false)
         val postId = arguments?.getString(ARG_POST_ID) ?: return null
+        val userId = arguments?.getString("userId") ?: ""
         val userImageUrl = UserDataHolder.getUserAvatar() ?: ""
         binding.imgAvatar.loadImage(userImageUrl)
         // Cài đặt RecyclerView
@@ -64,7 +69,7 @@ class BottomSheetCommentReelFragment : BottomSheetDialogFragment() {
                     .toString()
                     .trim()
             if (commentText.isNotEmpty()) {
-                addComment(postId, commentText, adapter)
+                addComment(postId, commentText, adapter, userId)
             } else {
                 binding.editText.error = "Nội dung bình luận không được để trống!"
             }
@@ -76,6 +81,7 @@ class BottomSheetCommentReelFragment : BottomSheetDialogFragment() {
         postId: String,
         commentText: String,
         adapter: CommentReelAdapter,
+        yourID: String,
     ) {
         val reelViewModel: ReelViewModel by viewModels({ requireActivity() })
 
@@ -89,6 +95,7 @@ class BottomSheetCommentReelFragment : BottomSheetDialogFragment() {
                 userName = userName,
                 userImageUrl = userImageUrl,
                 text = commentText,
+                yourID = yourID,
             )
 
         reelViewModel.addReelComment(postId, commentRequest)
