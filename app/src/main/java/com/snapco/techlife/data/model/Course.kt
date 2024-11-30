@@ -23,7 +23,7 @@ data class Course(
 )
 
 data class UserCourse(
-    val userId: String,
+    val id: String,
     val date: String,
     val userName: String,
     val avatar: String,
