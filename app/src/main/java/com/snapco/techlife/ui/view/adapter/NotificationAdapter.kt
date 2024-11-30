@@ -1,40 +1,76 @@
 package com.snapco.techlife.ui.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.snapco.techlife.R
-import com.snapco.techlife.data.model.Notification
+import com.snapco.techlife.data.model.NotificationPost
+import com.snapco.techlife.databinding.ItemNotificationBinding
+import com.snapco.techlife.extensions.loadImage
+import io.getstream.chat.android.core.internal.InternalStreamChatApi
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class NotificationAdapter(
-    private val notifications: List<Notification>
-) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+    private var notifications: List<NotificationPost>,
+) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
+    inner class NotificationViewHolder(
+        private val binding: ItemNotificationBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        @OptIn(InternalStreamChatApi::class)
+        fun bind(notification: NotificationPost) {
+            binding.apply {
+                tvName.text = notification.nameUser
+                tvMessage.text =
+                    if (notification.type == "like") {
+                        "${notification.nameUser} đã thích bài viết của bạn"
+                    } else {
+                        "${notification.nameUser} đã thích reel của bạn"
+                    }
+                tvTime.text = getFormattedTimeDifference(notification.time)
+                ivImage.loadImage(notification.imgUser)
+            }
+        }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtName: TextView = itemView.findViewById(R.id.txtName)
-        val txtMessage: TextView = itemView.findViewById(R.id.txtMessage)
-        val txtTime: TextView = itemView.findViewById(R.id.txtTime)
-        val imgProfile: ImageView = itemView.findViewById(R.id.imgProfile)
+        fun getFormattedTimeDifference(notificationTime: String): String {
+            val notificationDateTime = LocalDateTime.parse(notificationTime, DateTimeFormatter.ISO_DATE_TIME)
+            val now = LocalDateTime.now()
+            val seconds = ChronoUnit.SECONDS.between(notificationDateTime, now)
+            val minutes = seconds / 60
+
+            return when {
+                seconds < 60 -> "$seconds giây trước"
+                minutes < 60 -> "$minutes phút trước"
+                minutes < 1440 -> "${minutes / 60} giờ trước"
+                else -> "${minutes / 1440} ngày trước"
+            }
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_notification, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): NotificationViewHolder {
+        val binding =
+            ItemNotificationBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
+        return NotificationViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val notification = notifications[position]
-        holder.txtName.text = notification.name
-        holder.txtMessage.text = notification.message
-        holder.txtTime.text = notification.time
-        // Có thể load hình ảnh nếu cần
+    fun updateNotifications(notificationPost: List<NotificationPost>) {
+        notifications = notificationPost
+        notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int {
-        return notifications.size
+    override fun onBindViewHolder(
+        holder: NotificationViewHolder,
+        position: Int,
+    ) {
+        holder.bind(notifications[position])
     }
+
+    override fun getItemCount(): Int = notifications.size
 }

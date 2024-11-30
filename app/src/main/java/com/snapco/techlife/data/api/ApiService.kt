@@ -1,9 +1,12 @@
 package com.snapco.techlife.data.api
 
+import android.app.Notification
 import com.snapco.techlife.data.model.AddCommentReelRequest
 import com.snapco.techlife.data.model.AddCommentReelResponse
 import com.snapco.techlife.data.model.AddCommentRequest
 import com.snapco.techlife.data.model.AddCommentResponse
+import com.snapco.techlife.data.model.ChangepasswordRequest
+import com.snapco.techlife.data.model.ChangepasswordResponse
 import com.snapco.techlife.data.model.CheckEmailRequest
 import com.snapco.techlife.data.model.CheckEmailResponse
 import com.snapco.techlife.data.model.Course
@@ -22,20 +25,28 @@ import com.snapco.techlife.data.model.FollowResponse
 import com.snapco.techlife.data.model.GetCommentReelResponse
 import com.snapco.techlife.data.model.GetCommentResponse
 import com.snapco.techlife.data.model.GetUserResponse
+import com.snapco.techlife.data.model.LikeNotificationRequest
+import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.LikeReelResponse
 import com.snapco.techlife.data.model.LikeResponse
 import com.snapco.techlife.data.model.LoginRequest
 import com.snapco.techlife.data.model.LoginResponse
+import com.snapco.techlife.data.model.NotificationResponse
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.PremiumRequest
 import com.snapco.techlife.data.model.Reel
 import com.snapco.techlife.data.model.ReelProfileResponse
 import com.snapco.techlife.data.model.RegisterCourseRequest
+import com.snapco.techlife.data.model.ResetPasswordRequest
+import com.snapco.techlife.data.model.ResetPasswordResponse
+import com.snapco.techlife.data.model.SendEmailRequest
+import com.snapco.techlife.data.model.SendEmailResponse
 import com.snapco.techlife.data.model.UnfollowRequest
 import com.snapco.techlife.data.model.UnfollowResponse
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
+import com.snapco.techlife.data.model.UpdateLastLoginResponse
 import com.snapco.techlife.data.model.UpdateUserRequest
 import com.snapco.techlife.data.model.UpdateUserResponse
 import com.snapco.techlife.data.model.User
@@ -48,12 +59,47 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
+    @PUT("/updateNotificationRead/{notificationId}")
+    suspend fun updateNotificationRead(
+        @Path("notificationId") notificationId: String,
+        @Body read: Boolean,
+    ): Response<Unit>
+
+    @PUT("/updateNotificationProcessed/{notificationId}")
+    suspend fun updateNotificationProcessed(
+        @Path("notificationId") notificationId: String,
+    ): Response<Unit>
+
+    @GET("/getNotifications/{yourID}")
+    suspend fun getNotifications(
+        @Path("yourID") yourID: String,
+    ): NotificationResponse
+
     @PUT("/registerCourse/{courseId}")
     suspend fun registerCourse(
         @Path("courseId") courseId: String,
         @Body registerCourseRequest: RegisterCourseRequest,
     ): UpdateCourseResponse
 
+    @POST("/sendEmail")
+    suspend fun sendEmail(
+        @Body request: SendEmailRequest,
+    ): SendEmailResponse
+
+    @POST("/resetPassword")
+    suspend fun resetPassword(
+        @Body resetPasswordRequest: ResetPasswordRequest,
+    ): ResetPasswordResponse
+
+    @POST("/changepassword")
+    suspend fun changepassword(
+        @Body changepasswordRequest: ChangepasswordRequest,
+    ): ChangepasswordResponse
+
+    @PUT("/updateLastLogin/{id}")
+    suspend fun updateLastLogin(
+        @Path("id") userId: String,
+    ): UpdateLastLoginResponse
 
     @DELETE("/deleteCourse/{courseId}")
     suspend fun deleteCourse(
@@ -139,13 +185,13 @@ interface ApiService {
     @POST("likePost/{postId}")
     suspend fun likePost(
         @Path("postId") postId: String,
-        @Body userId: Map<String, String>,
+        @Body likeRequest: LikeNotificationRequest,
     ): Response<LikeResponse>
 
     @POST("likeReel/{reelId}")
     suspend fun likeReel(
         @Path("reelId") postId: String,
-        @Body userId: Map<String, String>,
+        @Body likeReelNotificationRequest: LikeReelNotificationRequest,
     ): Response<LikeReelResponse>
 
     @POST("createPost")
@@ -197,11 +243,25 @@ interface ApiService {
     @PUT("/updatePost/{postId}")
     suspend fun updatePost(
         @Path("postId") postId: String,
-        @Body updateRequest: Map<String, String>
+        @Body updateRequest: Map<String, String>,
     ): Response<Unit>
 
     @GET("getCoursesByName/{name}") // Thay endpoint thực tế của bạn vào đây
     suspend fun searchCourses(
         @Path("name") name: String,
     ): CourseResponse
+
+    @GET("getListNotification")
+    suspend fun getListNotification(): NotificationResponse
+
+    @GET("notifications/user/{myId}")
+    suspend fun getNotificationsByUser(
+        @Path("myId") myId: String,
+    ): Response<List<Notification>>
+
+    @PUT("/updateNotificationStatus/{notificationId}")
+    suspend fun updateNotificationStatus(
+        @Path("notificationId") notificationId: String,
+        @Body request: Map<String, String>,
+    ): Response<Unit>
 }

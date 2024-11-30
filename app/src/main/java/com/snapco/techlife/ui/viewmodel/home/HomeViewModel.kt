@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.snapco.techlife.data.api.ApiClient
 import com.snapco.techlife.data.model.*
-import com.snapco.techlife.data.request.UpdatePostRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -81,18 +80,20 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _addCommentResponse.value = response.body()
                 } else {
-                    _addCommentResponse.value = AddCommentResponse(
-                        success = false,
-                        message = "Failed to add comment!",
-                        post = null,
-                    )
+                    _addCommentResponse.value =
+                        AddCommentResponse(
+                            success = false,
+                            message = "Failed to add comment!",
+                            post = null,
+                        )
                 }
             } catch (e: Exception) {
-                _addCommentResponse.value = AddCommentResponse(
-                    success = false,
-                    message = "An error occurred!",
-                    post = null,
-                )
+                _addCommentResponse.value =
+                    AddCommentResponse(
+                        success = false,
+                        message = "An error occurred!",
+                        post = null,
+                    )
             }
         }
     }
@@ -108,11 +109,13 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun likePost(postId: String, userId: String) {
+    fun likePost(
+        postId: String,
+        likeRequest: LikeNotificationRequest,
+    ) {
         viewModelScope.launch {
             try {
-                val userIdMap = mapOf("userId" to userId)
-                val response = ApiClient.apiService.likePost(postId, userIdMap)
+                val response = ApiClient.apiService.likePost(postId, likeRequest)
                 if (response.isSuccessful) {
                     val updatedPost = response.body()?.post
                     updatedPost?.let {
@@ -182,7 +185,10 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun updatePost(postId: String, updatedCaption: String) {
+    fun updatePost(
+        postId: String,
+        updatedCaption: String,
+    ) {
         viewModelScope.launch {
             try {
                 val updateRequest = mapOf("caption" to updatedCaption)

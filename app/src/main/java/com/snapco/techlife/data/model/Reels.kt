@@ -46,6 +46,7 @@ data class AddCommentReelRequest(
     val userName: String,
     val userImageUrl: String,
     val text: String,
+    val yourID: String,
 )
 
 data class AddCommentReelResponse(

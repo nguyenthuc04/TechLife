@@ -99,7 +99,8 @@ class LoginRequiresPasswordActivity : AppCompatActivity() {
         user?.let {
             UserDataHolder.setUserData(it.id, it.account, it.name, it.avatar)
             updateAccount(it)
-            userViewModel.connectChat(it.id, it.name, tokenChat,it.avatar)
+            userViewModel.updateLastLogin(it.id)
+            userViewModel.connectChat(it.id, it.account, tokenChat, it.avatar)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.btnLogin.text = "Đăng nhập"
                 binding.progressBar.gone()

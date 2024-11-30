@@ -135,7 +135,7 @@ class ReelAdapter(
 
             // Xử lý click vào nút comment
             binding.btnComment.setOnClickListener {
-                onReelActionListener?.onCommentPost(reel._id, position)
+                onReelActionListener?.onCommentPost(reel._id, position, reel.userId)
             }
             binding.btnFollow.setOnClickListener {
             }
@@ -182,6 +182,7 @@ class ReelAdapter(
         fun onCommentPost(
             postId: String,
             position: Int,
+            userId: String,
         )
     }
 }

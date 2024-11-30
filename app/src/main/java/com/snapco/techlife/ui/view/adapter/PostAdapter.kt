@@ -16,24 +16,34 @@ import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.TechlifePostBinding
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class PostAdapter(
     var modelList: MutableList<Post>,
     private val onPostActionListener: OnPostActionListener?,
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
-
     private val currentUserId = UserDataHolder.getUserId()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = TechlifePostBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val binding =
+            TechlifePostBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>,
+    ) {
         if (payloads.isEmpty()) {
             holder.bind(modelList[position], position)
         } else {
@@ -46,7 +56,10 @@ class PostAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         onBindViewHolder(holder, position, mutableListOf())
     }
 
@@ -62,7 +75,10 @@ class PostAdapter(
         notifyDataSetChanged()
     }
 
-    private fun setLikeButtonState(likeButton: ImageButton, isLiked: List<String>?) {
+    private fun setLikeButtonState(
+        likeButton: ImageButton,
+        isLiked: List<String>?,
+    ) {
         if (isLiked?.contains(currentUserId) == true) {
             likeButton.setImageResource(R.drawable.ic_favorite_red) // Icon for liked state
         } else {
@@ -73,14 +89,36 @@ class PostAdapter(
     inner class ViewHolder(
         private val binding: TechlifePostBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        fun getFormattedTimeDifference(notificationTime: String): String {
+            val notificationDateTime = LocalDateTime.parse(notificationTime, DateTimeFormatter.ISO_DATE_TIME)
+            val now = LocalDateTime.now()
+            val seconds = ChronoUnit.SECONDS.between(notificationDateTime, now)
+            val minutes = seconds / 60
 
-        fun bind(post: Post, position: Int) {
+            return when {
+                seconds < 60 -> "$seconds giây trước"
+                minutes < 60 -> "$minutes phút trước"
+                minutes < 1440 -> "${minutes / 60} giờ trước"
+                else -> "${minutes / 1440} ngày trước"
+            }
+        }
+
+        fun bind(
+            post: Post,
+            position: Int,
+        ) {
             // Bind post data
             binding.userName.text = post.userName
             binding.captionText.text = post.caption
             binding.likesCount.text = "${post.likesCount} likes"
-            binding.commentsCount.text = "View all ${post.commentsCount} comments"
+            binding.time.text = getFormattedTimeDifference(post.createdAt)
             binding.userImageUrl.loadImage(post.userImageUrl)
+            if (post.commentsCount == 0)
+                {
+                    binding.commentsCount.text = ""
+                } else {
+                binding.commentsCount.text = "View ${post.commentsCount} comments"
+            }
 
             // Check if the post belongs to the current user
             if (post.userId == currentUserId) {
@@ -102,11 +140,11 @@ class PostAdapter(
 
             // Handle comment button click
             binding.commmentButton.setOnClickListener {
-                onPostActionListener?.onCommentPost(post._id)
+                onPostActionListener?.onCommentPost(post._id, post.userId)
             }
 
             binding.commentsCount.setOnClickListener {
-                onPostActionListener?.onCommentPost(post._id)
+                onPostActionListener?.onCommentPost(post._id, post.userId)
             }
 
             // Set up images in RecyclerView
@@ -117,7 +155,10 @@ class PostAdapter(
             }
         }
 
-        private fun showBottomSheetDialog(position: Int, context: Context) {
+        private fun showBottomSheetDialog(
+            position: Int,
+            context: Context,
+        ) {
             val bottomSheetDialog = BottomSheetDialog(context)
             val view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet, null)
             bottomSheetDialog.setContentView(view)
@@ -143,7 +184,10 @@ class PostAdapter(
             bottomSheetDialog.show()
         }
 
-        private fun showDeleteConfirmationDialog(context: Context, onDeleteConfirmed: () -> Unit) {
+        private fun showDeleteConfirmationDialog(
+            context: Context,
+            onDeleteConfirmed: () -> Unit,
+        ) {
             val dialogView =
                 LayoutInflater.from(context).inflate(R.layout.dialog_delete_confirmation, null)
             val builder = AlertDialog.Builder(context)
@@ -174,9 +218,19 @@ class PostAdapter(
 
     interface OnPostActionListener {
         fun onPostLongClicked(position: Int)
+
         fun onEditPost(position: Int)
+
         fun onDeletePost(position: Int)
-        fun onLikePost(post: Post, position: Int)
-        fun onCommentPost(postId: String)
+
+        fun onLikePost(
+            post: Post,
+            position: Int,
+        )
+
+        fun onCommentPost(
+            postId: String,
+            userId: String,
+        )
     }
 }

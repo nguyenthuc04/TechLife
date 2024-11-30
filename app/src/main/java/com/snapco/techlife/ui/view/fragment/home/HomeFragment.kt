@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.R
+import com.snapco.techlife.data.model.LikeNotificationRequest
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.databinding.FragmentHomeBinding
 import com.snapco.techlife.extensions.gone
@@ -24,8 +25,6 @@ import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetCommentFragme
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
-import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.client.events.NotificationMessageNewEvent
 
 class HomeFragment :
     Fragment(),
@@ -34,7 +33,7 @@ class HomeFragment :
     private lateinit var postAdapter: PostAdapter
     private val homeViewModel: HomeViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
-    private val channelViewModel : ChannelViewModel by viewModels()
+    private val channelViewModel: ChannelViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +45,7 @@ class HomeFragment :
         channelViewModel.getListChannel(UserDataHolder.getUserId().toString())
         chatViewModel.unreadMessagesCount.observe(viewLifecycleOwner) { unreadCount ->
             binding.txtUnread.text = unreadCount.toString()
-            if(unreadCount > 0) {
+            if (unreadCount > 0) {
                 binding.txtUnread.visible()
             } else {
                 binding.txtUnread.gone()
@@ -56,17 +55,19 @@ class HomeFragment :
         binding.btnNextActivityChannel.setOnClickListener {
             startActivity<ChannelActivity>()
         }
-        binding.btnNotification.setOnClickListener{
+        binding.btnNotification.setOnClickListener {
             startActivity<NotificationActivity>()
         }
-
-
-
 
         setupRecyclerView()
         homeViewModel.getListPosts()
         observePosts()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.getListPosts()
     }
 
     private fun setupRecyclerView() {
@@ -118,12 +119,21 @@ class HomeFragment :
         position: Int,
     ) {
         postAdapter.updateLikeButtonAt(position)
-        // Gọi ViewModel để cập nhật API
-        UserDataHolder.getUserId()?.let { homeViewModel.likePost(post._id, it) }
+        val likeRequest =
+            LikeNotificationRequest(
+                userId = UserDataHolder.getUserId().toString(),
+                yourID = post.userId,
+                nameUser = UserDataHolder.getUserName().toString(),
+                imgUser = UserDataHolder.getUserAvatar().toString(),
+            )
+        homeViewModel.likePost(post._id, likeRequest)
     }
 
-    override fun onCommentPost(postId: String) {
-        val bottomSheet = BottomSheetCommentFragment.newInstance(postId)
+    override fun onCommentPost(
+        postId: String,
+        userId: String,
+    ) {
+        val bottomSheet = BottomSheetCommentFragment.newInstance(postId, userId)
         bottomSheet.show(parentFragmentManager, BottomSheetCommentFragment::class.java.simpleName)
     }
 }

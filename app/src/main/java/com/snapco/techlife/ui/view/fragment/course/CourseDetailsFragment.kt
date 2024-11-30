@@ -2,16 +2,17 @@
 package com.snapco.techlife.ui.view.fragment.course
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.RegisterCourseRequest
+import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -24,14 +25,18 @@ class CourseDetailsFragment : Fragment() {
     private val courseActivityViewModel: CourseViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentCourseDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         // Nút quay lại
         binding.toolbarCustomBack.setOnClickListener {
@@ -47,11 +52,12 @@ class CourseDetailsFragment : Fragment() {
             binding.courseDescription.text = course.describe
             binding.mentorImage.loadImage(course.userImageUrl)
             binding.mentorName.text = course.userName
-
+            Log.d("CourseDetailsFragment", "Course: $course")
             // Kiểm tra nếu người dùng đã đăng ký khóa học
             val currentUserId = UserDataHolder.getUserId()
             if (currentUserId != null) {
                 val isRegistered = isUserRegistered(course, currentUserId)
+                Log.d("CourseDetailsFragment", "isRegistered: $isRegistered")
                 binding.registerButton.visibility = if (isRegistered) View.GONE else View.VISIBLE
             } else {
                 binding.registerButton.visibility = View.VISIBLE // Ẩn nếu không có user ID
@@ -81,20 +87,26 @@ class CourseDetailsFragment : Fragment() {
             message = "Bạn có muốn đăng ký khóa học '${course.name}' không?",
             onConfirm = {
                 registerCourse(course, currentUserId, currentUserName, currentUserAvatar)
-            }
+            },
         )
     }
 
-    private fun registerCourse(course: Course, userId: String, userName: String, avatar: String?) {
+    private fun registerCourse(
+        course: Course,
+        userId: String,
+        userName: String,
+        avatar: String?,
+    ) {
         val currentDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
 
         // Tạo request để gửi lên server
-        val registerRequest = RegisterCourseRequest(
-            id = userId,
-            userName = userName,
-            avatar = avatar ?: "",
-            date = currentDate,
-        )
+        val registerRequest =
+            RegisterCourseRequest(
+                id = userId,
+                userName = userName,
+                avatar = avatar ?: "",
+                date = currentDate,
+            )
 
         courseActivityViewModel.registerCourse(course.id ?: "", registerRequest)
 
@@ -111,8 +123,13 @@ class CourseDetailsFragment : Fragment() {
     }
 
 // Bỏ hàm cancelRegistration vì không cần nữa
-    private fun showConfirmationDialog(title: String, message: String, onConfirm: () -> Unit) {
-        AlertDialog.Builder(requireContext())
+    private fun showConfirmationDialog(
+        title: String,
+        message: String,
+        onConfirm: () -> Unit,
+    ) {
+        AlertDialog
+            .Builder(requireContext())
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("Có") { _, _ -> onConfirm() }
@@ -121,7 +138,8 @@ class CourseDetailsFragment : Fragment() {
             .show()
     }
 
-    private fun isUserRegistered(course: Course, userId: String): Boolean {
-        return course.user.any { it.userId == userId }
-    }
+    private fun isUserRegistered(
+        course: Course,
+        userId: String,
+    ): Boolean = course.user.any { it.id == userId }
 }

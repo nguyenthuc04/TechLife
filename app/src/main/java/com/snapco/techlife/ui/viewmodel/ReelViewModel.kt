@@ -11,6 +11,7 @@ import com.snapco.techlife.data.model.AddCommentReelResponse
 import com.snapco.techlife.data.model.CreateReelRequest
 import com.snapco.techlife.data.model.CreateReelResponse
 import com.snapco.techlife.data.model.GetCommentReelResponse
+import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.LikeReelResponse
 import com.snapco.techlife.data.model.Reel
 import kotlinx.coroutines.Dispatchers
@@ -85,12 +86,11 @@ class ReelViewModel : ViewModel() {
 
     fun likeReel(
         postId: String,
-        userId: String,
+        likeReelNotificationRequest: LikeReelNotificationRequest,
     ) {
         viewModelScope.launch {
             try {
-                val userIdMap = mapOf("userId" to userId)
-                val response = ApiClient.apiService.likeReel(postId, userIdMap)
+                val response = ApiClient.apiService.likeReel(postId, likeReelNotificationRequest)
                 if (response.isSuccessful) {
                     val updatedPost = response.body()?.reel
                     updatedPost?.let {

@@ -1,13 +1,13 @@
 package com.snapco.techlife.ui.view.activity.course
 
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.databinding.ActivityAddCourseBinding
@@ -27,9 +26,7 @@ import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class AddCourse : AppCompatActivity() {
     private val courseViewModel: CourseViewModel by viewModels()
@@ -38,6 +35,8 @@ class AddCourse : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private val PICK_IMAGE_REQUEST = 1
     private val PERMISSION_REQUEST_CODE = 2
+    private var startTime: String? = null
+    private var endTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,19 +52,9 @@ class AddCourse : AppCompatActivity() {
         binding.btnDone.setOnClickListener {
             uploadImage()
         }
-
-        binding.edtNgayBD.setOnClickListener {
-            openDatePicker { selectedDate ->
-                binding.edtNgayBD.setText(selectedDate)
-            }
+        binding.editTextText2.setOnClickListener {
+            showDatePickerDialog()
         }
-
-        binding.edtNgayKT.setOnClickListener {
-            openDatePicker { selectedDate ->
-                binding.edtNgayKT.setText(selectedDate)
-            }
-        }
-
         val typeKH = listOf("Cơ bản", "Nâng cao", "Chuyên môn hoá")
 
         val adapter = ArrayAdapter(
@@ -74,13 +63,26 @@ class AddCourse : AppCompatActivity() {
             typeKH
         )
 
+
         // Thiết lập giao diện dropdown
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        // Gắn adapter vào Spinner
-        binding.spinnerLoaiKH.adapter = adapter
-
+        binding.spnType.adapter = adapter
         observeCreatePremiumResponse()
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(this, { _, startYear, startMonth, startDay ->
+            startTime = String.format("%02d-%02d-%d", startDay, startMonth + 1, startYear)
+            DatePickerDialog(this, { _, endYear, endMonth, endDay ->
+                endTime = String.format("%02d-%02d-%d", endDay, endMonth + 1, endYear)
+                binding.editTextText2.setText("Start: $startTime, End: $endTime")
+            }, year, month, day).show()
+        }, year, month, day).show()
     }
 
     private fun checkPermissionAndPickImage() {
@@ -214,12 +216,12 @@ class AddCourse : AppCompatActivity() {
                         imageUrl = url,
                         name = binding.editTextText3.text.toString(),
                         quantity = binding.editTextText4.text.toString(),
-                        price = binding.edtGiaKH.text.toString(),
+                        price = binding.editTextText7.text.toString(),
                         duration = binding.editTextText5.text.toString(),
                         describe = binding.editTextText6.text.toString(),
-                        startDate = binding.edtNgayBD.text.toString(),
-                        endDate = binding.edtNgayKT.text.toString(),
-                        type = binding.spinnerLoaiKH.selectedItem.toString()
+                        startDate = startTime!!,
+                        endDate = endTime!!,
+                        type = binding.spnType.selectedItem.toString(),
                     )
                 courseViewModel.createCourse(createCourseRequest)
             }
@@ -270,24 +272,5 @@ class AddCourse : AppCompatActivity() {
             setDisplayShowTitleEnabled(false)
             setHomeAsUpIndicator(R.drawable.baseline_arrow_back_ios_new)
         }
-    }
-
-    // Hàm mở DatePicker
-    private fun openDatePicker(onDateSelected: (String) -> Unit) {
-        // Tạo DatePicker
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Chọn ngày")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
-
-        // Lắng nghe khi người dùng chọn ngày
-        datePicker.addOnPositiveButtonClickListener { selection ->
-            val date = Date(selection)
-            val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-            onDateSelected(dateFormat.format(date))
-        }
-
-        // Hiển thị DatePicker
-        datePicker.show(supportFragmentManager, "DATE_PICKER")
     }
 }

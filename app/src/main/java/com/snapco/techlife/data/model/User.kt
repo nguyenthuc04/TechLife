@@ -177,8 +177,43 @@ data class UnfollowResponse(
     val updatedUser: User,
 )
 
+data class UpdateLastLoginResponse(
+    val message: String,
+    val success: Boolean,
+    val user: User?,
+)
+
 data class TokenStreamRequest(
     val userId: String,
+)
+
+data class ChangepasswordRequest(
+    val account: String = "",
+    val oldPassword: String = "",
+    val newPassword: String = "",
+)
+
+data class ResetPasswordRequest(
+    val account: String = "",
+    val newPassword: String = "",
+)
+
+data class ResetPasswordResponse(
+    val success: Boolean,
+    val message: String,
+)
+
+data class SendEmailResponse(
+    val message: String,
+    val code: String? = null,
+)
+
+data class SendEmailRequest(
+    val email: String,
+)
+
+data class ChangepasswordResponse(
+    val success: Boolean,
 )
 
 data class TokenStreamResponse(

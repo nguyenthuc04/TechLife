@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -16,6 +15,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".ui.view.activity.messenger.ChatApplication"
@@ -30,8 +32,23 @@
         android:theme="@style/Theme.TechLife"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name=".extensions.NotificationService"
+            android:exported="false" />
         <activity
             android:name=".ui.view.fragment.course.CourseFilterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.forgotpassword.CreateNewPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.forgotpassword.ConfirmAccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.forgotpassword.ForgotPasswordEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.profile.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.home.CreateReelActivity"
@@ -54,9 +71,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.profile.CustomCameraActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.view.activity.home.EditPostActivity"
             android:exported="false" />
         <activity
             android:name=".ui.view.activity.profile.CustomGalleryActivity"
@@ -131,7 +145,11 @@
             android:name=".ui.view.activity.NotificationActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.view.activity.home.EditPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.login.WelcomeActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

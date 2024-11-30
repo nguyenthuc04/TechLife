@@ -1,25 +1,45 @@
 package com.snapco.techlife.ui.viewmodel
+
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.snapco.techlife.data.model.Notification
+import androidx.lifecycle.viewModelScope
+import com.snapco.techlife.data.api.ApiClient
+import com.snapco.techlife.data.model.NotificationResponse
+import com.snapco.techlife.data.response.NotificationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class NotificationViewModel : ViewModel(){
-    private val _notifications = MutableLiveData<List<Notification>>()
-    val notifications: LiveData<List<Notification>> get() = _notifications
+class NotificationViewModel : ViewModel() {
+    private val repository = NotificationRepository()
 
-    init {
-//        loadNotifications()
+    private val _notificationResponse = MutableLiveData<NotificationResponse>()
+    val notificationResponse: LiveData<NotificationResponse> get() = _notificationResponse
+
+    fun getNotifications(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.getNotifications(userId)
+                _notificationResponse.value = response
+            } catch (e: Exception) {
+                Log.e("NotificationViewModel", "getNotifications: $e")
+            }
+        }
     }
 
-//    private fun loadNotifications() {
-//        // Giả lập dữ liệu (dữ liệu thực có thể được lấy từ API hoặc Database)
-//        _notifications.value = listOf(
-//            Notification("Amy Nguyen", "Đã trả lời câu hỏi của bạn", "3 giờ"),
-//            Notification("Bộ môn CNTT", "Đã nhắc đến bạn trong một bình luận", "7 giờ"),
-//            Notification("Hữu Sơn", "Đã trả lời câu hỏi của bạn", "22 giờ"),
-//            Notification("Thùy Ngân", "Đã trả lời câu hỏi của bạn", "23 giờ"),
-//            Notification("Anh Kiett", "Và 2 người khác đã trả lời", "1 ngày")
-//        )
-//    }
+    fun updateNotificationRead(notificationId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.updateNotificationRead(notificationId, true)
+                if (response.isSuccessful) {
+                    Log.d("NotificationViewModel", "Notification processed")
+                } else {
+                    Log.e("NotificationViewModel", "Notification processing failed")
+                }
+            } catch (e: Exception) {
+                Log.e("NotificationViewModel", "updateNotificationProcessed: $e")
+            }
+        }
+    }
 }

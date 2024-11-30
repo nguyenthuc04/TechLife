@@ -44,9 +44,65 @@ class UserViewModel : ViewModel() {
     private val _userResponse = MutableLiveData<GetUserResponse>()
     val userResponse: LiveData<GetUserResponse> get() = _userResponse
 
+    private val _updateLastLoginResponse = MutableLiveData<UpdateLastLoginResponse>()
+    val updateLastLoginResponse: LiveData<UpdateLastLoginResponse> get() = _updateLastLoginResponse
+
+    private val _changepasswordResponse = MutableLiveData<ChangepasswordResponse>()
+    val changepasswordResponse: LiveData<ChangepasswordResponse> get() = _changepasswordResponse
+
     private val _createPremiumResponse = MutableLiveData<CreatePremiumResponse>()
     val createPremiumResponse: LiveData<CreatePremiumResponse> get() = _createPremiumResponse
     private val client: ChatClient by lazy { ChatClient.instance() }
+
+    private val _resetPasswordResponse = MutableLiveData<ResetPasswordResponse>()
+    val resetPasswordResponse: LiveData<ResetPasswordResponse> get() = _resetPasswordResponse
+
+    private val _sendEmailResponse = MutableLiveData<SendEmailResponse>()
+    val sendEmailResponse: LiveData<SendEmailResponse> get() = _sendEmailResponse
+
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.resetPassword(resetPasswordRequest)
+                _resetPasswordResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Reset password failed", e)
+            }
+        }
+    }
+
+    fun sendEmail(email: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.sendEmail(SendEmailRequest(email))
+                _sendEmailResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Send email failed", e)
+            }
+        }
+    }
+
+    fun changepassword(changepasswordRequest: ChangepasswordRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.changepassword(changepasswordRequest)
+                _changepasswordResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Change password failed", e)
+            }
+        }
+    }
+
+    fun updateLastLogin(courseId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.updateLastLogin(courseId)
+                _updateLastLoginResponse.value = response
+            } catch (e: Exception) {
+                Log.e("CourseViewModel", "Update course failed", e)
+            }
+        }
+    }
 
     fun createPremium(premiumRequest: PremiumRequest) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -147,7 +203,7 @@ class UserViewModel : ViewModel() {
 
     fun updateAvatarUserChat(
         userId: String,
-        avatar: String?
+        avatar: String?,
     ) {
         // Lấy thông tin user hiện tại từ ChatClient
         val currentUser = ChatClient.instance().getCurrentUser()
@@ -157,11 +213,13 @@ class UserViewModel : ViewModel() {
             val updatedUser =
                 io.getstream.chat.android.models.User(
                     id = currentUser.id,
-                    image = if (avatar != "") {
-                        avatar
-                    } else {
-                        currentUser.image
-                    }.toString(), // Giữ nguyên ảnh đại diện nếu có
+                    image =
+                        if (avatar != "") {
+                            avatar
+                        } else {
+                            currentUser.image
+                        }.toString(),
+                    // Giữ nguyên ảnh đại diện nếu có
                 )
 
             // Cập nhật thông tin user trên server của GetStream
@@ -184,17 +242,22 @@ class UserViewModel : ViewModel() {
         userId: String,
         name: String,
         streamToken: String,
-        avatar: String?
+        avatar: String?,
     ) {
         client
             .connectUser(
                 io.getstream.chat.android.models
                     .User(
-                        id = userId, name = name, image = (if (avatar != "") {
-                            avatar
-                        } else {
-                            "https://s3.ap-southeast-1.amazonaws.com/cdn.vntre.vn/default/avatar-mac-dinh-15-1724862465.jpg"
-                        }).toString()
+                        id = userId,
+                        name = name,
+                        image =
+                            (
+                                if (avatar != "") {
+                                    avatar
+                                } else {
+                                    "https://s3.ap-southeast-1.amazonaws.com/cdn.vntre.vn/default/avatar-mac-dinh-15-1724862465.jpg"
+                                }
+                            ).toString(),
                     ),
                 streamToken,
             ).enqueue { result ->

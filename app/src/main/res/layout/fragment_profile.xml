@@ -16,6 +16,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:background="@color/white"
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
@@ -179,6 +180,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgAvatar" />
 
+
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="0dp"
@@ -190,31 +192,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
-            <Button
-                android:id="@+id/button"
-                style="@style/ButtonGray"
-                android:layout_width="198dp"
-                android:layout_height="51dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="Chỉnh sửa"
-                app:layout_constraintEnd_toStartOf="@+id/button2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
-
-            <Button
-                android:id="@+id/button2"
-                style="@style/ButtonGray"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/layoutBtn"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="Khóa học"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView18">
+                <Button
+                    android:id="@+id/button"
+                    style="@style/ButtonGray"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Chỉnh sửa" />
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/ButtonGray"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="Khóa học"
+                     />
+            </LinearLayout>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
@@ -223,7 +228,7 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button"
+                app:layout_constraintTop_toBottomOf="@+id/layoutBtn"
                 app:tabGravity="fill"
                 app:tabIconTint="@color/black"
                 app:tabIndicatorColor="@color/black"
@@ -231,6 +236,7 @@
                 app:tabIndicatorGravity="bottom"
                 app:tabIndicatorHeight="2dp"
                 app:tabMode="fixed"
+                android:background="@color/white"
                 app:tabRippleColor="@android:color/transparent"
                 app:tabUnboundedRipple="false"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -243,6 +249,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tabLayout"
+                android:background="@color/white"
                 tools:ignore="SpeakableTextPresentCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -15,8 +15,6 @@ import com.snapco.techlife.ui.view.fragment.home.ImagePreviewFragment
 class ImageAdapter(
     private val images: List<String>,
 ) : RecyclerView.Adapter<ImageViewHolder>() {
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
