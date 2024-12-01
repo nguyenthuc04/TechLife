@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.snapco.techlife.databinding.FragmentProfileTabTwoBinding
 import com.snapco.techlife.ui.view.adapter.ReelProfileAdapter
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
-import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class ProfileTabTwoFragment : Fragment() {
     private lateinit var binding: FragmentProfileTabTwoBinding
@@ -24,7 +23,8 @@ class ProfileTabTwoFragment : Fragment() {
     ): View? {
         binding = FragmentProfileTabTwoBinding.inflate(inflater, container, false)
         setupRecyclerView()
-        UserDataHolder.getUserId()?.let { homeViewModel.getReelsByUser(it) }
+//        UserDataHolder.getUserId()?.let { homeViewModel.getReelsByUser(it) }
+        arguments?.getString("user_id")?.let { homeViewModel.getReelsByUser(it) }
         observeReels()
         return binding.root
     }
@@ -42,6 +42,16 @@ class ProfileTabTwoFragment : Fragment() {
             postList?.let {
                 reelAdapter.updateReels(it.reels!!.reversed())
             }
+        }
+    }
+
+    companion object {
+        fun newInstance(userId: String): ProfileTabTwoFragment {
+            val fragment = ProfileTabTwoFragment()
+            val args = Bundle()
+            args.putString("user_id", userId)
+            fragment.arguments = args
+            return fragment
         }
     }
 }

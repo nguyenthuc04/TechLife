@@ -60,6 +60,65 @@ class UserViewModel : ViewModel() {
     private val _sendEmailResponse = MutableLiveData<SendEmailResponse>()
     val sendEmailResponse: LiveData<SendEmailResponse> get() = _sendEmailResponse
 
+    private val _getReviewResponse = MutableLiveData<GetReviewResponse>()
+    val getReviewResponse: LiveData<GetReviewResponse> get() = _getReviewResponse
+
+    private val _createReviewResponse = MutableLiveData<CreateReviewResponse>()
+    val createReviewResponse: LiveData<CreateReviewResponse> get() = _createReviewResponse
+
+    private val _getAverageRatingResponse = MutableLiveData<GetAverageRatingResponse>()
+    val getAverageRatingResponse: LiveData<GetAverageRatingResponse> get() = _getAverageRatingResponse
+
+    private val _checkUserInAnyCourseResponse = MutableLiveData<CheckUserInAnyCourseResponse>()
+    val checkUserInAnyCourseResponse: LiveData<CheckUserInAnyCourseResponse> get() = _checkUserInAnyCourseResponse
+
+    fun checkUserInAnyCourse(
+        userId: String,
+        otherUserId: String,
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.checkUserInAnyCourse(userId, otherUserId)
+                _checkUserInAnyCourseResponse.value = response
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Check user in any course failed", e)
+            }
+        }
+    }
+
+    fun averageRating(idMentor: String) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.averageRating(idMentor)
+                _getAverageRatingResponse.value = response
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Get review failed", e)
+            }
+        }
+    }
+
+    fun getReview(idMentor: String) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.getReview(idMentor)
+                _getReviewResponse.value = response
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Get review failed", e)
+            }
+        }
+    }
+
+    fun createReview(createReviewRequest: CreateReviewRequest) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.createReview(createReviewRequest)
+                _createReviewResponse.value = response
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Create review failed", e)
+            }
+        }
+    }
+
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
         viewModelScope.launch(Dispatchers.IO) {
             try {

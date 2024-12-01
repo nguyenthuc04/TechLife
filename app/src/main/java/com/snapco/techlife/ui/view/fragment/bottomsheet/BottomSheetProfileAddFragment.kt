@@ -13,6 +13,7 @@ import com.snapco.techlife.ui.view.activity.course.AddCourse
 import com.snapco.techlife.ui.view.activity.home.CreatePostActivity
 import com.snapco.techlife.ui.view.activity.home.CreateReelActivity
 import com.snapco.techlife.ui.view.activity.premium.PremiumActivity
+import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 
 class BottomSheetProfileAddFragment : BottomSheetDialogFragment() {
     private lateinit var binding: BottomSheetProfilePlusBinding
@@ -31,6 +32,13 @@ class BottomSheetProfileAddFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        GetUserResponseHolder.getGetUserResponse()?.let { response ->
+            if (response.user.accountType == "mentor") {
+                binding.textView30.text = "Gia hạn"
+            } else {
+                binding.textView30.text = "Nâng cấp"
+            }
+        }
         binding.textView28.setOnClickListener {
             startActivity<CreateReelActivity>()
         }

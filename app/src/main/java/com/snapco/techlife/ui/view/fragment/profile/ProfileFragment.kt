@@ -21,6 +21,7 @@ import com.snapco.techlife.ui.view.adapter.ProfileTabAdapter
 import com.snapco.techlife.ui.view.fragment.bottomsheet.BottomSheetProfileAddFragment
 import com.snapco.techlife.ui.view.fragment.course.MyCourseFragment
 import com.snapco.techlife.ui.viewmodel.UserViewModel
+import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.GetUserResponseHolder
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
@@ -28,6 +29,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +46,17 @@ class ProfileFragment : Fragment() {
         setupTabs()
         observeUserData()
         setupSwipeRefresh()
+        UserDataHolder.getUserId()?.let { homeViewModel.getPostsByUser(it) }
         GetUserResponseHolder.getGetUserResponse()?.let { response ->
             updateUI(response)
         }
+        homeViewModel.postListProfile.observe(viewLifecycleOwner) { postList ->
+            postList?.let {
+                Log.d("ProfileFragment", "observePosts: ${postList.posts?.size}")
+                binding.textView4.text = it.posts!!.size.toString()
+            }
+        }
+
         binding.button2.setOnClickListener { replaceFragment(MyCourseFragment()) }
         binding.button.setOnClickListener { startActivity<EditProfileActivity>() }
     }
@@ -61,10 +71,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupTabs() {
-        val adapter = ProfileTabAdapter(this)
+        val adapter = ProfileTabAdapter(this, UserDataHolder.getUserId()!!)
         binding.viewPager.apply {
             this.adapter = adapter
-            offscreenPageLimit = 2
+            offscreenPageLimit = 1
             registerOnPageChangeCallback(
                 object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
@@ -84,8 +94,7 @@ class ProfileFragment : Fragment() {
         requireContext().getDrawable(
             when (position) {
                 0 -> R.drawable.tab_icon_one_selector
-                1 -> R.drawable.tab_icon_two_selector
-                else -> R.drawable.tab_icon_three_selector
+                else -> R.drawable.tab_icon_two_selector
             },
         )
 
@@ -118,10 +127,12 @@ class ProfileFragment : Fragment() {
             setupTextToolbar(toolbar, response.user.name)
             textView6.text = response.followersCount.toString()
             textView15.text = response.followingCount.toString()
-            textView4.text = response.postsCount.toString()
             textView17.text = response.user.nickname
             textView18.text = response.user.bio.takeIf { it != "null" } ?: ""
             imgAvatar.loadImage(url = response.user.avatar)
+            if (response.user.accountType == "mentee") {
+                button2.gone()
+            }
         }
 
     private fun logAction(message: String) = Log.d("ProfileFragment", message)
