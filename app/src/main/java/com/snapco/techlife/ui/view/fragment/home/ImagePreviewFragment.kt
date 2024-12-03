@@ -21,7 +21,6 @@ class ImagePreviewDialogFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        // Sử dụng ViewBinding
         binding = FragmentImagePreviewBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -29,19 +28,16 @@ class ImagePreviewDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Lấy dữ liệu từ arguments
         arguments?.let {
             images = it.getStringArrayList("images") ?: emptyList()
             startPosition = it.getInt("startPosition", 0)
         }
 
-        // Kiểm tra dữ liệu trước khi thiết lập adapter
         if (images.isNotEmpty()) {
             binding.viewPager.adapter = ImagePreviewAdapter(images)
             binding.viewPager.setCurrentItem(startPosition, false)
         }
 
-        // Xử lý nút back
         binding.backButton.setOnClickListener {
             dismiss()
         }
@@ -53,12 +49,9 @@ class ImagePreviewDialogFragment : DialogFragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK)) // Nền đen hoàn toàn
-
-        // Thay đổi màu status bar khi mở dialog
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
         dialog.window?.statusBarColor = Color.BLACK
 
-        // Cho phép đóng dialog khi nhấn ngoài vùng của dialog
         dialog.setCanceledOnTouchOutside(true)
 
         return dialog
