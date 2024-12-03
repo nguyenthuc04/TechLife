@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.databinding.ItemOthercourseBinding
 import com.snapco.techlife.extensions.loadImage
+import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class OtherCourseAdapter(
     private var courses: MutableList<Course>,

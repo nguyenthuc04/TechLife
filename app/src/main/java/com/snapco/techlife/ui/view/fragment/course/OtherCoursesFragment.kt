@@ -127,14 +127,6 @@ class OtherCoursesFragment : Fragment() {
                         "Mức độ liên quan" -> {
                             matches
                         }
-//                        "Số lượng người tham gia nhiều nhất" -> {
-////                            // Lọc theo số lượng người tham gia nhiều nhất
-////                            matches = matches && course.quantity == course.maxParticipants
-//                        }
-//                        "Số lượng người tham gia ít nhất" -> {
-//                            // Lọc theo số lượng người tham gia ít nhất
-////                            matches = matches && course.quantity == course.minParticipants
-//                        }
                         "Bất kỳ" -> {
                             // Lọc theo "Bất kỳ" (có thể không cần điều kiện gì)
                             matches

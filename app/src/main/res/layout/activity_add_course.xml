@@ -142,7 +142,7 @@
                 android:ems="10"
                 android:padding="8dp"
                 android:background="@drawable/bg_edt_addcourse"
-                android:hint="Ngày học"
+                android:hint="Thời lượng khoá học"
                 android:inputType="text" />
 
         </LinearLayout>

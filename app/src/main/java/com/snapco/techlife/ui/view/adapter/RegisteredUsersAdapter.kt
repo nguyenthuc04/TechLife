@@ -6,15 +6,21 @@ import com.snapco.techlife.databinding.ItemRegisteredUserBinding
 import com.snapco.techlife.extensions.loadImage
 
 class RegisteredUsersAdapter(
-    private var users: List<UserCourse>
+    private var users: List<UserCourse>,
+    private var ClickNT : ClickChat
 ) : RecyclerView.Adapter<RegisteredUsersAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(
-        private val binding: ItemRegisteredUserBinding
+        private val binding: ItemRegisteredUserBinding,
+
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: UserCourse) {
             binding.userName.text = user.userName
             binding.userAvatar.loadImage(user.avatar)
+
+            binding.imgChat.setOnClickListener {
+                ClickNT.clickMess(user.id)
+            }
         }
     }
 
@@ -34,5 +40,9 @@ class RegisteredUsersAdapter(
     fun updateUsers(newUsers: List<UserCourse>) {
         users = newUsers
         notifyDataSetChanged()
+    }
+
+    interface ClickChat {
+        fun clickMess(id: String)
     }
 }

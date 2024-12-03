@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
+import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
@@ -55,6 +56,8 @@ class CourseDetailsFragment : Fragment() {
             Log.d("CourseDetailsFragment", "Course: $course")
             // Kiểm tra nếu người dùng đã đăng ký khóa học
             val currentUserId = UserDataHolder.getUserId()
+
+
             if (currentUserId != null) {
                 val isRegistered = isUserRegistered(course, currentUserId)
                 Log.d("CourseDetailsFragment", "isRegistered: $isRegistered")
