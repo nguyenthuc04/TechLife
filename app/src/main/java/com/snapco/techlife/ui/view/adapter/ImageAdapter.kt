@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.snapco.techlife.R
 import com.snapco.techlife.extensions.ImageLayoutType
 import com.snapco.techlife.extensions.ImageViewHolder
-import com.snapco.techlife.ui.view.fragment.home.ImagePreviewFragment
+import com.snapco.techlife.ui.view.fragment.home.ImagePreviewDialogFragment
 
 class ImageAdapter(
     private val images: List<String>,
@@ -164,21 +164,25 @@ class ImageAdapter(
         }
     }
     private fun showImagePreview(context: Context, startPosition: Int) {
+        // Kiểm tra dữ liệu trước khi truyền
+        if (images.isEmpty()) return
+
         val bundle = Bundle().apply {
-            putStringArrayList("images", ArrayList(images)) // Chuyển đổi danh sách sang ArrayList
+            putStringArrayList("images", ArrayList(images)) // Chuyển danh sách sang ArrayList
             putInt("startPosition", startPosition)
         }
 
-        val fragment = ImagePreviewFragment().apply {
+        val dialogFragment = ImagePreviewDialogFragment().apply {
             arguments = bundle
         }
 
-        (context as? FragmentActivity)?.supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.frameLayout, fragment)
-            ?.addToBackStack(null)
-            ?.commit()
+        // Kiểm tra context trước khi hiển thị dialog
+        if (context is FragmentActivity) {
+            dialogFragment.show(context.supportFragmentManager, "ImagePreviewDialog")
+        }
     }
+
+
 }
 
 
