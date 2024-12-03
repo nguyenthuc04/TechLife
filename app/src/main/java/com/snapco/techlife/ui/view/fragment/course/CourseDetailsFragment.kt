@@ -10,13 +10,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.loadImage
+import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.extensions.visible
+import com.snapco.techlife.ui.view.activity.messenger.ChatActivity
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
+import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
+import io.getstream.chat.android.client.ChatClient
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -24,6 +30,8 @@ import java.util.Locale
 class CourseDetailsFragment : Fragment() {
     private lateinit var binding: FragmentCourseDetailsBinding
     private val courseActivityViewModel: CourseViewModel by activityViewModels()
+    private val client: ChatClient by lazy { ChatClient.instance() }
+    private val listChannelViewModel: ChannelViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +52,8 @@ class CourseDetailsFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
+
+
         courseActivityViewModel.coursesDetails.observe(viewLifecycleOwner) { course ->
             binding.courseImage.loadImage(course.imageUrl)
             binding.courseName.text = course.name
@@ -54,14 +64,22 @@ class CourseDetailsFragment : Fragment() {
             binding.mentorImage.loadImage(course.userImageUrl)
             binding.mentorName.text = course.userName
             Log.d("CourseDetailsFragment", "Course: $course")
+
+            course.userId?.let { clickMes(it) }
             // Kiểm tra nếu người dùng đã đăng ký khóa học
             val currentUserId = UserDataHolder.getUserId()
 
 
             if (currentUserId != null) {
                 val isRegistered = isUserRegistered(course, currentUserId)
-                Log.d("CourseDetailsFragment", "isRegistered: $isRegistered")
-                binding.registerButton.visibility = if (isRegistered) View.GONE else View.VISIBLE
+                if(currentUserId == course.userId){
+                    binding.registerButton.gone()
+                } else {
+                    Log.d("CourseDetailsFragment", "isRegistered: $isRegistered")
+                    binding.registerButton.visibility = if (isRegistered) View.GONE else View.VISIBLE
+                    binding.NextMess.visibility = if (isRegistered) View.VISIBLE else View.GONE
+                }
+
             } else {
                 binding.registerButton.visibility = View.VISIBLE // Ẩn nếu không có user ID
             }
@@ -145,4 +163,45 @@ class CourseDetailsFragment : Fragment() {
         course: Course,
         userId: String,
     ): Boolean = course.user.any { it.id == userId }
+
+    override fun onResume() {
+        courseActivityViewModel.getCoursesByUser(UserDataHolder.getUserId().toString())
+        super.onResume()
+    }
+
+    private fun clickMes (userSlect : String) {
+        binding.NextMess.setOnClickListener {
+            val idUserSearch = userSlect // id nguoi dc tim kiem
+            val idMe = (client.getCurrentUser()?.id ?: "") // id nguoi dung
+            val idCheck1 = idUserSearch + idMe
+            val idCheck2 = idMe + idUserSearch
+
+            listChannelViewModel.checkChannelExists(idCheck1) { check1 ->
+                if (check1) {
+                    // Kênh đã tồn tại với idChannel
+                    startActivity<ChatActivity> {
+                        putExtra("ID", idCheck1)
+                    }
+                } else {
+                    // Nếu idChannel không tồn tại, kiểm tra tiếp idCheck
+                    listChannelViewModel.checkChannelExists(idCheck2) { check2 ->
+                        if (check2) {
+                            // Kênh đã tồn tại với idCheck
+                            startActivity<ChatActivity> {
+                                putExtra("ID", idCheck2)
+                            }
+                        } else {
+                            val extraData =
+                                mapOf(
+                                    "user_create" to client.getCurrentUser()!!.name, // Tên người dùng hiện tại
+                                )
+                            // Nếu cả idChannel và idCheck không tồn tại, tạo kênh mới với idChannel
+                            listChannelViewModel.createChannel(idCheck2, idUserSearch,extraData)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
