@@ -2,6 +2,7 @@ package com.snapco.techlife.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 data class User(
     val id: String = "",
@@ -17,6 +18,47 @@ data class User(
     val posts: List<String> = emptyList(),
     val accountType: String = "",
     val streamToken: String? = null, // thuoc tinh token cho chat
+)
+
+data class CreateReviewRequest(
+    val idMentor: String,
+    val rating: Int,
+    val comment: String,
+    val userId: String,
+)
+
+data class CreateReviewResponse(
+    val success: Boolean,
+    val message: String,
+)
+
+data class GetReviewResponse(
+    val success: Boolean,
+    val reviews: List<Review>,
+)
+
+data class GetAverageRatingResponse(
+    val success: Boolean,
+    val averageRating: Int,
+)
+
+data class CheckUserInAnyCourseResponse(
+    val success: Boolean,
+    val isCheck: Boolean,
+)
+
+class Review(
+    @SerializedName("_id") val id: String?,
+    val rating: Int,
+    val comment: String,
+    val userId: UserReview,
+    val date: String,
+)
+
+data class UserReview(
+    val _id: String,
+    val name: String,
+    val avatar: String,
 )
 
 data class PremiumRequest(

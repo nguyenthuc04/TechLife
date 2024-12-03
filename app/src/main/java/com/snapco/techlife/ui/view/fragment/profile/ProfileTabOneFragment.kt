@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.snapco.techlife.databinding.FragmentProfileTabOneBinding
 import com.snapco.techlife.ui.view.adapter.PostProfileAdapter
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
-import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class ProfileTabOneFragment : Fragment() {
     private lateinit var binding: FragmentProfileTabOneBinding
@@ -25,7 +24,8 @@ class ProfileTabOneFragment : Fragment() {
     ): View? {
         binding = FragmentProfileTabOneBinding.inflate(inflater, container, false)
         setupRecyclerView()
-        UserDataHolder.getUserId()?.let { homeViewModel.getPostsByUser(it) }
+//        UserDataHolder.getUserId()?.let { homeViewModel.getPostsByUser(it) }
+        arguments?.getString("user_id")?.let { homeViewModel.getPostsByUser(it) }
         observePosts()
         return binding.root
     }
@@ -44,6 +44,16 @@ class ProfileTabOneFragment : Fragment() {
                 postAdapter.updatePosts(it.posts!!.reversed())
                 Log.d("ProfileTabOneFragment", "observePosts: $postList")
             }
+        }
+    }
+
+    companion object {
+        fun newInstance(userId: String): ProfileTabOneFragment {
+            val fragment = ProfileTabOneFragment()
+            val args = Bundle()
+            args.putString("user_id", userId)
+            fragment.arguments = args
+            return fragment
         }
     }
 }

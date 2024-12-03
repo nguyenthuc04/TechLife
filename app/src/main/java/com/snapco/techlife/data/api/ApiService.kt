@@ -9,6 +9,7 @@ import com.snapco.techlife.data.model.ChangepasswordRequest
 import com.snapco.techlife.data.model.ChangepasswordResponse
 import com.snapco.techlife.data.model.CheckEmailRequest
 import com.snapco.techlife.data.model.CheckEmailResponse
+import com.snapco.techlife.data.model.CheckUserInAnyCourseResponse
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
@@ -18,12 +19,16 @@ import com.snapco.techlife.data.model.CreatePostResponse
 import com.snapco.techlife.data.model.CreatePremiumResponse
 import com.snapco.techlife.data.model.CreateReelRequest
 import com.snapco.techlife.data.model.CreateReelResponse
+import com.snapco.techlife.data.model.CreateReviewRequest
+import com.snapco.techlife.data.model.CreateReviewResponse
 import com.snapco.techlife.data.model.CreateUserRequest
 import com.snapco.techlife.data.model.CreateUserResponse
 import com.snapco.techlife.data.model.FollowRequest
 import com.snapco.techlife.data.model.FollowResponse
+import com.snapco.techlife.data.model.GetAverageRatingResponse
 import com.snapco.techlife.data.model.GetCommentReelResponse
 import com.snapco.techlife.data.model.GetCommentResponse
+import com.snapco.techlife.data.model.GetReviewResponse
 import com.snapco.techlife.data.model.GetUserResponse
 import com.snapco.techlife.data.model.LikeNotificationRequest
 import com.snapco.techlife.data.model.LikeReelNotificationRequest
@@ -59,6 +64,27 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
+    @GET("/getReview/{idMentor}")
+    suspend fun getReview(
+        @Path("idMentor") idMentor: String,
+    ): GetReviewResponse
+
+    @GET("/averageRating/{idMentor}")
+    suspend fun averageRating(
+        @Path("idMentor") idMentor: String,
+    ): GetAverageRatingResponse
+
+    @GET("/checkUserInAnyCourse/{userId}/{otherUserId}")
+    suspend fun checkUserInAnyCourse(
+        @Path("userId") userId: String,
+        @Path("otherUserId") otherUserId: String,
+    ): CheckUserInAnyCourseResponse
+
+    @POST("/createReview")
+    suspend fun createReview(
+        @Body request: CreateReviewRequest,
+    ): CreateReviewResponse
+
     @PUT("/updateNotificationRead/{notificationId}")
     suspend fun updateNotificationRead(
         @Path("notificationId") notificationId: String,
