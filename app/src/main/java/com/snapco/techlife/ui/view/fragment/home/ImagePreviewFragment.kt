@@ -11,16 +11,19 @@ import androidx.fragment.app.DialogFragment
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.FragmentImagePreviewBinding
 import com.snapco.techlife.ui.view.adapter.ImagePreviewAdapter
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class ImagePreviewDialogFragment : DialogFragment() {
 
     private lateinit var binding: FragmentImagePreviewBinding
     private lateinit var images: List<String>
     private var startPosition: Int = 0
+    private var previousStatusBarColor: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentImagePreviewBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,20 +48,37 @@ class ImagePreviewDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), R.style.FullScreenDialog)
+
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
-        dialog.window?.statusBarColor = Color.BLACK
-        
-        dialog.window?.decorView?.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_FULLSCREEN
-
         dialog.setCanceledOnTouchOutside(true)
 
         return dialog
     }
 
-}
+    override fun onStart() {
+        super.onStart()
+        setStatusBarBlack()
+    }
 
+    override fun onStop() {
+        super.onStop()
+        restoreStatusBarColor()
+    }
+
+    private fun setStatusBarBlack() {
+        val window = requireActivity().window
+        previousStatusBarColor = window.statusBarColor
+        window.statusBarColor = Color.BLACK
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+    }
+
+    private fun restoreStatusBarColor() {
+        val window = requireActivity().window
+        window.statusBarColor = previousStatusBarColor
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+    }
+}
