@@ -28,6 +28,7 @@ import com.snapco.techlife.data.model.FollowResponse
 import com.snapco.techlife.data.model.GetAverageRatingResponse
 import com.snapco.techlife.data.model.GetCommentReelResponse
 import com.snapco.techlife.data.model.GetCommentResponse
+import com.snapco.techlife.data.model.GetReelIdResponse
 import com.snapco.techlife.data.model.GetReviewResponse
 import com.snapco.techlife.data.model.GetUserResponse
 import com.snapco.techlife.data.model.LikeNotificationRequest
@@ -40,8 +41,8 @@ import com.snapco.techlife.data.model.NotificationResponse
 import com.snapco.techlife.data.model.Post
 import com.snapco.techlife.data.model.PostProfileResponse
 import com.snapco.techlife.data.model.PremiumRequest
-import com.snapco.techlife.data.model.Reel
 import com.snapco.techlife.data.model.ReelProfileResponse
+import com.snapco.techlife.data.model.ReelResponse
 import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.data.model.ResetPasswordRequest
 import com.snapco.techlife.data.model.ResetPasswordResponse
@@ -62,8 +63,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
+    @GET("/getReel/{reelId}")
+    suspend fun getReelById(
+        @Path("reelId") reelId: String,
+    ): GetReelIdResponse
+
     @GET("/getReview/{idMentor}")
     suspend fun getReview(
         @Path("idMentor") idMentor: String,
@@ -233,8 +240,14 @@ interface ApiService {
         @Body createReelRequest: CreateReelRequest,
     ): CreateReelResponse
 
-    @GET("/getListReel")
-    suspend fun getListReel(): List<Reel>
+//    @GET("/getListReel")
+//    suspend fun getListReel(): List<Reel>
+
+    @GET("getListReel")
+    suspend fun getReels(
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+    ): ReelResponse
 
     @GET("/getPostsByUser/{userId}")
     suspend fun getPostsByUser(

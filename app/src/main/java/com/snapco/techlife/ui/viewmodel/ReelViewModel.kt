@@ -5,16 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.snapco.techlife.data.api.ApiClient
+import com.snapco.techlife.data.api.ApiClient.apiService
 import com.snapco.techlife.data.model.AddCommentReelRequest
 import com.snapco.techlife.data.model.AddCommentReelResponse
 import com.snapco.techlife.data.model.CreateReelRequest
 import com.snapco.techlife.data.model.CreateReelResponse
 import com.snapco.techlife.data.model.GetCommentReelResponse
+import com.snapco.techlife.data.model.GetReelIdResponse
 import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.LikeReelResponse
 import com.snapco.techlife.data.model.Reel
+import com.snapco.techlife.extensions.ReelPagingSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class ReelViewModel : ViewModel() {
@@ -30,8 +38,28 @@ class ReelViewModel : ViewModel() {
     private val _commentReelResponse = MutableLiveData<GetCommentReelResponse>()
     val commentReelResponse: LiveData<GetCommentReelResponse> get() = _commentReelResponse
 
+    private val _getReelIdResponse = MutableLiveData<GetReelIdResponse>()
+    val getReelIdResponse: LiveData<GetReelIdResponse> get() = _getReelIdResponse
+
     private val _addCommentReelResponse = MutableLiveData<AddCommentReelResponse>()
     val addCommentReelResponse: LiveData<AddCommentReelResponse> get() = _addCommentReelResponse
+
+    fun getReelById(reelId: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getReelById(reelId)
+                _getReelIdResponse.value = response
+                Log.d("ReelViewModel", response.toString())
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Get comment failed", e)
+            }
+        }
+    }
+
+    fun getReels(): Flow<PagingData<Reel>> =
+        Pager(PagingConfig(pageSize = 3)) {
+            ReelPagingSource(apiService)
+        }.flow.cachedIn(viewModelScope)
 
     fun addReelComment(
         reelId: String,
@@ -39,24 +67,14 @@ class ReelViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                val response = ApiClient.apiService.addReelComment(reelId, commentRequest)
+                val response = apiService.addReelComment(reelId, commentRequest)
                 if (response.isSuccessful) {
                     _addCommentReelResponse.value = response.body()
                 } else {
-                    _addCommentReelResponse.value =
-                        AddCommentReelResponse(
-                            success = false,
-                            message = "Thêm bình luận thất bại!",
-                            reel = null,
-                        )
+                    Log.e("ReelViewModel", "Error adding comment: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                _addCommentReelResponse.value =
-                    AddCommentReelResponse(
-                        success = false,
-                        message = "Có lỗi xảy ra!",
-                        reel = null,
-                    )
+                Log.e("ReelViewModel", "Error adding comment", e)
             }
         }
     }
@@ -64,7 +82,7 @@ class ReelViewModel : ViewModel() {
     fun createReel(createReelRequest: CreateReelRequest) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ApiClient.apiService.createReel(createReelRequest)
+                val response = apiService.createReel(createReelRequest)
                 _createReelResponse.postValue(response)
             } catch (e: Exception) {
                 Log.e("ReelViewModel", "Create Post failed", e)
@@ -72,17 +90,17 @@ class ReelViewModel : ViewModel() {
         }
     }
 
-    fun getListReel() {
-        viewModelScope.launch {
-            try {
-                val response = ApiClient.apiService.getListReel()
-                _reel.value = response
-                Log.d("ReelViewModel", response.toString())
-            } catch (e: Exception) {
-                Log.e("ReelViewModel", "Get list reel failed", e)
-            }
-        }
-    }
+//    fun getListReel() {
+//        viewModelScope.launch {
+//            try {
+//                val response = ApiClient.apiService.getListReel()
+//                _reel.value = response
+//                Log.d("ReelViewModel", response.toString())
+//            } catch (e: Exception) {
+//                Log.e("ReelViewModel", "Get list reel failed", e)
+//            }
+//        }
+//    }
 
     fun likeReel(
         postId: String,
@@ -92,25 +110,13 @@ class ReelViewModel : ViewModel() {
             try {
                 val response = ApiClient.apiService.likeReel(postId, likeReelNotificationRequest)
                 if (response.isSuccessful) {
-                    val updatedPost = response.body()?.reel
-                    updatedPost?.let {
-                        val currentList = _reel.value?.toMutableList() ?: mutableListOf()
-                        val index = currentList.indexOfFirst { it._id == postId }
-                        if (index >= 0) {
-                            currentList[index] = updatedPost
-                            _reel.value = currentList // Dùng setValue để cập nhật _posts
-                            _likeReelResponse.value = response.body() // Gửi phản hồi về like
-                            Log.d("ReelViewModel", "Like post success: ${response.body()}")
-                        }
-                    }
+                    _likeReelResponse.value = response.body()
+                    Log.d("ReelViewModel", response.body().toString())
                 } else {
-                    Log.e(
-                        "HomeViewModel",
-                        "Error liking post: ${response.errorBody()?.string()}",
-                    )
+                    Log.e("ReelViewModel", "Error liking post: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error liking post", e)
+                Log.e("ReelViewModel", "Error liking post", e)
             }
         }
     }
