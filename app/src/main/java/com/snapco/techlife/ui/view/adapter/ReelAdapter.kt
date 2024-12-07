@@ -3,6 +3,8 @@ package com.snapco.techlife.ui.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.Reel
@@ -13,19 +15,14 @@ import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
 class ReelAdapter(
-    private var modelList: MutableList<Reel>,
     private val onReelActionListener: OnReelActionListener?,
-) : RecyclerView.Adapter<ReelAdapter.ViewHolder>() {
+    private val recyclerView: RecyclerView,
+) : PagingDataAdapter<Reel, ReelAdapter.ViewHolder>(REEL_COMPARATOR) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ViewHolder {
-        val binding =
-            ItemReelBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            )
+        val binding = ItemReelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -33,51 +30,15 @@ class ReelAdapter(
         holder: ViewHolder,
         position: Int,
     ) {
-        holder.binding.videoView.stopPlayback() // Dừng phát video cũ
-        holder.bind(modelList[position], position)
-    }
-
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.pauseVideo() // Tạm dừng video khi mục cuộn ra khỏi màn hình
-    }
-
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int,
-        payloads: MutableList<Any>,
-    ) {
-        if (payloads.isEmpty()) {
-            super.onBindViewHolder(holder, position, payloads)
-        } else {
-            for (payload in payloads) {
-                when (payload) {
-                    "updateLikeReelButton" -> {
-                        holder.updateLikeButton(modelList[position].likes)
-                        holder.updateLikesCount(modelList[position].likesCount)
-                    }
-                    "updateCommentCount" -> {
-                        holder.updateCommentCount(modelList[position].commentsCount)
-                    }
-                }
-            }
+        val reel = getItem(position)
+        if (reel != null) {
+            holder.bind(reel, position)
         }
     }
 
-    fun updateLikeButtonAt(position: Int) {
-        notifyItemChanged(position, "updateLikeReelButton")
-    }
-
-    fun updateCommentCountAt(position: Int) {
-        notifyItemChanged(position, "updateCommentCount")
-    }
-
-    override fun getItemCount(): Int = modelList.size
-
-    fun updateReel(newPosts: List<Reel>) {
-        modelList.clear()
-        modelList.addAll(newPosts)
-        notifyDataSetChanged()
+    fun loadVideoAtPosition(position: Int) {
+        val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) as? ViewHolder
+        viewHolder?.startVideo()
     }
 
     private fun setLikeButtonState(
@@ -104,7 +65,6 @@ class ReelAdapter(
                     tag = reel.videoUrl[0]
                     setVideoPath(reel.videoUrl[0])
                     setOnPreparedListener {
-                        it.start()
                         it.isLooping = true
                     }
                 }
@@ -147,6 +107,19 @@ class ReelAdapter(
             }
         }
 
+        fun startVideo() {
+            if (!binding.videoView.isPlaying) {
+                binding.videoView.start()
+                binding.btnPlay.gone()
+            }
+        }
+
+        fun updateCommentsAndLikes(reel: Reel) {
+            binding.likesCount.text = reel.likesCount.toString()
+            binding.commentCount.text = reel.commentsCount.toString()
+            setLikeButtonState(binding.btnHeart, reel.likes)
+        }
+
         fun pauseVideo() {
             if (binding.videoView.isPlaying) {
                 binding.videoView.pause()
@@ -165,6 +138,21 @@ class ReelAdapter(
         fun updateLikeButton(isLiked: List<String>?) {
             setLikeButtonState(binding.btnHeart, isLiked)
         }
+    }
+
+    companion object {
+        private val REEL_COMPARATOR =
+            object : DiffUtil.ItemCallback<Reel>() {
+                override fun areItemsTheSame(
+                    oldItem: Reel,
+                    newItem: Reel,
+                ): Boolean = oldItem._id == newItem._id
+
+                override fun areContentsTheSame(
+                    oldItem: Reel,
+                    newItem: Reel,
+                ): Boolean = oldItem == newItem
+            }
     }
 
     interface OnReelActionListener {

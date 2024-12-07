@@ -14,7 +14,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.GetUserResponse
 import com.snapco.techlife.databinding.FragmentProfileBinding
-import com.snapco.techlife.extensions.*
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.loadImage
+import com.snapco.techlife.extensions.replaceFragment
+import com.snapco.techlife.extensions.setupClickToolbar
+import com.snapco.techlife.extensions.setupTextToolbar
+import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.profile.EditProfileActivity
 import com.snapco.techlife.ui.view.activity.profile.MenuProfileActivity
 import com.snapco.techlife.ui.view.adapter.ProfileTabAdapter
@@ -51,9 +56,13 @@ class ProfileFragment : Fragment() {
             updateUI(response)
         }
         homeViewModel.postListProfile.observe(viewLifecycleOwner) { postList ->
-            postList?.let {
-                Log.d("ProfileFragment", "observePosts: ${postList.posts?.size}")
-                binding.textView4.text = it.posts!!.size.toString()
+            if (postList == null) {
+                binding.textView4.text = "0"
+            } else {
+                postList?.let {
+                    Log.d("ProfileFragment", "observePosts: ${postList.posts?.size}")
+                    binding.textView4.text = it.posts!!.size.toString()
+                }
             }
         }
 

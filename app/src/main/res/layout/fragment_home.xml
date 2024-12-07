@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 <androidx.core.widget.NestedScrollView
+    android:layout_marginTop="40dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -79,7 +80,221 @@
             </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="vertical">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <FrameLayout
+                            android:id="@+id/user_image_container"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/user_image_url"
+                                android:layout_width="35dp"
+                                android:background="@drawable/skeleton_background"
+                                android:layout_gravity="center"
+                                android:layout_height="35dp" />
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/user_name"
+                            android:layout_width="100dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintStart_toEndOf="@+id/user_image_container"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:background="@drawable/skeleton_background" />
+
+                        <View
+                            android:id="@+id/time"
+                            android:layout_width="50dp"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintStart_toStartOf="@+id/user_name"
+                            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/skeleton_background" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <ImageButton
+                            android:id="@+id/like_button"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/skeleton_background"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:id="@+id/commment_button"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/like_button"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:id="@+id/likes_count"
+                        android:layout_width="100dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/user_image_container"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/skeleton_background" />
+                    <View
+                        android:id="@+id/caption_text"
+                        android:layout_width="50dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/user_image_container"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/skeleton_background" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <FrameLayout
+                            android:id="@+id/user_image_container1"
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/user_image_url1"
+                                android:layout_width="35dp"
+                                android:background="@drawable/skeleton_background"
+                                android:layout_gravity="center"
+                                android:layout_height="35dp" />
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/user_name1"
+                            android:layout_width="100dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintStart_toEndOf="@+id/user_image_container1"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:background="@drawable/skeleton_background" />
+
+                        <View
+                            android:id="@+id/time1"
+                            android:layout_width="50dp"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintStart_toStartOf="@+id/user_name1"
+                            app:layout_constraintTop_toBottomOf="@+id/user_name1" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/skeleton_background" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp">
+
+                        <ImageButton
+                            android:id="@+id/like_button1"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/skeleton_background"
+
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:id="@+id/commment_button1"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/skeleton_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/like_button"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <View
+                        android:id="@+id/likes_count1"
+                        android:layout_width="100dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/user_image_container"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/skeleton_background" />
+                    <View
+                        android:id="@+id/caption_text1"
+                        android:layout_width="50dp"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toEndOf="@+id/user_image_container"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@drawable/skeleton_background" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_id"
             android:layout_width="match_parent"
@@ -89,6 +304,7 @@
             android:orientation="vertical"
             android:overScrollMode="never"
             android:scrollbars="none"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="10"
             tools:listitem="@layout/techlife_post" />

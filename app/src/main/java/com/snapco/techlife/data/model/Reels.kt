@@ -17,6 +17,15 @@ data class Reel(
     var comments: List<CommentReel>?,
 )
 
+data class ReelResponse(
+    val reels: List<Reel>,
+)
+
+data class GetReelIdResponse(
+    val success: Boolean,
+    val reels: Reel,
+)
+
 data class CommentReel(
     val _id: String,
     val reelId: String?,

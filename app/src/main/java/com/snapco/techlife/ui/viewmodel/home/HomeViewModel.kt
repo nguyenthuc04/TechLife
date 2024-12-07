@@ -53,8 +53,9 @@ class HomeViewModel : ViewModel() {
             try {
                 val response = ApiClient.apiService.getPostsByUser(userId)
                 _postListProfile.value = response
+                Log.d("HomeViewModel1", response.toString())
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Get posts by user failed", e)
+                _postListProfile.value = null
             }
         }
     }
