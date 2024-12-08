@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.databinding.FragmentCourseDetailsProfileBinding
+import com.snapco.techlife.extensions.formatPrice
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChatActivity
@@ -49,8 +50,8 @@ class CourseDetailsProfileFragment : Fragment(),RegisteredUsersAdapter.ClickChat
         courseActivityViewModel.coursesDetails.observe(viewLifecycleOwner) { course ->
             binding.courseImage.loadImage(course.imageUrl)
             binding.courseName.text = course.name
-            binding.courseDate.text = course.date
-            binding.coursePrice.text = course.price
+            binding.courseDate.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.coursePrice.text = course.price.toInt().formatPrice()
             binding.courseDuration.text = course.duration
             binding.courseDescription.text = course.describe
             registeredUsersAdapter.updateUsers(course.user)

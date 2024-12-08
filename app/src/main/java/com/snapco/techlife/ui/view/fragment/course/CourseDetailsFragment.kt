@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.databinding.FragmentCourseDetailsBinding
+import com.snapco.techlife.extensions.formatPrice
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.extensions.startActivity
@@ -57,8 +58,8 @@ class CourseDetailsFragment : Fragment() {
         courseActivityViewModel.coursesDetails.observe(viewLifecycleOwner) { course ->
             binding.courseImage.loadImage(course.imageUrl)
             binding.courseName.text = course.name
-            binding.courseDate.text = course.date
-            binding.coursePrice.text = course.price
+            binding.courseDate.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.coursePrice.text = course.price.toInt().formatPrice()
             binding.courseDuration.text = course.duration
             binding.courseDescription.text = course.describe
             binding.mentorImage.loadImage(course.userImageUrl)

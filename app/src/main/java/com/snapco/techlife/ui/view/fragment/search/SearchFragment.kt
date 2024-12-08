@@ -53,9 +53,9 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchAdapter = SearchAdapter(emptyList()) { user ->
-                searchActivityViewModel.setUser(user)
-                replaceFragment(SearchProfileFragment())
-            }
+            searchActivityViewModel.setUser(user)
+            replaceFragment(SearchProfileFragment())
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = searchAdapter
@@ -63,7 +63,10 @@ class SearchFragment : Fragment() {
         searchViewModel.users.observe(
             viewLifecycleOwner,
             Observer { users ->
-                searchAdapter.updateData(users)
+                val filteredUsers = users.filter { user ->
+                    user.accountType != "admin" && user.accountType != "staff"
+                }
+                searchAdapter.updateData(filteredUsers)
             },
         )
 

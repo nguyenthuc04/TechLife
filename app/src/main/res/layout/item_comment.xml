@@ -12,6 +12,7 @@
             android:id="@+id/imgAvatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"

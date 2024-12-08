@@ -67,6 +67,7 @@ class HomeViewModel : ViewModel() {
                 val response = ApiClient.apiService.getReelsByUser(userId)
                 _reelListProfile.value = response
             } catch (e: Exception) {
+                _reelListProfile.value = null
                 Log.e("HomeViewModel", "Get reels by user failed", e)
             }
         }

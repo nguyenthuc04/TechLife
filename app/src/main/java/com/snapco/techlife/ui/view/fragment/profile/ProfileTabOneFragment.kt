@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.snapco.techlife.databinding.FragmentProfileTabOneBinding
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.adapter.PostProfileAdapter
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
@@ -40,9 +42,14 @@ class ProfileTabOneFragment : Fragment() {
 
     private fun observePosts() {
         homeViewModel.postListProfile.observe(viewLifecycleOwner) { postList ->
-            postList?.let {
-                postAdapter.updatePosts(it.posts!!.reversed())
-                Log.d("ProfileTabOneFragment", "observePosts: $postList")
+            Log.d("ProfileTabOneFragment", "Post list observed: $postList")
+            if (postList == null || postList.posts.isNullOrEmpty()) {
+                binding.noPostsMessage.visibility = View.VISIBLE
+                binding.imageView10.visible()
+            } else {
+                binding.noPostsMessage.visibility = View.GONE
+                binding.imageView10.gone()
+                postAdapter.updatePosts(postList.posts.reversed())
             }
         }
     }
