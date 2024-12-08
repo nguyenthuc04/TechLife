@@ -2,70 +2,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- CardView -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        >
+        android:layout_margin="8sp"
+        app:cardBackgroundColor="@color/very_light_gray"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Course Image -->
+            <!-- Ảnh chính -->
             <ImageView
                 android:id="@+id/imageView11"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:scaleType="centerCrop"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Course Name -->
+            <!-- Tiêu đề bài viết -->
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Ultimate AWS Certified Solutions Architect Associate 2021"
-                android:textColor="@color/black"
+                android:maxLines="1"
+                android:text="Ký sự HTML CSS"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView11" />
+
+            <!-- Thông tin tác giả và thời gian đọc -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView41"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <!-- Icon menu góc phải -->
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="Van Tuan"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="số lượng còn lại: 2"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="1000000"
+                android:textColor="@color/red"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imageView11"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
-            <!-- Instructor Name -->
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Instructor: John Doe"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imageView11"
-                app:layout_constraintTop_toBottomOf="@id/textView34" />
-            <!-- Ratings and Enrolled Count -->
-            <TextView
-                android:id="@+id/tvRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:paddingBottom="8dp"
-                android:text="4.7 ★★★★★ (78,572)"
-                android:textColor="@color/dark_gray"
-                android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/imageView11"
-                app:layout_constraintTop_toBottomOf="@id/textView20" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

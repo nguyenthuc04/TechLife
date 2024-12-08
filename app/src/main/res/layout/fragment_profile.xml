@@ -10,15 +10,15 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_marginTop="40dp"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         tools:context=".ui.view.fragment.profile.ProfileFragment">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -199,58 +199,78 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18">
+
                 <Button
                     android:id="@+id/button"
                     style="@style/ButtonGray"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
                     android:text="Chỉnh sửa" />
+
                 <Button
                     android:id="@+id/button2"
                     style="@style/ButtonGray"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Khóa học"
-                     />
+                    android:layout_weight="1"
+                    android:text="Khóa học" />
             </LinearLayout>
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
+            <FrameLayout
+                android:id="@+id/frameLayout2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutBtn"
-                app:tabGravity="fill"
-                app:tabIconTint="@color/black"
-                app:tabIndicatorColor="@color/black"
-                app:tabIndicatorFullWidth="false"
-                app:tabIndicatorGravity="bottom"
-                app:tabIndicatorHeight="2dp"
-                app:tabMode="fixed"
-                android:background="@color/white"
-                app:tabRippleColor="@android:color/transparent"
-                app:tabUnboundedRipple="false"
-                tools:ignore="SpeakableTextPresentCheck" />
+                app:layout_constraintTop_toBottomOf="@+id/layoutBtn">
+
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    app:tabGravity="fill"
+                    app:tabIconTint="@color/black"
+                    app:tabIndicatorColor="@color/black"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorGravity="bottom"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabMode="fixed"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabUnboundedRipple="false"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:layout_gravity="top"-->
+                <!--                    android:background="@color/lighter_gray" />-->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/lighter_gray" />
+            </FrameLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout"
-                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@+id/frameLayout2"
                 tools:ignore="SpeakableTextPresentCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
