@@ -1,6 +1,7 @@
 package com.snapco.techlife.ui.view.fragment.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.snapco.techlife.databinding.FragmentProfileTabTwoBinding
+import com.snapco.techlife.extensions.gone
+import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.adapter.ReelProfileAdapter
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
 
@@ -21,10 +24,13 @@ class ProfileTabTwoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        Log.d("ProfileTabTwoFragment", "onCreateView called")
         binding = FragmentProfileTabTwoBinding.inflate(inflater, container, false)
         setupRecyclerView()
-//        UserDataHolder.getUserId()?.let { homeViewModel.getReelsByUser(it) }
-        arguments?.getString("user_id")?.let { homeViewModel.getReelsByUser(it) }
+        arguments?.getString("user_id")?.let {
+            Log.d("ProfileTabTwoFragment", "User ID: $it")
+            homeViewModel.getReelsByUser(it)
+        }
         observeReels()
         return binding.root
     }
@@ -38,9 +44,15 @@ class ProfileTabTwoFragment : Fragment() {
     }
 
     private fun observeReels() {
-        homeViewModel.reelListProfile.observe(viewLifecycleOwner) { postList ->
-            postList?.let {
-                reelAdapter.updateReels(it.reels!!.reversed())
+        homeViewModel.reelListProfile.observe(viewLifecycleOwner) { reelList ->
+            Log.d("ProfileTabTwoFragment", "Reel list observed: $reelList")
+            if (reelList == null || reelList.reels.isNullOrEmpty()) {
+                binding.noReelsMessage.visibility = View.VISIBLE
+                binding.imageView10.visible()
+            } else {
+                binding.noReelsMessage.visibility = View.GONE
+                binding.imageView10.gone()
+                reelAdapter.updateReels(reelList.reels.reversed())
             }
         }
     }

@@ -5,6 +5,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/very_light_gray"
         app:cardCornerRadius="24dp"
         app:cardElevation="2dp">
 
@@ -17,7 +19,8 @@
                 android:id="@+id/imageView11"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +34,7 @@
                 android:layout_marginTop="12dp"
                 android:text="Ký sự HTML CSS"
                 android:textColor="#000000"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +62,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:text="Van Tuan"
-                android:textColor="#666666"
-                android:textSize="14sp"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imgAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
@@ -74,8 +77,8 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
                 android:text="số lượng còn lại: 2"
-                android:textColor="#666666"
-                android:textSize="14sp"
+                android:textColor="@color/dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />

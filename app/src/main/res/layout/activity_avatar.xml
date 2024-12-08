@@ -51,16 +51,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
             tools:srcCompat="@tools:sample/avatars" />
 
         <Button
-            style="@style/CustomButton"
             android:id="@+id/btnAddAvatar"
+            style="@style/CustomButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -71,8 +72,8 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            style="@style/CustomButtonStroke"
             android:id="@+id/btnNext"
+            style="@style/CustomButtonStroke"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
