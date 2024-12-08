@@ -72,6 +72,21 @@ class UserViewModel : ViewModel() {
     private val _checkUserInAnyCourseResponse = MutableLiveData<CheckUserInAnyCourseResponse>()
     val checkUserInAnyCourseResponse: LiveData<CheckUserInAnyCourseResponse> get() = _checkUserInAnyCourseResponse
 
+    fun updateAccountType(userId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.updateAccountType(userId)
+                if (response.isSuccessful) {
+                    Log.d("UserViewModel", "Notification processed")
+                } else {
+                    Log.e("UserViewModel", "Notification processing failed")
+                }
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "updateNotificationProcessed: $e")
+            }
+        }
+    }
+
     fun checkUserInAnyCourse(
         userId: String,
         otherUserId: String,

@@ -34,6 +34,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.activity.ReelDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.view.activity.profile.PostDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.view.activity.profile.ReviewActivity"
             android:exported="false" />
 

@@ -6,6 +6,7 @@
     </data>
 
     <LinearLayout
+        android:id="@+id/llItemNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

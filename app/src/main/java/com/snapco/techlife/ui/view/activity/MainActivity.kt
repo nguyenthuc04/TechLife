@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.snapco.techlife.R
 import com.snapco.techlife.databinding.ActivityMainBinding
@@ -73,7 +72,11 @@ class MainActivity : AppCompatActivity() {
     private fun startNotificationService() {
         val serviceIntent = Intent(this, NotificationService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 startServiceProperly(serviceIntent)
             } else {
                 ActivityCompat.requestPermissions(
@@ -98,6 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchUserData() {
         lifecycleScope.launch(Dispatchers.IO) {
             UserDataHolder.getUserId()?.let { userId ->
+                userViewModel.updateAccountType(userId)
                 userViewModel.getUser(userId)
             }
         }

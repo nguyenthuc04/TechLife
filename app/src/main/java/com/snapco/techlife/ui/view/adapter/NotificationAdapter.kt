@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit
 
 class NotificationAdapter(
     private var notifications: List<NotificationPost>,
+    private val onNotificationClick: onNotificationActionListener?,
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
     inner class NotificationViewHolder(
         private val binding: ItemNotificationBinding,
@@ -23,16 +24,19 @@ class NotificationAdapter(
             binding.apply {
                 tvName.text = notification.nameUser
 
-                    if (notification.type == "other") {
-                        tvMessage.text = "${notification.contentId}"
-                        tvMessage.setTextColor(Color.BLACK)
-                    }else if (notification.type == "like") {
-                        tvMessage.text = "${notification.nameUser} đã thích bài viết của bạn"
-                    } else {
-                        tvMessage.text = "${notification.nameUser} đã thích reel của bạn"
-                    }
+                if (notification.type == "other") {
+                    tvMessage.text = "${notification.contentId}"
+                    tvMessage.setTextColor(Color.BLACK)
+                } else if (notification.type == "like") {
+                    tvMessage.text = "${notification.nameUser} đã thích bài viết của bạn"
+                } else {
+                    tvMessage.text = "${notification.nameUser} đã thích reel của bạn"
+                }
                 tvTime.text = getFormattedTimeDifference(notification.time)
                 ivImage.loadImage(notification.imgUser)
+                llItemNotification.setOnClickListener {
+                    onNotificationClick?.onNotificationClick(notification)
+                }
             }
         }
 
@@ -77,4 +81,9 @@ class NotificationAdapter(
     }
 
     override fun getItemCount(): Int = notifications.size
+
+    @Suppress("ktlint:standard:class-naming")
+    interface onNotificationActionListener {
+        fun onNotificationClick(notificationPost: NotificationPost)
+    }
 }

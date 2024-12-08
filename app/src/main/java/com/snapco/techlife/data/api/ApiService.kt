@@ -66,6 +66,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @PUT("/updateAccountType/{userId}")
+    suspend fun updateAccountType(
+        @Path("userId") userId: String,
+    ): Response<Unit>
+
     @GET("/getReel/{reelId}")
     suspend fun getReelById(
         @Path("reelId") reelId: String,
