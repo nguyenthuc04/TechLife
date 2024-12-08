@@ -48,6 +48,7 @@ class HomeViewModel : ViewModel() {
     private val _updateResult = MutableLiveData<Result<Boolean>>()
     val updateResult: LiveData<Result<Boolean>> get() = _updateResult
 
+
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
             try {
