@@ -1,6 +1,7 @@
 package com.snapco.techlife.ui.view.activity.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,7 @@ class ReviewActivity : AppCompatActivity() {
         setupToolbar()
         val userId = intent.getStringExtra("USER_ID")
         setupRecyclerView()
+        Log.d("ReviewActivity", "onCreate: $userId")
         userViewModel.getReview(userId.toString())
         userViewModel.checkUserInAnyCourse(UserDataHolder.getUserId().toString(), userId.toString())
         userViewModel.checkUserInAnyCourseResponse.observe(this) { checkUserInAnyCourseResponse ->
