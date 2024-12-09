@@ -20,6 +20,7 @@ data class Course(
     val startDate: String,
     val endDate: String,
     val type: String,
+    val phoneNumber : String,
 )
 
 data class UserCourse(
@@ -48,6 +49,7 @@ data class CreateCourseRequest(
     val startDate: String,
     val endDate: String,
     val type: String,
+    val phoneNumber: String,
 )
 
 @Parcelize

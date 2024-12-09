@@ -222,6 +222,7 @@ class AddCourse : AppCompatActivity() {
                         startDate = startTime!!,
                         endDate = endTime!!,
                         type = binding.spnType.selectedItem.toString(),
+                        phoneNumber = binding.editTextPhoneNumber.text.toString(),
                     )
                 courseViewModel.createCourse(createCourseRequest)
             }

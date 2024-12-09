@@ -2,6 +2,7 @@ package com.snapco.techlife.ui.view.fragment.course
 
 import RegisteredUsersAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.snapco.techlife.databinding.FragmentCourseDetailsProfileBinding
 import com.snapco.techlife.extensions.formatPrice
 import com.snapco.techlife.extensions.loadImage
+import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.extensions.startActivity
 import com.snapco.techlife.ui.view.activity.messenger.ChatActivity
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.messenger.ChannelViewModel
 import io.getstream.chat.android.client.ChatClient
 
-class CourseDetailsProfileFragment : Fragment(),RegisteredUsersAdapter.ClickChat {
+class CourseDetailsProfileFragment : Fragment(), RegisteredUsersAdapter.ClickChat {
     private lateinit var binding: FragmentCourseDetailsProfileBinding
     private val courseActivityViewModel: CourseViewModel by activityViewModels()
     private lateinit var registeredUsersAdapter: RegisteredUsersAdapter
@@ -50,20 +52,30 @@ class CourseDetailsProfileFragment : Fragment(),RegisteredUsersAdapter.ClickChat
         courseActivityViewModel.coursesDetails.observe(viewLifecycleOwner) { course ->
             binding.courseImage.loadImage(course.imageUrl)
             binding.courseName.text = course.name
-            binding.courseDate.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.courseDateStart.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.courseDateEnd.text = "đến: ${course.endDate}"
             binding.coursePrice.text = course.price.toInt().formatPrice()
-            binding.courseDuration.text = course.duration
+            binding.courseDuration.text = "Thời lượng: ${course.duration}"
             binding.courseDescription.text = course.describe
             registeredUsersAdapter.updateUsers(course.user)
         }
     }
 
     private fun setupRecyclerView() {
-        registeredUsersAdapter = RegisteredUsersAdapter(mutableListOf(),this)
+        registeredUsersAdapter = RegisteredUsersAdapter(mutableListOf(), this) { userId ->
+            Log.d("CourseDetailsProfileFragment", "Navigating to CourseStudentsFragment with User ID: $userId")
+            navigateToCourseStudentsFragment(userId)
+        }
         binding.registeredUsersRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = registeredUsersAdapter
         }
+    }
+
+    private fun navigateToCourseStudentsFragment(userId: String) {
+        Log.d("CourseDetailsProfileFragment", "Received User ID: $userId")
+        val fragment = CourseStudentsFragment.newInstance(userId)
+        replaceFragment(fragment)
     }
 
     override fun clickMess(id: String) {
@@ -92,7 +104,7 @@ class CourseDetailsProfileFragment : Fragment(),RegisteredUsersAdapter.ClickChat
                                 "user_create" to client.getCurrentUser()!!.name, // Tên người dùng hiện tại
                             )
                         // Nếu cả idChannel và idCheck không tồn tại, tạo kênh mới với idChannel
-                        listChannelViewModel.createChannel(idCheck2, idUserSearch,extraData)
+                        listChannelViewModel.createChannel(idCheck2, idUserSearch, extraData)
                     }
                 }
             }

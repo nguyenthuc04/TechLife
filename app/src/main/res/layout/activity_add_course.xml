@@ -83,7 +83,7 @@
                 <ImageView
                     android:id="@+id/imageView11"
                     android:layout_width="0dp"
-                    android:layout_height="300dp"
+                    android:layout_height="250dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="16dp"
@@ -123,6 +123,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView11" />
 
+                <EditText
+                    android:id="@+id/editTextPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/bg_edt_addcourse"
+                    android:ems="10"
+                    android:hint="Số điện thoại"
+                    android:inputType="phone"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+
                 <LinearLayout
                     android:id="@+id/linerLayout1"
                     android:layout_width="match_parent"
@@ -131,7 +146,7 @@
                     android:layout_marginRight="16dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextText3">
+                    app:layout_constraintTop_toBottomOf="@+id/editTextPhoneNumber">
 
                     <EditText
                         android:id="@+id/editTextText4"
@@ -175,7 +190,6 @@
                     android:padding="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linerLayout1" />
-
 
                 <EditText
                     android:id="@+id/editTextText7"

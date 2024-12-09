@@ -58,12 +58,14 @@ class CourseDetailsFragment : Fragment() {
         courseActivityViewModel.coursesDetails.observe(viewLifecycleOwner) { course ->
             binding.courseImage.loadImage(course.imageUrl)
             binding.courseName.text = course.name
-            binding.courseDate.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.courseDateStart.text = "Ngày bắt đầu: ${course.startDate}"
+            binding.courseDateEnd.text = "đến: ${course.endDate}"
             binding.coursePrice.text = course.price.toInt().formatPrice()
-            binding.courseDuration.text = course.duration
+            binding.courseDuration.text = "Thời lượng: ${course.duration}"
             binding.courseDescription.text = course.describe
             binding.mentorImage.loadImage(course.userImageUrl)
             binding.mentorName.text = course.userName
+            binding.mentorPhoneNumber.text = "Liên hệ: ${course.phoneNumber}"
             Log.d("CourseDetailsFragment", "Course: $course")
 
             course.userId?.let { clickMes(it) }

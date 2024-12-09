@@ -1,3 +1,4 @@
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,19 +8,26 @@ import com.snapco.techlife.extensions.loadImage
 
 class RegisteredUsersAdapter(
     private var users: List<UserCourse>,
-    private var ClickNT : ClickChat
+    private var ClickNT: ClickChat,
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<RegisteredUsersAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(
         private val binding: ItemRegisteredUserBinding,
 
-    ) : RecyclerView.ViewHolder(binding.root) {
+        ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(user: UserCourse) {
             binding.userName.text = user.userName
             binding.userAvatar.loadImage(user.avatar)
 
             binding.imgChat.setOnClickListener {
                 ClickNT.clickMess(user.id)
+            }
+
+
+            binding.root.setOnClickListener {
+                Log.d("RegisteredUsersAdapter", "User ID clicked: ${user.id}")
+                onItemClick(user.id)
             }
         }
     }
