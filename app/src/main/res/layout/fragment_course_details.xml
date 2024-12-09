@@ -73,15 +73,23 @@
                     app:shapeAppearanceOverlay="@style/ShapeAppearance_MaterialComponents_CircularImageView"
                     tools:src="@drawable/ic_launcher_foreground" />
 
-                <!-- Mentor Name -->
-                <TextView
-                    android:id="@+id/mentorName"
+                <!-- Mentor Info -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mentor Name"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <!-- Mentor Name -->
+                    <TextView
+                        android:id="@+id/mentorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mentor Name"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <!-- CardView -->
@@ -118,7 +126,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"
                         android:text="Ký sự ngày thứ 25 học ở F8"
                         android:textColor="#000000"
                         android:textSize="24sp"
@@ -133,7 +142,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="16dp"
                         android:text="This is a detailed course description..."
                         android:textColor="@android:color/black"
                         android:textSize="18sp"
@@ -148,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:text="$99.99"
                         android:textColor="@android:color/holo_red_dark"
                         android:textSize="16sp"
@@ -156,36 +167,62 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/courseDescription" />
 
-                    <!-- Course Duration -->
+                    <TextView
+                        android:id="@+id/courseDateEnd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="10dp"
+                        android:text="End Date: Jan 31, 2024"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="normal"
+                        app:layout_constraintStart_toEndOf="@+id/courseDateStart"
+                        app:layout_constraintTop_toBottomOf="@id/coursePrice" />
+
+                    <TextView
+                        android:id="@+id/courseDateStart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Start Date: Jan 1, 2024"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="normal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/coursePrice" />
+
                     <TextView
                         android:id="@+id/courseDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="16dp"
                         android:text="Duration: 6 weeks"
-                        android:textColor="@color/dark_grey"
-                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
                         android:textStyle="normal"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/coursePrice" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/courseDateStart"
+                        app:layout_constraintVertical_bias="0.0" />
 
-                    <!-- Course Date -->
                     <TextView
-                        android:id="@+id/courseDate"
+                        android:id="@+id/mentorPhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="16dp"
-                        android:text="Start Date: Jan 1, 2024"
-                        android:textColor="@color/dark_grey"
+                        android:text="Phone: 123-456-7890"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/coursePrice" />
+                        app:layout_constraintTop_toBottomOf="@id/courseDuration" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

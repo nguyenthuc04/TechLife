@@ -403,4 +403,16 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+    fun getCourseByUser(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.getUser(userId)
+                Log.d("UserViewModel", "API Response: $response")
+                _user.value = response.user
+            } catch (e: Exception) {
+                Log.e("UserViewModel", "Get course by user failed", e)
+            }
+        }
+    }
 }
