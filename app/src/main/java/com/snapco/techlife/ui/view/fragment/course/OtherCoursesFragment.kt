@@ -99,7 +99,7 @@ class OtherCoursesFragment : Fragment() {
         val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
         retrievedOptions?.let {
-            val filteredCourses = courseList.filter { course ->
+            var filteredCourses = courseList.filter { course ->
                 var matches = true
 
                 for (option in it) {
@@ -144,12 +144,23 @@ class OtherCoursesFragment : Fragment() {
                 matches
             }
 
+            // Áp dụng sắp xếp
+            filteredCourses = when {
+                it.contains("Số lượng người tham gia nhiều nhất") ->
+                    filteredCourses.sortedByDescending { it.quantity }
+                it.contains("Số lượng người tham gia ít nhất") ->
+                    filteredCourses.sortedBy { it.quantity }
+                else -> filteredCourses
+            }
+
+            // Hiển thị hoặc ẩn thông báo không có khóa học
             if (filteredCourses.isEmpty()) {
                 binding.tvNoCourses.visibility = View.VISIBLE
             } else {
                 binding.tvNoCourses.visibility = View.GONE
             }
 
+            // Chia loại khóa học và cập nhật giao diện
             val basicCourses = filteredCourses.filter { it.type == "Cơ bản" }
             val advancedCourses = filteredCourses.filter { it.type == "Nâng cao" }
             val specializedCourses = filteredCourses.filter { it.type == "Chuyên môn hoá" }
@@ -172,6 +183,7 @@ class OtherCoursesFragment : Fragment() {
                 if (specializedCourses.isEmpty()) View.GONE else View.VISIBLE
         }
     }
+
 
     private fun onCourseClicked(course: Course) {
         courseActivityViewModel.setCours(course)

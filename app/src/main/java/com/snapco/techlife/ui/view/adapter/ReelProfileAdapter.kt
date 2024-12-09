@@ -8,6 +8,7 @@ import com.snapco.techlife.databinding.ItemReelProfileBinding
 
 class ReelProfileAdapter(
     private var reels: List<Reel>,
+    private val onReelClickListener: (Reel) -> Unit
 ) : RecyclerView.Adapter<ReelProfileAdapter.ReelViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -33,6 +34,9 @@ class ReelProfileAdapter(
     ) {
         val reel = reels[position]
         holder.bind(reel)
+        holder.itemView.setOnClickListener {
+            onReelClickListener(reel)
+        }
     }
 
     override fun getItemCount(): Int = reels.size

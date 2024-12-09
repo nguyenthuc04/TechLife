@@ -15,6 +15,7 @@ import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class CourseViewModel : ViewModel() {
@@ -127,19 +128,28 @@ class CourseViewModel : ViewModel() {
         }
     }
 
-    fun searchCourses(name : String) {
+    fun searchCourses(name: String) {
         viewModelScope.launch {
             try {
                 val response = ApiClient.apiService.searchCourses(name)
+
                 if (response.success) {
                     _searchCourses.value = response.data
+
                 } else {
+                    _searchCourses.value = emptyList()
+                    // Xử lý lỗi từ backend
                     _error.value = response.message
                 }
             } catch (e: Exception) {
-                _error.value = e.localizedMessage
+                _searchCourses.value = emptyList()
+                // Xử lý các lỗi ngoại lệ khác
+                _error.value = e.localizedMessage ?: "Đã xảy ra lỗi không xác định."
             }
         }
     }
-
 }
+
+
+
+

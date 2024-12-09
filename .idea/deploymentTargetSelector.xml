@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-12-06T16:09:37.371155500Z">
+        <DropdownSelection timestamp="2024-12-06T03:03:27.051626Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\tatua\.android\avd\Pixel_6a_API_32.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/admin/.android/avd/Pixel_XL_API_32.avd" />
             </handle>
           </Target>
         </DropdownSelection>

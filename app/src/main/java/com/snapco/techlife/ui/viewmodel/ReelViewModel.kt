@@ -55,6 +55,11 @@ class ReelViewModel : ViewModel() {
             }
         }
     }
+    fun getReels2(): Flow<PagingData<Reel>> {
+        return Pager(PagingConfig(pageSize = 10)) {
+            ReelPagingSource(apiService)
+        }.flow.cachedIn(viewModelScope)
+    }
 
     fun getReels(): Flow<PagingData<Reel>> =
         Pager(PagingConfig(pageSize = 3)) {

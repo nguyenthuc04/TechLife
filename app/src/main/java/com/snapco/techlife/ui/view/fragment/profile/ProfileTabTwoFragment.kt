@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.snapco.techlife.R
 import com.snapco.techlife.databinding.FragmentProfileTabTwoBinding
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.adapter.ReelProfileAdapter
+import com.snapco.techlife.ui.view.fragment.reels.ReelDetailFragment
+import com.snapco.techlife.ui.view.fragment.reels.ReelsFragment
 import com.snapco.techlife.ui.viewmodel.home.HomeViewModel
+import kotlinx.coroutines.launch
 
 class ProfileTabTwoFragment : Fragment() {
     private lateinit var binding: FragmentProfileTabTwoBinding
@@ -36,11 +41,20 @@ class ProfileTabTwoFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        reelAdapter = ReelProfileAdapter(mutableListOf())
+        reelAdapter = ReelProfileAdapter(mutableListOf()) { reel ->
+            openReelsFragment(reel._id)
+        }
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(context, 4)
             adapter = reelAdapter
         }
+    }
+    private fun openReelsFragment(reelId: String) {
+        val fragment = ReelDetailFragment.newInstance(reelId)
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frameLayout, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun observeReels() {
@@ -56,6 +70,7 @@ class ProfileTabTwoFragment : Fragment() {
             }
         }
     }
+
 
     companion object {
         fun newInstance(userId: String): ProfileTabTwoFragment {
