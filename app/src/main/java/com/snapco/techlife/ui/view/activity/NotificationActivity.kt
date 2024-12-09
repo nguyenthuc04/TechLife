@@ -68,6 +68,8 @@ class NotificationActivity :
     }
 
     private fun navigateToReel(reelId: String) {
-        // Implement navigation to the reel screen
+        val intent = Intent(this, PostDetailActivity::class.java)
+        intent.putExtra("reelId", reelId)
+        startActivity(intent)
     }
 }

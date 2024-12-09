@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.frameLayout, HomeFragment())
+            .addToBackStack(null)
             .commit()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.frameLayout, it)
+                    .addToBackStack(null)
                     .commit()
             }
             true

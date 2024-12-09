@@ -8,6 +8,8 @@
         android:background="@color/black"
         tools:context=".ui.view.fragment.reels.ReelsFragment">
 
+
+
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
@@ -16,10 +18,10 @@
 
             <!-- Add a placeholder layout for the shimmer effect -->
             <LinearLayout
-                android:layout_marginBottom="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="32dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -68,6 +70,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reels"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="34sp" />
 
     </FrameLayout>
 </layout>

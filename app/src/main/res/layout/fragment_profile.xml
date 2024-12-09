@@ -53,11 +53,6 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <ImageView
-                            android:id="@+id/imageView4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/baseline_keyboard_arrow_down_24" />
 
                     </LinearLayout>
 
