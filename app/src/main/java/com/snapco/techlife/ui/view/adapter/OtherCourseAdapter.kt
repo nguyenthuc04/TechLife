@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.databinding.ItemOthercourseBinding
+import com.snapco.techlife.extensions.formatPrice
 import com.snapco.techlife.extensions.loadImage
 import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 
@@ -17,10 +18,12 @@ class OtherCourseAdapter(
         private val binding: ItemOthercourseBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(course: Course) {
-            binding.textView34.text = course.name
             binding.imageView11.loadImage(course.imageUrl)
-            binding.textView20.text = course.userName
             binding.textView34.text = course.name
+            binding.textView41.text = course.price.toInt().formatPrice()
+            binding.imgAvatar.loadImage(course.userImageUrl)
+            binding.textView20.text = course.userName
+            binding.textView38.text = "Số lượng còn lại: ${course.quantity}"
 
             binding.root.setOnClickListener {
                 onItemClickListener(course) // Gọi callback khi bấm vào item

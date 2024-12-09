@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:layout_margin="8dp"
+        android:padding="10dp"
+        android:layout_margin="6dp"
         android:background="@drawable/item_background"
         android:elevation="4dp"
         android:gravity="center_vertical">
@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="12dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:clipToOutline="true"
             tools:src="@drawable/ic_launcher_foreground" />
 

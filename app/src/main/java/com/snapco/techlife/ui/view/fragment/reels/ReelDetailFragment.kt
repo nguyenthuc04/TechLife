@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.filter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.Reel
+import com.snapco.techlife.data.model.Reels
+import com.snapco.techlife.databinding.FragmentReelDetailBinding
 import com.snapco.techlife.databinding.FragmentReelsBinding
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.visible
@@ -26,10 +29,10 @@ import com.snapco.techlife.ui.viewmodel.objectdataholder.UserDataHolder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ReelsFragment :
+class ReelDetailFragment :
     Fragment(),
     ReelAdapter.OnReelActionListener {
-    private lateinit var binding: FragmentReelsBinding
+    private lateinit var binding: FragmentReelDetailBinding
     private lateinit var reelAdapter: ReelAdapter
     private val reelViewModel: ReelViewModel by viewModels()
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
@@ -39,18 +42,23 @@ class ReelsFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reels, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_reel_detail, container, false)
         shimmerFrameLayout = binding.shimmerViewContainer
+        binding.backButton.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
         setupViewPager()
         observeReels()
         return binding.root
     }
 
     private fun observeReels() {
+        val reelId = arguments?.getString(ARG_REEL_ID)
+
         lifecycleScope.launch {
             reelViewModel.getReels().collectLatest { pagingData ->
-                Log.d("ReelsFragment", "Received paging data")
-                reelAdapter.submitData(pagingData)
+                val filteredPagingData = pagingData.filter { it._id == reelId }
+                reelAdapter.submitData(filteredPagingData)
             }
         }
 
@@ -66,6 +74,7 @@ class ReelsFragment :
             }
         }
     }
+
 
     private fun setupViewPager() {
         reelAdapter = ReelAdapter(this, binding.viewPager.getChildAt(0) as RecyclerView)
@@ -136,4 +145,16 @@ class ReelsFragment :
             BottomSheetCommentReelFragment::class.java.simpleName,
         )
     }
+    companion object {
+        private const val ARG_REEL_ID = "reel_id"
+
+        fun newInstance(reelId: String): ReelDetailFragment {
+            val fragment = ReelDetailFragment()
+            val args = Bundle()
+            args.putString(ARG_REEL_ID, reelId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
 }

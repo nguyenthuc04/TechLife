@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.LikeNotificationRequest
 import com.snapco.techlife.data.model.Post
@@ -34,6 +35,7 @@ class HomeFragment :
     private val homeViewModel: HomeViewModel by viewModels()
     private val chatViewModel: ChatViewModel by viewModels()
     private val channelViewModel: ChannelViewModel by viewModels()
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,7 @@ class HomeFragment :
         savedInstanceState: Bundle?,
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        shimmerFrameLayout = binding.shimmerViewContainer
 
         channelViewModel.getListChannel(UserDataHolder.getUserId().toString())
         chatViewModel.unreadMessagesCount.observe(viewLifecycleOwner) { unreadCount ->
@@ -81,8 +84,15 @@ class HomeFragment :
     private fun observePosts() {
         homeViewModel.posts.observe(viewLifecycleOwner) { postList ->
             Log.d("HomeFragment", "observePosts: $postList")
-            postList?.let {
-                postAdapter.updatePosts(it.reversed())
+            if (postList != null) {
+                postAdapter.updatePosts(postList.reversed())
+                shimmerFrameLayout.stopShimmer()
+                shimmerFrameLayout.gone()
+                binding.recyclerViewId.visible()
+            } else {
+                shimmerFrameLayout.startShimmer()
+                shimmerFrameLayout.visible()
+                binding.recyclerViewId.gone()
             }
         }
     }

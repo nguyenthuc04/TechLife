@@ -1,10 +1,12 @@
 package com.snapco.techlife.ui.view.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.snapco.techlife.data.model.NotificationPost
 import com.snapco.techlife.databinding.ItemNotificationBinding
+import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.loadImage
 import io.getstream.chat.android.core.internal.InternalStreamChatApi
 import java.time.LocalDateTime
@@ -21,14 +23,21 @@ class NotificationAdapter(
         fun bind(notification: NotificationPost) {
             binding.apply {
                 tvName.text = notification.nameUser
-                tvMessage.text =
-                    if (notification.type == "like") {
-                        "${notification.nameUser} đã thích bài viết của bạn"
+                    if (notification.type == "other") {
+                        tvMessage.text = "${notification.contentId}"
+                        tvMessage.setTextColor(Color.BLACK)
+                        tvMessage.textSize = 15F
+                        ivImage.gone()
+                    }else if (notification.type == "like") {
+                        tvMessage.text = "${notification.nameUser} đã thích bài viết của bạn"
+                        ivImage.loadImage(notification.imgUser)
+
                     } else {
-                        "${notification.nameUser} đã thích reel của bạn"
+                        tvMessage.text = "${notification.nameUser} đã thích reel của bạn"
+                        ivImage.loadImage(notification.imgUser)
                     }
                 tvTime.text = getFormattedTimeDifference(notification.time)
-                ivImage.loadImage(notification.imgUser)
+
             }
         }
 

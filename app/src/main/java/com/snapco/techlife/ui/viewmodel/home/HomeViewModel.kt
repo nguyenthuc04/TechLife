@@ -48,13 +48,15 @@ class HomeViewModel : ViewModel() {
     private val _updateResult = MutableLiveData<Result<Boolean>>()
     val updateResult: LiveData<Result<Boolean>> get() = _updateResult
 
+
     fun getPostsByUser(userId: String) {
         viewModelScope.launch {
             try {
                 val response = ApiClient.apiService.getPostsByUser(userId)
                 _postListProfile.value = response
+                Log.d("HomeViewModel1", response.toString())
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Get posts by user failed", e)
+                _postListProfile.value = null
             }
         }
     }
@@ -65,6 +67,7 @@ class HomeViewModel : ViewModel() {
                 val response = ApiClient.apiService.getReelsByUser(userId)
                 _reelListProfile.value = response
             } catch (e: Exception) {
+                _reelListProfile.value = null
                 Log.e("HomeViewModel", "Get reels by user failed", e)
             }
         }
