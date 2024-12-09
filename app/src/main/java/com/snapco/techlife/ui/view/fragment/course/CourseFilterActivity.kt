@@ -30,7 +30,8 @@ class CourseFilterActivity : AppCompatActivity() {
 
         selectedOptions = DataCheckMart.getMultiplePreferences(this, "MyChecked").toMutableSet()
         if (selectedOptions.isEmpty()) {
-            selectedOptions = mutableSetOf()
+            selectedOptions = mutableSetOf("Mức độ liên quan", "Bất kỳ", "Mọi thời điểm", "Tất cả")
+            DataCheckMart.saveMultiplePreferences(this, "MyChecked", selectedOptions)
         }
         showChecked()
 

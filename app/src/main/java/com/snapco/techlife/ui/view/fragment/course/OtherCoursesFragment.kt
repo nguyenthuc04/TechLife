@@ -83,7 +83,7 @@ class OtherCoursesFragment : Fragment() {
                 val query = s.toString().trim()
                 courseViewModel.searchCourses(query)
                 courseViewModel.searchCourses.observe(viewLifecycleOwner) { courseList ->
-//                    otherCourseAdapter.updateCourses(courseList)
+                    Log.d("FIx123", "onTextChanged: list = $courseList")
                     getDataFilter(courseList)
                 }
                 if(query.isEmpty()){
@@ -113,87 +113,86 @@ class OtherCoursesFragment : Fragment() {
         private const val REQUEST_CODE_ADD_COURSE = 1
     }
 
-    fun getDataFilter (list : List<Course>) {
+    fun getDataFilter(list: List<Course>) {
+        Log.d("datal", "onTextChanged: list = $list ")
         val retrievedOptions = DataCheckMart.getMultiplePreferences(requireContext(), "MyChecked")
         val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
         retrievedOptions?.let {
-            val filteredCourses = list.filter { course ->
-                var matches = true
+            var filteredCourses = list // Khởi tạo danh sách gốc
 
-                // Kiểm tra các tùy chọn trong retrievedOptions và lọc
-                for (option in it) {
-                    when (option) {
-                        "Mức độ liên quan" -> {
-                            matches
-                        }
-                        "Bất kỳ" -> {
-                            // Lọc theo "Bất kỳ" (có thể không cần điều kiện gì)
-                            matches
-                        }
-                        "Dưới 2 tiếng" -> {
-                            // Lọc theo thời gian khóa học dưới 2 tiếng
-                            matches = matches && course.duration.toInt() < 2
-                        }
-                        "2 - 5 tiếng" -> {
-                            // Lọc theo thời gian khóa học từ 2 đến 5 tiếng
-                            matches = matches && course.duration.toInt() in 2..5
-                        }
-                        "Trên 5 tiếng" -> {
-                            // Lọc theo thời gian khóa học trên 5 tiếng
-                            matches = matches && course.duration.toInt() > 5
-                        }
-                        "Mọi thời điểm" -> {
-                            // Lọc theo "Mọi thời điểm"
-                            matches
-                        }
-                        "Hôm nay" -> {
-                            // Lọc theo "Hôm nay"
-                            val today = LocalDate.now()
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter) // Dùng formatter
-                            matches = matches && startDate.isEqual(today)
-                        }
-                        "Tuần này" -> {
-                            // Lọc theo "Tuần này"
-                            val today = LocalDate.now()
-                            val weekOfYearToday = today.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter)
-                            val weekOfYearStart = startDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
-                            matches = matches && weekOfYearStart == weekOfYearToday
-                        }
-                        "Tháng này" -> {
-                            // Lọc theo "Tháng này"
-                            val today = LocalDate.now()
-                            val monthToday = today.monthValue
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter)
-                            val monthStart = startDate.monthValue
-                            matches = matches && monthStart == monthToday
-                        }
-                        "Tất cả" -> {
-                            // Lọc theo "Tất cả"
-                            matches
-                        }
-                        "Cơ bản" -> {
-                            // Lọc theo "Cơ bản"
-                            matches = matches && course.type == "Cơ bản"
-                        }
-                        "Nâng cao" -> {
-                            // Lọc theo "Nâng cao"
-                            matches = matches && course.type == "Nâng cao"
-                        }
-                        "Chuyên môn hoá" -> {
-                            // Lọc theo "Chuyên môn hoá"
-                            matches = matches && course.type == "Chuyên môn hoá"
+            for (option in it) {
+                when (option) {
+                    "Mức độ liên quan" -> {
+                        // Không thay đổi danh sách
+                    }
+                    "Số lượng người tham gia nhiều nhất" -> {
+                        // Sắp xếp từ cao xuống thấp
+                        filteredCourses = filteredCourses.sortedByDescending { it.quantity }
+                    }
+                    "Số lượng người tham gia ít nhất" -> {
+                        // Sắp xếp từ thấp lên cao
+                        filteredCourses = filteredCourses.sortedBy { it.quantity }
+                    }
+                    "Bất kỳ" -> {
+                        // Không lọc gì thêm
+                    }
+                    "Dưới 2 tiếng" -> {
+                        filteredCourses = filteredCourses.filter { it.duration.toInt() < 2 }
+                    }
+                    "2 - 5 tiếng" -> {
+                        filteredCourses = filteredCourses.filter { it.duration.toInt() in 2..5 }
+                    }
+                    "Trên 5 tiếng" -> {
+                        filteredCourses = filteredCourses.filter { it.duration.toInt() > 5 }
+                    }
+                    "Mọi thời điểm" -> {
+                        // Không lọc thời gian
+                    }
+                    "Hôm nay" -> {
+                        val today = LocalDate.now()
+                        filteredCourses = filteredCourses.filter {
+                            val startDate = LocalDate.parse(it.startDate, dateFormatter)
+                            startDate.isEqual(today)
                         }
                     }
+                    "Tuần này" -> {
+                        val today = LocalDate.now()
+                        val weekOfYearToday = today.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
+                        filteredCourses = filteredCourses.filter {
+                            val startDate = LocalDate.parse(it.startDate, dateFormatter)
+                            val weekOfYearStart = startDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
+                            weekOfYearStart == weekOfYearToday
+                        }
+                    }
+                    "Tháng này" -> {
+                        val today = LocalDate.now()
+                        val monthToday = today.monthValue
+                        filteredCourses = filteredCourses.filter {
+                            val startDate = LocalDate.parse(it.startDate, dateFormatter)
+                            startDate.monthValue == monthToday
+                        }
+                    }
+                    "Tất cả" -> {
+                        // Không lọc
+                    }
+                    "Cơ bản" -> {
+                        filteredCourses = filteredCourses.filter { it.type == "Cơ bản" }
+                    }
+                    "Nâng cao" -> {
+                        filteredCourses = filteredCourses.filter { it.type == "Nâng cao" }
+                    }
+                    "Chuyên môn hoá" -> {
+                        filteredCourses = filteredCourses.filter { it.type == "Chuyên môn hoá" }
+                    }
                 }
-
-                // Trả về kết quả lọc
-                matches
             }
+
+            // Cập nhật danh sách sau khi lọc/sắp xếp
             otherCourseAdapter.updateCourses(filteredCourses)
         }
     }
+
 
     override fun onResume() {
         courseViewModel.getListCourses()
