@@ -57,12 +57,12 @@ class AddCourse : AppCompatActivity() {
         }
         val typeKH = listOf("Cơ bản", "Nâng cao", "Chuyên môn hoá")
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item, // Layout mặc định cho item
-            typeKH
-        )
-
+        val adapter =
+            ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item, // Layout mặc định cho item
+                typeKH,
+            )
 
         // Thiết lập giao diện dropdown
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -182,13 +182,14 @@ class AddCourse : AppCompatActivity() {
 
     private fun uploadImage() {
         selectedImageUri?.let { uri ->
+            binding.btnDone.text = ""
             binding.progressBar.visibility = View.VISIBLE
             cloudinaryUploader.uploadMedia(
                 uri,
                 false,
                 object : CloudinaryUploader.UploadCallback {
                     override fun onProgress(progress: Int) {
-                        binding.progressBar.progress = progress
+                        // Do nothing
                     }
 
                     override fun onSuccess(url: String) {
@@ -233,6 +234,7 @@ class AddCourse : AppCompatActivity() {
         courseViewModel.createCourseResponse.observe(this) { response ->
             response?.let {
                 if (response.success) {
+                    binding.btnDone.text = "Đăng"
                     binding.progressBar.gone()
                     finish()
                 } else {
