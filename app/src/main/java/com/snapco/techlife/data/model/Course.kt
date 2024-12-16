@@ -20,7 +20,7 @@ data class Course(
     val startDate: String,
     val endDate: String,
     val type: String,
-    val phoneNumber : String,
+    val phoneNumber: String,
 )
 
 data class UserCourse(
@@ -73,6 +73,11 @@ data class UpdateCourseResponse(
     val success: Boolean,
     val message: String,
     val course: Course,
+)
+
+data class CoursesByUserResponse(
+    val success: Boolean,
+    val courses: List<Course>,
 )
 
 data class CourseProfileResponse(

@@ -10,12 +10,12 @@ import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.CourseDeleteResponse
 import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
+import com.snapco.techlife.data.model.CoursesByUserResponse
 import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.data.model.RegisterCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseRequest
 import com.snapco.techlife.data.model.UpdateCourseResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class CourseViewModel : ViewModel() {
@@ -30,6 +30,9 @@ class CourseViewModel : ViewModel() {
 
     private val _updateCourseResponse = MutableLiveData<UpdateCourseResponse>()
     val updateCourseResponse: LiveData<UpdateCourseResponse> get() = _updateCourseResponse
+
+    private val _coursesByUserResponse = MutableLiveData<CoursesByUserResponse>()
+    val coursesByUserResponse: LiveData<CoursesByUserResponse> get() = _coursesByUserResponse
 
     private val _registerCourseResponse = MutableLiveData<UpdateCourseResponse>()
     val registerCourseResponse: LiveData<UpdateCourseResponse> get() = _registerCourseResponse
@@ -49,6 +52,17 @@ class CourseViewModel : ViewModel() {
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
+
+    fun getCoursesByUserRegistration(courseId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiClient.apiService.getCoursesByUserRegistration(courseId)
+                _coursesByUserResponse.postValue(response)
+            } catch (e: Exception) {
+                Log.e("CourseViewModel", "Update course failed", e)
+            }
+        }
+    }
 
     fun deleteCourse(courseId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -80,7 +94,10 @@ class CourseViewModel : ViewModel() {
         }
     }
 
-    fun registerCourse(courseId: String, registerCourseRequest: RegisterCourseRequest) {
+    fun registerCourse(
+        courseId: String,
+        registerCourseRequest: RegisterCourseRequest,
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ApiClient.apiService.registerCourse(courseId, registerCourseRequest)
@@ -92,7 +109,6 @@ class CourseViewModel : ViewModel() {
             }
         }
     }
-
 
     fun getCoursesByUser(userId: String) {
         viewModelScope.launch {
@@ -135,7 +151,6 @@ class CourseViewModel : ViewModel() {
 
                 if (response.success) {
                     _searchCourses.value = response.data
-
                 } else {
                     _searchCourses.value = emptyList()
                     // Xử lý lỗi từ backend
@@ -149,7 +164,3 @@ class CourseViewModel : ViewModel() {
         }
     }
 }
-
-
-
-

@@ -36,6 +36,8 @@ class BottomSheetProfileAddFragment : BottomSheetDialogFragment() {
             if (response.user.accountType == "mentor") {
                 binding.textView30.text = "Gia hạn"
             } else {
+                binding.textView31.visibility = View.GONE
+                binding.imageView9.visibility = View.GONE
                 binding.textView30.text = "Nâng cấp"
             }
         }

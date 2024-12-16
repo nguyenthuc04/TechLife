@@ -17,9 +17,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.snapco.techlife.R
 import com.snapco.techlife.data.model.LikeReelNotificationRequest
 import com.snapco.techlife.data.model.Reel
-import com.snapco.techlife.data.model.Reels
 import com.snapco.techlife.databinding.FragmentReelDetailBinding
-import com.snapco.techlife.databinding.FragmentReelsBinding
 import com.snapco.techlife.extensions.gone
 import com.snapco.techlife.extensions.visible
 import com.snapco.techlife.ui.view.adapter.ReelAdapter
@@ -74,7 +72,6 @@ class ReelDetailFragment :
             }
         }
     }
-
 
     private fun setupViewPager() {
         reelAdapter = ReelAdapter(this, binding.viewPager.getChildAt(0) as RecyclerView)
@@ -145,6 +142,7 @@ class ReelDetailFragment :
             BottomSheetCommentReelFragment::class.java.simpleName,
         )
     }
+
     companion object {
         private const val ARG_REEL_ID = "reel_id"
 
@@ -156,5 +154,4 @@ class ReelDetailFragment :
             return fragment
         }
     }
-
 }

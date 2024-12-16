@@ -16,6 +16,7 @@ import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.databinding.FragmentOtherCoursesBinding
 import com.snapco.techlife.extensions.replaceFragment
 import com.snapco.techlife.extensions.startActivity
+import com.snapco.techlife.ui.view.activity.course.CoursesByUserActivity
 import com.snapco.techlife.ui.view.adapter.OtherCourseAdapter
 import com.snapco.techlife.ui.viewmodel.CourseViewModel
 import com.snapco.techlife.ui.viewmodel.objectdataholder.DataCheckMart
@@ -45,23 +46,37 @@ class OtherCoursesFragment : Fragment() {
         courseViewModel.courses.observe(viewLifecycleOwner) { courseList ->
             filterAndDisplayCourses(courseList)
         }
+        binding.btnList.setOnClickListener {
+            startActivity<CoursesByUserActivity>()
+        }
+        binding.edtSearchCourse.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {}
 
-        binding.edtSearchCourse.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString().trim()
-                courseViewModel.searchCourses(query)
-                courseViewModel.searchCourses.observe(viewLifecycleOwner) { courseList ->
-                    filterAndDisplayCourses(courseList)
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    val query = s.toString().trim()
+                    courseViewModel.searchCourses(query)
+                    courseViewModel.searchCourses.observe(viewLifecycleOwner) { courseList ->
+                        filterAndDisplayCourses(courseList)
+                    }
+                    if (query.isEmpty()) {
+                        courseViewModel.getListCourses()
+                    }
                 }
-                if (query.isEmpty()) {
-                    courseViewModel.getListCourses()
-                }
-            }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
+                override fun afterTextChanged(s: Editable?) {}
+            },
+        )
 
         binding.imgFilter.setOnClickListener {
             startActivity<CourseFilterActivity>()
@@ -99,59 +114,67 @@ class OtherCoursesFragment : Fragment() {
         val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
         retrievedOptions?.let {
-            var filteredCourses = courseList.filter { course ->
-                var matches = true
+            var filteredCourses =
+                courseList.filter { course ->
+                    var matches = true
 
-                for (option in it) {
-                    when (option) {
-                        "Mức độ liên quan", "Bất kỳ", "Mọi thời điểm", "Tất cả" -> matches
-                        "Dưới 2 tiếng" -> matches =
-                            matches && course.duration.replace(Regex("[^\\d]"), "").toInt() < 2
+                    for (option in it) {
+                        when (option) {
+                            "Mức độ liên quan", "Bất kỳ", "Mọi thời điểm", "Tất cả" -> matches
+                            "Dưới 2 tiếng" ->
+                                matches =
+                                    matches &&
+                                    course.duration.replace(Regex("[^\\d]"), "").toInt() < 2
 
-                        "2 - 5 tiếng" -> matches =
-                            matches && course.duration.replace(Regex("[^\\d]"), "").toInt() in 2..5
+                            "2 - 5 tiếng" ->
+                                matches =
+                                    matches &&
+                                    course.duration.replace(Regex("[^\\d]"), "").toInt() in 2..5
 
-                        "Trên 5 tiếng" -> matches =
-                            matches && course.duration.replace(Regex("[^\\d]"), "").toInt() > 5
+                            "Trên 5 tiếng" ->
+                                matches =
+                                    matches &&
+                                    course.duration.replace(Regex("[^\\d]"), "").toInt() > 5
 
-                        "Hôm nay" -> {
-                            val today = LocalDate.now()
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter)
-                            matches = matches && startDate.isEqual(today)
+                            "Hôm nay" -> {
+                                val today = LocalDate.now()
+                                val startDate = LocalDate.parse(course.startDate, dateFormatter)
+                                matches = matches && startDate.isEqual(today)
+                            }
+
+                            "Tuần này" -> {
+                                val today = LocalDate.now()
+                                val weekOfYearToday = today.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
+                                val startDate = LocalDate.parse(course.startDate, dateFormatter)
+                                val weekOfYearStart = startDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
+                                matches = matches && weekOfYearStart == weekOfYearToday
+                            }
+
+                            "Tháng này" -> {
+                                val today = LocalDate.now()
+                                val monthToday = today.monthValue
+                                val startDate = LocalDate.parse(course.startDate, dateFormatter)
+                                val monthStart = startDate.monthValue
+                                matches = matches && monthStart == monthToday
+                            }
+
+                            "Cơ bản" -> matches = matches && course.type == "Cơ bản"
+                            "Nâng cao" -> matches = matches && course.type == "Nâng cao"
+                            "Chuyên môn hoá" -> matches = matches && course.type == "Chuyên môn hoá"
                         }
-
-                        "Tuần này" -> {
-                            val today = LocalDate.now()
-                            val weekOfYearToday = today.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter)
-                            val weekOfYearStart = startDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR)
-                            matches = matches && weekOfYearStart == weekOfYearToday
-                        }
-
-                        "Tháng này" -> {
-                            val today = LocalDate.now()
-                            val monthToday = today.monthValue
-                            val startDate = LocalDate.parse(course.startDate, dateFormatter)
-                            val monthStart = startDate.monthValue
-                            matches = matches && monthStart == monthToday
-                        }
-
-                        "Cơ bản" -> matches = matches && course.type == "Cơ bản"
-                        "Nâng cao" -> matches = matches && course.type == "Nâng cao"
-                        "Chuyên môn hoá" -> matches = matches && course.type == "Chuyên môn hoá"
                     }
+                    matches
                 }
-                matches
-            }
 
             // Áp dụng sắp xếp
-            filteredCourses = when {
-                it.contains("Số lượng người tham gia nhiều nhất") ->
-                    filteredCourses.sortedByDescending { it.quantity }
-                it.contains("Số lượng người tham gia ít nhất") ->
-                    filteredCourses.sortedBy { it.quantity }
-                else -> filteredCourses
-            }
+            filteredCourses =
+                when {
+                    it.contains("Số lượng người tham gia nhiều nhất") ->
+                        filteredCourses.sortedByDescending { it.quantity }
+                    it.contains("Số lượng người tham gia ít nhất") ->
+                        filteredCourses.sortedBy { it.quantity }
+                    else -> filteredCourses
+                }
 
             // Hiển thị hoặc ẩn thông báo không có khóa học
             if (filteredCourses.isEmpty()) {
@@ -184,14 +207,17 @@ class OtherCoursesFragment : Fragment() {
         }
     }
 
-
     private fun onCourseClicked(course: Course) {
         courseActivityViewModel.setCours(course)
         replaceFragment(CourseDetailsFragment())
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ADD_COURSE && resultCode == AppCompatActivity.RESULT_OK) {
             courseViewModel.getListCourses()

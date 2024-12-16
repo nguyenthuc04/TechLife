@@ -64,6 +64,7 @@ class CreateNewPassActivity : AppCompatActivity() {
             return
         }
         binding.progressBar.visible()
+        binding.btnNext.text = ""
         val resetPass = ResetPasswordRequest(email!!, pass)
         userViewModel.resetPassword(resetPass)
         userViewModel.resetPasswordResponse.observe(this) {

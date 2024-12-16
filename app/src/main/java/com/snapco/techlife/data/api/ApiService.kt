@@ -13,6 +13,7 @@ import com.snapco.techlife.data.model.CheckUserInAnyCourseResponse
 import com.snapco.techlife.data.model.Course
 import com.snapco.techlife.data.model.CourseProfileResponse
 import com.snapco.techlife.data.model.CourseResponse
+import com.snapco.techlife.data.model.CoursesByUserResponse
 import com.snapco.techlife.data.model.CreateCourseRequest
 import com.snapco.techlife.data.model.CreatePostRequest
 import com.snapco.techlife.data.model.CreatePostResponse
@@ -66,6 +67,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @GET("/getCoursesByUserRegistration/{userId}")
+    suspend fun getCoursesByUserRegistration(
+        @Path("userId") userId: String,
+    ): CoursesByUserResponse
+
     @PUT("/updateAccountType/{userId}")
     suspend fun updateAccountType(
         @Path("userId") userId: String,

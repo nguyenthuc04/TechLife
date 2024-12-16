@@ -97,8 +97,6 @@ class ReelAdapter(
             binding.btnComment.setOnClickListener {
                 onReelActionListener?.onCommentPost(reel._id, position, reel.userId)
             }
-            binding.btnFollow.setOnClickListener {
-            }
 
             // Xử lý click giữ bài viết
             itemView.setOnLongClickListener {
